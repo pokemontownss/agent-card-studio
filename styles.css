@@ -168,7 +168,7 @@ h2 { font-size: 30px; line-height: 1.1; letter-spacing: -.055em; margin: 0; font
 .color-swatch { height: 25px; width: 25px; border: 2px solid #f8f7f2; border-radius: 50%; cursor: pointer; box-shadow: 0 0 0 1px #d7d8d0; transition: transform .18s, box-shadow .18s; }
 .color-swatch:hover { transform: scale(1.09); }
 .color-swatch.is-selected { box-shadow: 0 0 0 2px var(--ink); }
-.swatch-lime { background: #d5fa61; }.swatch-violet { background: #c1aaff; }.swatch-coral { background: #ff8068; }.swatch-blue { background: #76d7ef; }
+.swatch-violet { background: #7C4DFF; } .swatch-amber { background: #F59E0B; } .swatch-pink { background: #EC4899; } .swatch-red { background: #EF4444; } .swatch-cyan { background: #06B6D4; } .swatch-orange { background: #F97316; } .swatch-sky { background: #0EA5E9; } .swatch-green { background: #22C55E; } .swatch-teal { background: #14B8A6; } .swatch-indigo { background: #6366F1; }
 .color-name { font: 8px var(--mono); color: #787b72; margin-left: 4px; }
 .wallet-notice, .wallet-connected { min-height: 53px; background: #efeee8; border: 1px solid #e1e1d9; display: flex; align-items: center; gap: 10px; padding: 9px 12px; font-size: 9px; line-height: 1.55; color: #6f7269; }
 .notice-icon { font-size: 15px; color: #969a8f; }
@@ -190,14 +190,20 @@ h2 { font-size: 30px; line-height: 1.1; letter-spacing: -.055em; margin: 0; font
 .preview-live { display: flex; align-items: center; gap: 5px; color: #7c8c47; font-size: 7px; }
 .preview-live i { width: 5px; height: 5px; background: #a2c744; border-radius: 50%; }
 .collectible-card { aspect-ratio: 1.58; width: 100%; max-width: 520px; align-self: center; position: relative; overflow: hidden; border-radius: 5px; padding: 17px 19px 15px; display: flex; flex-direction: column; justify-content: space-between; color: #252922; isolation: isolate; box-shadow: 0 19px 48px rgba(51,55,42,.18), 0 2px 5px rgba(0,0,0,.08); background: #d5fa61; transition: background .3s, transform .3s; }
-.collectible-card::before { content: ''; position: absolute; inset: 0; z-index: -1; opacity: .35; background: linear-gradient(130deg, transparent 44%, rgba(255,255,255,.7) 44.2%, transparent 44.7%), radial-gradient(ellipse at 70% 38%, rgba(255,255,255,.68), transparent 28%); }
+.collectible-card::before { content: ''; position: absolute; inset: 0; z-index: -1; opacity: .5; background: repeating-linear-gradient(0deg, rgba(255,255,255,.05) 0 1px, transparent 1px 3px, rgba(0,0,0,.045) 3px 4px, transparent 4px 6px), linear-gradient(130deg, transparent 44%, rgba(255,255,255,.55) 44.2%, transparent 44.7%), radial-gradient(ellipse at 70% 38%, rgba(255,255,255,.5), transparent 28%); }
 .collectible-card::after { content: ''; position: absolute; z-index: -1; width: 280px; height: 175px; right: -68px; top: 22px; border: 1px solid rgba(33,38,24,.17); border-radius: 50%; transform: rotate(-32deg); box-shadow: 0 0 0 13px rgba(255,255,255,.06), 0 0 0 27px rgba(33,38,24,.06); }
 .collectible-card:hover { transform: translateY(-3px) rotate(-.3deg); }
 .hero-tilt .collectible-card, .hero-tilt .collectible-card:hover { transform: rotateX(var(--rx)) rotateY(var(--ry)) translateY(-2px); }
-.theme-lime { background-color: #d5fa61; }
-.theme-violet { background-color: #c7b5ff; }
-.theme-coral { background-color: #ff8b74; }
-.theme-blue { background-color: #78d9ee; }
+.theme-violet { background: linear-gradient(140deg, #c4afff, #7C4DFF 28%, #4d309e 52%, #9974ff 76%, #c4afff); background-color: #7C4DFF; }
+.theme-amber { background: linear-gradient(140deg, #fad391, #F59E0B 28%, #986207 52%, #f7b341 76%, #fad391); background-color: #F59E0B; }
+.theme-pink { background: linear-gradient(140deg, #f6add1, #EC4899 28%, #922d5f 52%, #f070af 76%, #f6add1); background-color: #EC4899; }
+.theme-red { background: linear-gradient(140deg, #f8abab, #EF4444 28%, #942a2a 52%, #f36d6d 76%, #f8abab); background-color: #EF4444; }
+.theme-cyan { background: linear-gradient(140deg, #8fdeec, #06B6D4 28%, #047183 52%, #3dc6dd 76%, #8fdeec); background-color: #06B6D4; }
+.theme-orange { background: linear-gradient(140deg, #fcc096, #F97316 28%, #9a470e 52%, #fa9249 76%, #fcc096); background-color: #F97316; }
+.theme-sky { background: linear-gradient(140deg, #93d6f5, #0EA5E9 28%, #096690 52%, #43b9ee 76%, #93d6f5); background-color: #0EA5E9; }
+.theme-green { background: linear-gradient(140deg, #9ce5b7, #22C55E 28%, #157a3a 52%, #53d281 76%, #9ce5b7); background-color: #22C55E; }
+.theme-teal { background: linear-gradient(140deg, #95dfd7, #14B8A6 28%, #0c7267 52%, #48c8ba 76%, #95dfd7); background-color: #14B8A6; }
+.theme-indigo { background: linear-gradient(140deg, #b9baf9, #6366F1 28%, #3d3f95 52%, #8588f4 76%, #b9baf9); background-color: #6366F1; }
 .card-topline, .card-bottomline { display: flex; justify-content: space-between; align-items: flex-start; position: relative; z-index: 2; }
 .card-brand { display: flex; align-items: center; gap: 6px; font: 8px var(--mono); letter-spacing: .1em; }
 .mini-mark { font-size: 14px; line-height: 1; }
@@ -475,7 +481,7 @@ h2 { font-size: 30px; line-height: 1.1; letter-spacing: -.055em; margin: 0; font
 .confirm-card-slot .collectible-card { max-width: 320px; }
 .success-card-slot .collectible-card { max-width: 360px; }
 .collectible-card .card-bottomline { margin-top: auto; position: relative; z-index: 2; }
-.card-artwork { position: relative; inset: auto; width: 100%; aspect-ratio: 372 / 238; flex: none; display: grid; place-items: center; border-radius: 8px; border: 1.5px solid rgba(37, 42, 30, .4); box-shadow: inset 0 0 0 3px rgba(255, 255, 255, .25), inset 0 -30px 50px rgba(20, 24, 16, .16); overflow: hidden; background: linear-gradient(155deg, rgba(255, 255, 255, .38), rgba(255, 255, 255, 0) 46%, rgba(20, 24, 16, .13)); }
+.card-artwork { position: relative; inset: auto; width: 100%; aspect-ratio: 372 / 238; flex: none; display: grid; place-items: center; border-radius: 8px; border: 1.5px solid rgba(37, 42, 30, .4); box-shadow: inset 0 0 0 3px rgba(255, 255, 255, .25), inset 0 -30px 50px rgba(20, 24, 16, .16); overflow: hidden; background: #0B0916; }
 .card-halo { width: 54%; top: 6%; left: 44%; }
 .card-glyph { width: 36%; height: 64%; left: 50%; top: 18%; }
 .card-chip { top: 76px; right: 27px; z-index: 4; }
@@ -499,3 +505,12 @@ h2 { font-size: 30px; line-height: 1.1; letter-spacing: -.055em; margin: 0; font
 .collectible-card.card-paid .card-edition { opacity: 1; color: #7c5a08; font-weight: 700; }
 .collectible-card.card-paid .card-chip { background: linear-gradient(120deg, #f9e08a, #caa12f); color: #3d2c02; border-color: rgba(124, 90, 8, .5); }
 .collectible-card.card-paid .card-artwork::after { content: ''; position: absolute; inset: 0; z-index: 2; background: linear-gradient(115deg, rgba(255, 138, 138, .32), rgba(255, 217, 138, .32) 25%, rgba(168, 255, 176, .28) 50%, rgba(138, 198, 255, .32) 75%, rgba(211, 138, 255, .32)); mix-blend-mode: screen; pointer-events: none; }
+
+/* === Metal series (v5) === */
+.card-art-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.card-artwork .card-halo, .card-artwork .card-orb, .card-artwork .art-coordinate { display: none; }
+.collectible-card .tcg-head, .collectible-card .tcg-ability, .collectible-card .tcg-moves { display: none; }
+.collectible-card .card-chip { background: linear-gradient(135deg, #4a4a55, #17171c 55%, #3d3d47); color: #edeae2; border: 1px solid rgba(255,255,255,.4); box-shadow: inset 0 0 0 1px rgba(0,0,0,.35), 0 1px 2px rgba(0,0,0,.25); letter-spacing: 1.6px; }
+.collectible-card.card-paid .card-chip { background: linear-gradient(120deg, #f9e08a, #caa12f); color: #3d2c02; border-color: rgba(124, 90, 8, .5); }
+.collectible-card .card-bottomline strong { text-shadow: 0 1px 0 rgba(255,255,255,.45); }
+.my-card img { background: #0B0916; }

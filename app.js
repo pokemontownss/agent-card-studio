@@ -21,14 +21,20 @@ const personaConfig = {
 const personaByIndex = ["guardian", "builder", "explorer"];
 
 const colorConfig = {
-  lime: { label: "Lime / 001", hex: "#D5FA61", ink: "#252922", accent: "#b9d94b" },
-  violet: { label: "Violet / 002", hex: "#C7B5FF", ink: "#292536", accent: "#9e8be8" },
-  coral: { label: "Coral / 003", hex: "#FF8B74", ink: "#342521", accent: "#e96f59" },
-  blue: { label: "Sky / 004", hex: "#78D9EE", ink: "#1f2c30", accent: "#54b7ce" },
+  violet: { label: "Violet / 001", hex: "#7C4DFF", ink: "#17130E", accent: "#5B34C9" },
+  amber: { label: "Amber / 002", hex: "#F59E0B", ink: "#17130E", accent: "#B45309" },
+  pink: { label: "Pink / 003", hex: "#EC4899", ink: "#17130E", accent: "#BE185D" },
+  red: { label: "Red / 004", hex: "#EF4444", ink: "#17130E", accent: "#B91C1C" },
+  cyan: { label: "Cyan / 005", hex: "#06B6D4", ink: "#17130E", accent: "#0E7490" },
+  orange: { label: "Orange / 006", hex: "#F97316", ink: "#17130E", accent: "#C2410C" },
+  sky: { label: "Sky / 007", hex: "#0EA5E9", ink: "#17130E", accent: "#0369A1" },
+  green: { label: "Green / 008", hex: "#22C55E", ink: "#17130E", accent: "#15803D" },
+  teal: { label: "Teal / 009", hex: "#14B8A6", ink: "#17130E", accent: "#0F766E" },
+  indigo: { label: "Indigo / 010", hex: "#6366F1", ink: "#17130E", accent: "#4338CA" },
 };
 
-const state = { name: "nara.ai", persona: "guardian", color: "lime", tier: 0, freeUsed: false, connected: false, address: null, chainId: null };
-const heroState = { persona: "guardian", color: "lime" };
+const state = { name: "nara.ai", persona: "guardian", color: "violet", tier: 0, freeUsed: false, connected: false, address: null, chainId: null };
+const heroState = { persona: "guardian", color: "violet" };
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 let chainState = { totalMinted: null, freePrice: null, paidPrice: null, mintOpen: null, maxSupply: 10000, owner: null, loaded: false, error: false };
@@ -68,6 +74,8 @@ function withTimeout(promise, ms) {
 function escapeXml(value) {
   return String(value).replace(/[<>&'"]/g, (char) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", "'": "&apos;", '"': "&quot;" }[char]));
 }
+
+function artPath(personaKey) { return "assets/art-" + personaKey + ".webp"; }
 
 function glyphMarkup(kind) {
   if (kind === "builder") {
@@ -172,9 +180,9 @@ function updateCard() {
   const chip = card.querySelector(".card-chip");
   if (chip) chip.textContent = state.tier === 1 ? "PREMIUM" : "STANDARD";
   $("#previewName").textContent = state.name;
-  $("#previewRole").textContent = personaConfig[state.persona].cardTitle;
+  $("#previewRole").textContent = personaConfig[state.persona].title.toUpperCase() + " \u00B7 PWR " + (tcgData[state.persona].power + (state.tier === 1 ? 30 : 0));
   $("#colorName").textContent = colorConfig[state.color].label;
-  $("#previewGlyph").innerHTML = glyphMarkup(state.persona);
+  const previewArt = $("#previewGlyph"); if (previewArt) previewArt.src = artPath(state.persona);
   card.setAttribute("aria-label", "Pratinjau kartu " + state.name + ", " + personaConfig[state.persona].title);
   fillTcg(card, state.persona, state.tier);
   updateEditionLabels();
@@ -192,12 +200,12 @@ function updateCardSlots() {
     const clone = original.cloneNode(true);
     clone.removeAttribute("id");
     clone.setAttribute("aria-hidden", "true");
-    const glyph = clone.querySelector("svg");
-    if (glyph) glyph.innerHTML = glyphMarkup(state.persona);
+    const art = clone.querySelector(".card-art-img");
+    if (art) art.src = artPath(state.persona);
     const nameEl = clone.querySelector("strong");
     const roleEl = clone.querySelector(".card-role");
     if (nameEl) nameEl.textContent = state.name;
-    if (roleEl) roleEl.textContent = personaConfig[state.persona].cardTitle;
+    if (roleEl) roleEl.textContent = personaConfig[state.persona].title.toUpperCase() + " \u00B7 PWR " + (tcgData[state.persona].power + (state.tier === 1 ? 30 : 0));
     applyEditionToClone(clone, label);
     slot.replaceChildren(clone);
   });
@@ -212,8 +220,8 @@ function syncHeroCard() {
   const role = document.getElementById("heroCardRole");
   const glyph = document.getElementById("heroGlyph");
   const colorName = document.getElementById("heroColorName");
-  if (role) role.textContent = personaConfig[heroState.persona].cardTitle;
-  if (glyph) glyph.innerHTML = glyphMarkup(heroState.persona);
+  if (role) role.textContent = personaConfig[heroState.persona].title.toUpperCase() + " \u00B7 PWR " + (tcgData[heroState.persona].power + 30);
+  if (glyph) glyph.src = artPath(heroState.persona);
   if (colorName) colorName.textContent = colorConfig[heroState.color].label;
   card.setAttribute("aria-label", "Contoh kartu nara.ai, " + personaConfig[heroState.persona].title);
   fillTcg(card, heroState.persona, 1);
@@ -235,9 +243,9 @@ function updateXShare() {
   if (!link) return;
   let text;
   if (mintedResult) {
-    text = "Aku baru saja mint Agent Card #" + pad4(mintedResult.tokenId) + " (" + state.name + ", " + personaConfig[state.persona].title + ") di BNB Chain — metadata 100% on-chain. Bukan Agent ID resmi Binance. Bukti mint: " + explorerTx(mintedResult.txHash);
+    text = "Aku baru saja mint Agent Card #" + pad4(mintedResult.tokenId) + " (" + state.name + ", " + personaConfig[state.persona].title + ") di BNB Chain — data kartu tersimpan on-chain. Bukan Agent ID resmi Binance. Bukti mint: " + explorerTx(mintedResult.txHash);
   } else {
-    text = "Aku merancang kartu Agent ID " + state.name + " (" + personaConfig[state.persona].title + ") di Agent Card Studio — mint NFT koleksi di BNB Chain, metadata 100% on-chain. Bukan Agent ID resmi Binance.";
+    text = "Aku merancang kartu Agent ID " + state.name + " (" + personaConfig[state.persona].title + ") di Agent Card Studio — mint NFT koleksi di BNB Chain, data kartu tersimpan on-chain. Bukan Agent ID resmi Binance.";
   }
   link.href = "https://x.com/intent/post?text=" + encodeURIComponent(text);
 }
@@ -747,69 +755,86 @@ function showSuccess() {
 
 /* ---------- Unduh PNG & bagikan ---------- */
 
-function buildCardSvg(tokenId) {
-  const color = colorConfig[state.color];
-  const tier = mintedResult ? mintedResult.tier : state.tier;
-  const data = tcgData[state.persona];
-  const label = escapeXml(state.name);
-  const role = escapeXml(personaConfig[state.persona].cardTitle);
-  const mark = glyphMarkup(state.persona);
-  const ink = color.ink;
-  const nameSize = state.name.length <= 14 ? 34 : state.name.length <= 20 ? 28 : state.name.length <= 26 ? 24 : 20;
-  const frame = tier === 1
-    ? '<rect x="3" y="3" width="414" height="588" rx="16" fill="none" stroke="#b98a1e" stroke-width="6"/><rect x="11" y="11" width="398" height="572" rx="12" fill="none" stroke="#f5d67a" stroke-width="2"/>'
-    : '<rect x="6" y="6" width="408" height="582" rx="14" fill="none" stroke="#ffffff" stroke-opacity=".55" stroke-width="2"/>';
-  const artOverlay = tier === 1
-    ? '<rect x="24" y="112" width="372" height="220" rx="10" fill="url(#holo)" fill-opacity=".35"/>'
-    : '<path d="M24 332 L216 112 L306 112 L114 332 Z" fill="#ffffff" fill-opacity=".14"/>';
-  const dots = (cy, n) => {
-    let out = "";
-    for (let i = 0; i < n; i++) out += '<circle cx="' + (40 + i * 18) + '" cy="' + cy + '" r="6.5" fill="' + ink + '"/>';
-    return out;
-  };
+function hexMix(hex, target, f) {
+  const a = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+  const b = [1, 3, 5].map((i) => parseInt(target.slice(i, i + 2), 16));
+  return "#" + a.map((v, i) => Math.round(v + (b[i] - v) * f).toString(16).padStart(2, "0")).join("");
+}
+
+function buildMetalSvg(opts) {
+  const c = opts.colorHex;
+  const L1 = hexMix(c, "#ffffff", 0.55), L2 = hexMix(c, "#ffffff", 0.22);
+  const D1 = hexMix(c, "#000000", 0.38), D2 = hexMix(c, "#000000", 0.55);
+  const ink = "#17130E";
+  const paid = opts.tier === 1;
+  const pwr = tcgData[opts.personaKey].power + (paid ? 30 : 0);
+  const persona = personaConfig[opts.personaKey].title.toUpperCase();
+  const name = escapeXml(opts.name);
+  const overlays = paid
+    ? '<rect x="6" y="6" width="408" height="582" rx="26" fill="url(#holo)" opacity="0.20"/><rect x="6" y="6" width="408" height="582" rx="26" fill="url(#sheen)" opacity="0.5"/>'
+    : '<rect x="6" y="6" width="408" height="582" rx="26" fill="url(#sheen)" opacity="0.28"/>';
   return '<svg xmlns="http://www.w3.org/2000/svg" width="840" height="1188" viewBox="0 0 420 594">'
-    + '<defs><linearGradient id="shine" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff" stop-opacity=".5"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#26301b" stop-opacity=".13"/></linearGradient>'
-    + '<linearGradient id="holo" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ff8a8a"/><stop offset=".25" stop-color="#ffd98a"/><stop offset=".5" stop-color="#a8ffb0"/><stop offset=".75" stop-color="#8ac6ff"/><stop offset="1" stop-color="#d38aff"/></linearGradient></defs>'
-    + '<rect width="420" height="594" rx="18" fill="' + color.hex + '"/><rect width="420" height="594" rx="18" fill="url(#shine)"/>' + frame
-    + '<text x="26" y="42" font-family="Arial,sans-serif" font-size="13" font-weight="700" letter-spacing="3" fill="' + ink + '">&#10035; AGENT CARD</text>'
-    + '<text x="394" y="42" text-anchor="end" font-family="monospace" font-size="12" letter-spacing="2" fill="' + ink + '" fill-opacity=".75">' + escapeXml(editionName(tier)) + "</text>"
-    + '<text x="26" y="80" font-family="Arial,sans-serif" font-size="' + nameSize + '" font-weight="700" fill="' + ink + '">' + label + "</text>"
-    + '<text x="330" y="80" text-anchor="end" font-family="Arial,sans-serif" font-size="13" fill="' + ink + '" fill-opacity=".75">PWR</text>'
-    + '<text x="394" y="80" text-anchor="end" font-family="Arial,sans-serif" font-size="26" font-weight="700" fill="' + ink + '">' + (data.power + (tier === 1 ? 30 : 0)) + "</text>"
-    + '<rect x="24" y="112" width="372" height="220" rx="10" fill="' + ink + '" fill-opacity=".1"/>' + artOverlay
-    + '<rect x="24" y="112" width="372" height="220" rx="10" fill="none" stroke="' + ink + '" stroke-opacity=".4" stroke-width="1.5"/>'
-    + '<g color="' + ink + '" transform="translate(135 142) scale(1.5)">' + mark + "</g>"
-    + '<rect x="24" y="348" width="372" height="58" rx="8" fill="' + ink + '" fill-opacity=".09"/>'
-    + '<text x="38" y="373" font-family="monospace" font-size="10" letter-spacing="2" fill="' + ink + '" fill-opacity=".65">ABILITY</text>'
-    + '<text x="102" y="374" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="' + ink + '">' + escapeXml(data.ability) + "</text>"
-    + '<text x="38" y="394" font-family="Arial,sans-serif" font-size="12.5" fill="' + ink + '" fill-opacity=".85">' + escapeXml(data.abilityText) + "</text>"
-    + dots(441, 2)
-    + '<text x="84" y="448" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="' + ink + '">' + escapeXml(data.moves[0][0]) + "</text>"
-    + '<text x="394" y="449" text-anchor="end" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="' + ink + '">' + data.moves[0][1] + "</text>"
-    + '<line x1="24" y1="464" x2="396" y2="464" stroke="' + ink + '" stroke-opacity=".2"/>'
-    + dots(489, 3)
-    + '<text x="102" y="496" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="' + ink + '">' + escapeXml(data.moves[1][0]) + "</text>"
-    + '<text x="394" y="497" text-anchor="end" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="' + ink + '">' + data.moves[1][1] + "</text>"
-    + '<text x="24" y="530" font-family="Arial,sans-serif" font-size="10.5" fill="' + ink + '" fill-opacity=".6">Weakness: Glitch &#183; Resistance: None &#183; Retreat: 1</text>'
-    + '<text x="24" y="560" font-family="monospace" font-size="12.5" fill="' + ink + '">No. ' + pad4(tokenId) + " / 10000</text>"
-    + '<text x="394" y="560" text-anchor="end" font-family="monospace" font-size="12.5" letter-spacing="2" fill="' + ink + '">' + role + "</text>"
-    + '<text x="24" y="582" font-family="monospace" font-size="8" fill="' + ink + '" fill-opacity=".5">BNB CHAIN COLLECTIBLE - NOT AN OFFICIAL BINANCE AGENT ID</text>'
+    + '<defs>'
+    + '<linearGradient id="metal" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="' + L1 + '"/><stop offset="0.2" stop-color="' + c + '"/><stop offset="0.42" stop-color="' + D1 + '"/><stop offset="0.62" stop-color="' + L2 + '"/><stop offset="0.82" stop-color="' + D2 + '"/><stop offset="1" stop-color="' + L1 + '"/></linearGradient>'
+    + '<linearGradient id="sheen" x1="0" y1="0" x2="0.7" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0.55"/><stop offset="0.45" stop-color="#ffffff" stop-opacity="0.05"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>'
+    + '<linearGradient id="holo" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff5f6d"/><stop offset="0.25" stop-color="#ffc371"/><stop offset="0.5" stop-color="#8aff80"/><stop offset="0.75" stop-color="#4dc9ff"/><stop offset="1" stop-color="#b18cff"/></linearGradient>'
+    + '<linearGradient id="chip" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4a4a55"/><stop offset="0.5" stop-color="#1b1b21"/><stop offset="1" stop-color="#3d3d47"/></linearGradient>'
+    + '<pattern id="brush" width="3" height="3" patternUnits="userSpaceOnUse"><line x1="0" y1="0.5" x2="3" y2="0.5" stroke="#ffffff" stroke-opacity="0.05"/><line x1="0" y1="2" x2="3" y2="2" stroke="#000000" stroke-opacity="0.05"/></pattern>'
+    + '<clipPath id="artClip"><rect x="24" y="80" width="372" height="252" rx="14"/></clipPath>'
+    + '</defs>'
+    + '<rect x="6" y="6" width="408" height="582" rx="26" fill="url(#metal)"/>'
+    + '<rect x="6" y="6" width="408" height="582" rx="26" fill="url(#brush)"/>'
+    + overlays
+    + '<g stroke="#ffffff" stroke-opacity="0.06" fill="none"><circle cx="368" cy="96" r="34"/><circle cx="368" cy="96" r="58"/><circle cx="368" cy="96" r="82"/><circle cx="368" cy="96" r="106"/></g>'
+    + '<rect x="14" y="14" width="392" height="566" rx="20" fill="none" stroke="#ffffff" stroke-opacity="0.38" stroke-width="1.5"/>'
+    + '<rect x="6" y="6" width="408" height="582" rx="26" fill="none" stroke="#000000" stroke-opacity="0.45" stroke-width="2"/>'
+    + '<text x="30" y="54" font-family="Arial, sans-serif" font-size="12.5" font-weight="700" letter-spacing="3.5" fill="' + ink + '" fill-opacity="0.88">AGENT CARD</text>'
+    + '<text x="390" y="54" text-anchor="end" font-family="Arial, sans-serif" font-size="11.5" font-weight="700" letter-spacing="2" fill="' + ink + '" fill-opacity="0.88">' + (paid ? "&#9733; RARE HOLO" : "&#9679; COMMON") + '</text>'
+    + '<rect x="30" y="66" width="360" height="1.4" fill="#000000" fill-opacity="0.28"/><rect x="30" y="67.6" width="360" height="1" fill="#ffffff" fill-opacity="0.35"/>'
+    + '<g clip-path="url(#artClip)"><image href="' + opts.artHref + '" x="24" y="80" width="372" height="252" preserveAspectRatio="xMidYMid slice"/><rect x="24" y="80" width="372" height="110" fill="#ffffff" opacity="0.07"/></g>'
+    + '<rect x="24" y="80" width="372" height="252" rx="14" fill="none" stroke="#000000" stroke-opacity="0.5" stroke-width="2.5"/>'
+    + '<rect x="27.5" y="83.5" width="365" height="245" rx="11" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="1"/>'
+    + '<g transform="translate(30,354)"><rect width="52" height="38" rx="7" fill="url(#chip)"/><path d="M0 13 H52 M0 25 H52 M17 0 V38 M35 0 V38" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.4" fill="none"/><rect width="52" height="38" rx="7" fill="none" stroke="#ffffff" stroke-opacity="0.25"/></g>'
+    + '<text x="390" y="378" text-anchor="end" font-family="Arial, sans-serif" font-size="11" font-weight="700" letter-spacing="2.4" fill="' + ink + '" fill-opacity="0.8">' + (paid ? "PAID EDITION" : "FREE EDITION") + '</text>'
+    + '<text x="29" y="449" font-family="Arial, sans-serif" font-size="31" font-weight="800" letter-spacing="0.5" fill="#ffffff" fill-opacity="0.35">' + name + '</text>'
+    + '<text x="28" y="448" font-family="Arial, sans-serif" font-size="31" font-weight="800" letter-spacing="0.5" fill="' + ink + '">' + name + '</text>'
+    + '<text x="29" y="482" font-family="Arial, sans-serif" font-size="12" font-weight="700" letter-spacing="2.6" fill="' + ink + '" fill-opacity="0.75">' + persona + ' &#183; PWR ' + pwr + '</text>'
+    + '<rect x="30" y="502" width="360" height="1.2" fill="#000000" fill-opacity="0.22"/><rect x="30" y="503.4" width="360" height="1" fill="#ffffff" fill-opacity="0.3"/>'
+    + '<text x="30" y="540" font-family="Arial, sans-serif" font-size="13.5" font-weight="700" letter-spacing="1.6" fill="' + ink + '" fill-opacity="0.88">No. ' + pad4(opts.serial) + ' / 10000</text>'
+    + '<text x="390" y="540" text-anchor="end" font-family="Arial, sans-serif" font-size="12" font-weight="700" letter-spacing="2.2" fill="' + ink + '" fill-opacity="0.8">BNB CHAIN</text>'
+    + '<text x="210" y="570" text-anchor="middle" font-family="Arial, sans-serif" font-size="7.5" letter-spacing="1.4" fill="' + ink + '" fill-opacity="0.55">COLLECTIBLE CARD &#183; NOT AN OFFICIAL BINANCE AGENT ID</text>'
     + "</svg>";
+}
+
+function buildCardSvg(tokenId, artHref) {
+  const tier = mintedResult ? mintedResult.tier : state.tier;
+  return buildMetalSvg({
+    name: state.name,
+    personaKey: state.persona,
+    colorHex: colorConfig[state.color].hex,
+    tier: tier,
+    serial: tokenId,
+    artHref: artHref || artPath(state.persona),
+  });
+}
+
+function blobToDataUrl(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
 }
 
 async function downloadCard() {
   const tokenId = mintedResult ? mintedResult.tokenId : (chainState.totalMinted != null ? chainState.totalMinted + 1 : 1);
-  let svg = null;
-  if (mintedResult && readContract) {
-    try {
-      const meta = decodeTokenUri(await readContract.tokenURI(mintedResult.tokenId));
-      if (meta && typeof meta.image === "string" && meta.image.startsWith("data:image/svg+xml;base64,")) {
-        const b64img = meta.image.split(",")[1];
-        svg = new TextDecoder().decode(Uint8Array.from(atob(b64img), (ch) => ch.charCodeAt(0)));
-      }
-    } catch (e) { /* fallback ke gambar studio di bawah */ }
-  }
-  if (!svg) svg = buildCardSvg(tokenId);
+  let artUri = artPath(state.persona);
+  try {
+    const resp = await fetch(artUri);
+    if (resp.ok) artUri = await blobToDataUrl(await resp.blob());
+  } catch (e) { /* pakai path relatif sebagai fallback */ }
+  const svg = buildCardSvg(tokenId, artUri);
   const blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
   const url = URL.createObjectURL(blob);
   try {
@@ -844,9 +869,9 @@ async function downloadCard() {
 
 function shareText() {
   if (mintedResult) {
-    return "Aku baru saja mint Agent Card #" + pad4(mintedResult.tokenId) + " (" + state.name + ", " + personaConfig[state.persona].title + ") di BNB Chain — metadata 100% on-chain. Bukan Agent ID resmi Binance. Bukti mint: " + explorerTx(mintedResult.txHash);
+    return "Aku baru saja mint Agent Card #" + pad4(mintedResult.tokenId) + " (" + state.name + ", " + personaConfig[state.persona].title + ") di BNB Chain — data kartu tersimpan on-chain. Bukan Agent ID resmi Binance. Bukti mint: " + explorerTx(mintedResult.txHash);
   }
-  return "Aku merancang kartu Agent ID " + state.name + " (" + personaConfig[state.persona].title + ") di Agent Card Studio — mint NFT koleksi di BNB Chain, metadata 100% on-chain. Bukan Agent ID resmi Binance.";
+  return "Aku merancang kartu Agent ID " + state.name + " (" + personaConfig[state.persona].title + ") di Agent Card Studio — mint NFT koleksi di BNB Chain, data kartu tersimpan on-chain. Bukan Agent ID resmi Binance.";
 }
 
 async function shareCard() {
