@@ -193,7 +193,7 @@ contract AgentCard {
         string memory styleLabel = card.style == 0 ? "Guardian" : card.style == 1 ? "Builder" : "Explorer";
         string memory editionLabel = card.tier == TIER_PAID ? "Paid Edition" : "Free Edition";
         string memory rarityLabel = card.tier == TIER_PAID ? "Rare Holo" : "Common";
-        string memory svg = _buildSvg(tokenId, card, styleLabel);
+        string memory svg = _buildSvg(tokenId, card);
         string memory json = string(
             abi.encodePacked(
                 '{"name":"Agent Card #',
@@ -250,26 +250,72 @@ contract AgentCard {
         return "18";
     }
 
-    function _emblem(uint8 style, string memory colorHex) internal pure returns (string memory) {
+    function _stars() internal pure returns (string memory) {
+        return
+            '<circle cx="52" cy="126" r="1.8" fill="#fff" fill-opacity="0.9"/><circle cx="150" cy="118" r="1.5" fill="#fff" fill-opacity="0.8"/><circle cx="392" cy="182" r="1.2" fill="#fff" fill-opacity="0.5"/><circle cx="70" cy="222" r="1.1" fill="#fff" fill-opacity="0.5"/><path d="M120 134 l1.8 4.2 4.2 1.8 -4.2 1.8 -1.8 4.2 -1.8 -4.2 -4.2 -1.8 4.2 -1.8 z" fill="#fff" fill-opacity="0.85"/>';
+    }
+
+    function _scene(uint8 style, string memory colorHex) internal pure returns (string memory) {
         if (style == 0) {
             return
                 string(
                     abi.encodePacked(
-                        '<path d="M210 128 L282 156 V232 C282 292 248 322 210 340 C172 322 138 292 138 232 V156 Z" fill="#ffffff" fill-opacity="0.92"/>',
-                        '<path d="M210 147 L263 168 V229 C263 277 240 301 210 315 C180 301 157 277 157 229 V168 Z" fill="',
+                        _stars(),
+                        '<circle cx="318" cy="152" r="52" fill="url(#glow)"/><circle cx="318" cy="152" r="30" fill="#fef3c7"/><circle cx="308" cy="144" r="5" fill="#fde68a" fill-opacity="0.7"/>',
+                        '<path d="M24 336 L110 238 L180 300 L248 226 L330 302 L396 252 L396 336 Z" fill="#2a1660"/>',
+                        '<path d="M24 336 L84 272 L160 322 L232 268 L310 326 L396 284 L396 336 Z" fill="#150830"/>',
+                        '<ellipse cx="150" cy="318" rx="62" ry="10" fill="#000" fill-opacity="0.35"/>',
+                        '<path d="M150 138 L216 162 V234 C216 288 184 314 150 330 C116 314 84 288 84 234 V162 Z" fill="url(#crest)"/>',
+                        '<path d="M150 156 L198 174 V232 C198 274 176 296 150 308 C124 296 102 274 102 232 V174 Z" fill="',
                         colorHex,
-                        '" fill-opacity="0.6"/>'
+                        '"/>',
+                        '<circle cx="150" cy="228" r="13" fill="#fbbf24"/><circle cx="150" cy="228" r="13" fill="none" stroke="#fff7ed" stroke-width="2"/>',
+                        '<path d="M150 219 L153 225 L159 225 L154 229 L156 236 L150 232 L144 236 L146 229 L141 225 L147 225 Z" fill="#fff7ed"/>'
                     )
                 );
         }
         if (style == 1) {
             return
-                '<path d="M210 132 L288 174 L210 216 L132 174 Z" fill="#ffffff" fill-opacity="0.95"/><path d="M132 174 L210 216 V300 L132 258 Z" fill="#ffffff" fill-opacity="0.5"/><path d="M288 174 L210 216 V300 L288 258 Z" fill="#ffffff" fill-opacity="0.72"/>';
+                string(
+                    abi.encodePacked(
+                        '<circle cx="70" cy="128" r="1.5" fill="#fff" fill-opacity="0.7"/><circle cx="356" cy="120" r="1.4" fill="#fff" fill-opacity="0.65"/>',
+                        '<circle cx="302" cy="312" r="58" fill="url(#glow)"/><circle cx="302" cy="316" r="40" fill="#fdba74"/><circle cx="302" cy="316" r="29" fill="#ffedd5"/>',
+                        '<path d="M24 336 V250 h40 v86 Z M94 336 v-68 h30 v68 Z M174 336 v-78 h36 v78 Z M274 336 v-64 h30 v64 Z M340 336 v-90 h56 v90 Z" fill="#3b1154"/>',
+                        '<path d="M40 336 v-54 h34 v54 Z M104 336 v-44 h44 v44 Z M196 336 v-58 h30 v58 Z M286 336 v-40 h40 v40 Z M356 336 v-48 h28 v48 Z" fill="#180726"/>',
+                        '<path d="M50 296 h5 v7 h-5 Z M61 312 h5 v7 h-5 Z M113 304 h5 v7 h-5 Z M205 290 h5 v7 h-5 Z M364 300 h5 v7 h-5 Z" fill="#fbbf24" fill-opacity="0.9"/>',
+                        '<circle cx="150" cy="205" r="60" fill="url(#glow)"/>',
+                        '<path d="M150 148 L204 176 L150 204 L96 176 Z" fill="#fff7ed"/>',
+                        '<path d="M96 176 L150 204 V262 L96 234 Z" fill="',
+                        colorHex,
+                        '"/>',
+                        '<path d="M204 176 L150 204 V262 L204 234 Z" fill="#fed7aa"/>',
+                        '<path d="M150 168 L172 179 L150 190 L128 179 Z" fill="',
+                        colorHex,
+                        '" fill-opacity="0.65"/>',
+                        '<path d="M272 152 L290 162 L272 172 L254 162 Z" fill="#fff7ed"/><path d="M254 162 L272 172 V190 L254 180 Z" fill="',
+                        colorHex,
+                        '" fill-opacity="0.85"/><path d="M290 162 L272 172 V190 L290 180 Z" fill="#fed7aa"/>'
+                    )
+                );
         }
-        return '<path d="M210 122 L230 188 L296 208 L230 228 L210 294 L190 228 L124 208 L190 188 Z" fill="#ffffff" fill-opacity="0.93"/>';
+        return
+            string(
+                abi.encodePacked(
+                    _stars(),
+                    '<ellipse cx="92" cy="152" rx="46" ry="12" fill="none" stroke="#bae6fd" stroke-width="3" stroke-opacity="0.8" transform="rotate(-16 92 152)"/>',
+                    '<circle cx="92" cy="152" r="27" fill="url(#planet)"/>',
+                    '<circle cx="330" cy="128" r="12" fill="url(#glow)"/><path d="M330 128 L392 100 L386 122 L338 140 Z" fill="#a5f3fc" fill-opacity="0.55"/><circle cx="330" cy="128" r="4.5" fill="#fff"/>',
+                    '<circle cx="215" cy="212" r="54" fill="url(#glow)"/>',
+                    '<path d="M215 148 L230 194 L276 210 L230 226 L215 272 L200 226 L154 210 L200 194 Z" fill="url(#crest)"/>',
+                    '<path d="M215 186 L221 202 L237 208 L221 214 L215 230 L209 214 L193 208 L209 202 Z" fill="',
+                    colorHex,
+                    '"/>',
+                    '<path d="M24 336 V306 C110 288 180 318 260 304 C320 294 360 306 396 298 V336 Z" fill="#04122e"/>'
+                )
+            );
     }
 
-    function _buildSvg(uint256 tokenId, Card storage card, string memory styleLabel) internal view returns (string memory) {
+    function _buildSvg(uint256 tokenId, Card storage card) internal view returns (string memory) {
         bool paid = card.tier == TIER_PAID;
         (string memory abilityName, string memory line1, string memory line2) = _ability(card.style);
         (string memory m1, string memory d1, string memory m2, string memory d2) = _moves(card.style);
@@ -280,44 +326,70 @@ contract AgentCard {
                     "<defs>",
                     '<linearGradient id="fr" x1="0" y1="0" x2="0" y2="1">',
                     paid
-                        ? '<stop offset="0" stop-color="#f9e08a"/><stop offset="0.5" stop-color="#caa12f"/><stop offset="1" stop-color="#f9e08a"/>'
-                        : '<stop offset="0" stop-color="#e8ecf1"/><stop offset="1" stop-color="#9aa3ad"/>',
+                        ? '<stop offset="0" stop-color="#fff3c4"/><stop offset="0.5" stop-color="#f59e0b"/><stop offset="1" stop-color="#ff7847"/>'
+                        : '<stop offset="0" stop-color="#eafcff"/><stop offset="0.5" stop-color="#67e8f9"/><stop offset="1" stop-color="#f0fdff"/>',
                     "</linearGradient>",
-                    '<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">',
-                    '<stop offset="0" stop-color="',
+                    '<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#150a33"/><stop offset="1" stop-color="#070313"/></linearGradient>',
+                    '<radialGradient id="amb" cx="0.5" cy="0" r="1.1"><stop offset="0" stop-color="',
                     card.colorHex,
-                    paid ? '"/><stop offset="1" stop-color="#05070a"/></linearGradient>' : '"/><stop offset="1" stop-color="#0d1117"/></linearGradient>',
-                    '<linearGradient id="art" x1="0" y1="0" x2="1" y2="1">',
-                    '<stop offset="0" stop-color="',
+                    '" stop-opacity="0.4"/><stop offset="1" stop-color="',
                     card.colorHex,
-                    '"/><stop offset="1" stop-color="#05070a"/></linearGradient>',
+                    '" stop-opacity="0"/></radialGradient>',
+                    '<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">',
+                    card.style == 0
+                        ? '<stop offset="0" stop-color="#160b36"/><stop offset="0.62" stop-color="#4c1d95"/><stop offset="1" stop-color="#9333ea"/>'
+                        : card.style == 1
+                            ? '<stop offset="0" stop-color="#2a0a3a"/><stop offset="0.55" stop-color="#8e2a5c"/><stop offset="1" stop-color="#f97316"/>'
+                            : '<stop offset="0" stop-color="#020617"/><stop offset="0.6" stop-color="#1e3a8a"/><stop offset="1" stop-color="#0369a1"/>',
+                    "</linearGradient>",
+                    '<radialGradient id="glow" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#fff7e0" stop-opacity="0.85"/><stop offset="1" stop-color="#fff7e0" stop-opacity="0"/></radialGradient>',
+                    '<radialGradient id="planet" cx="0.35" cy="0.35" r="0.9"><stop offset="0" stop-color="#bae6fd"/><stop offset="1" stop-color="#2563eb"/></radialGradient>',
+                    '<linearGradient id="crest" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#c7d2fe"/></linearGradient>',
+                    '<linearGradient id="nameGrad" x1="0" y1="0" x2="0" y2="1">',
+                    paid
+                        ? '<stop offset="0" stop-color="#fffbe8"/><stop offset="1" stop-color="#f5d67a"/></linearGradient>'
+                        : '<stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#a5f3fc"/></linearGradient>',
                     '<linearGradient id="holo" x1="0" y1="0" x2="1" y2="1">',
                     '<stop offset="0" stop-color="#ff8a8a"/><stop offset="0.25" stop-color="#ffd98a"/><stop offset="0.5" stop-color="#a8ffb0"/><stop offset="0.75" stop-color="#8ac6ff"/><stop offset="1" stop-color="#d38aff"/></linearGradient>',
+                    '<radialGradient id="orb" cx="0.35" cy="0.35" r="0.9"><stop offset="0" stop-color="#ffffff"/><stop offset="0.55" stop-color="',
+                    card.colorHex,
+                    '"/><stop offset="1" stop-color="',
+                    card.colorHex,
+                    '"/></radialGradient>',
+                    '<clipPath id="win"><rect x="24" y="98" width="372" height="238" rx="10"/></clipPath>',
                     "</defs>",
                     '<rect width="420" height="594" rx="18" fill="url(#fr)"/>',
+                    '<rect x="4" y="4" width="412" height="586" rx="15" fill="none" stroke="url(#fr)" stroke-opacity="0.45" stroke-width="2"/>',
                     '<rect x="10" y="10" width="400" height="574" rx="12" fill="url(#bg)"/>',
+                    '<rect x="10" y="10" width="400" height="574" rx="12" fill="url(#amb)"/>',
                     '<text x="26" y="42" font-family="monospace" font-size="11" letter-spacing="3" fill="#ffffff" fill-opacity="0.75">AGENT CARD &#183; BASIC</text>',
                     '<text x="26" y="82" font-family="sans-serif" font-weight="bold" font-size="',
                     _nameSize(bytes(card.agentName).length),
-                    '" fill="#ffffff">',
+                    '" fill="url(#nameGrad)">',
                     card.agentName,
                     "</text>",
+                    '<rect x="26" y="90" width="64" height="3" rx="1.5" fill="url(#fr)"/>',
                     '<text x="334" y="82" text-anchor="end" font-family="sans-serif" font-size="13" fill="#ffffff" fill-opacity="0.8">PWR</text>',
-                    '<text x="394" y="82" text-anchor="end" font-family="sans-serif" font-size="26" font-weight="bold" fill="#ffffff">',
+                    '<text x="394" y="82" text-anchor="end" font-family="sans-serif" font-size="26" font-weight="bold" fill="url(#nameGrad)">',
                     _toString(_power(card.style, card.tier)),
                     "</text>",
-                    '<rect x="24" y="98" width="372" height="238" rx="10" fill="url(#art)"/>',
+                    '<g clip-path="url(#win)">',
+                    '<rect x="24" y="98" width="372" height="238" fill="url(#sky)"/>',
+                    '<rect x="24" y="98" width="372" height="238" fill="',
+                    card.colorHex,
+                    '" fill-opacity="0.12"/>',
+                    _scene(card.style, card.colorHex),
                     paid
-                        ? '<rect x="24" y="98" width="372" height="238" rx="10" fill="url(#holo)" fill-opacity="0.38"/>'
-                        : '<path d="M24 336 L240 98 L330 98 L114 336 Z" fill="#ffffff" fill-opacity="0.08"/>',
-                    '<rect x="24" y="98" width="372" height="238" rx="10" fill="none" stroke="#ffffff" stroke-opacity="0.4" stroke-width="1.5"/>',
-                    '<g transform="translate(0,-10)">',
-                    _emblem(card.style, card.colorHex),
+                        ? '<rect x="24" y="98" width="372" height="238" fill="url(#holo)" fill-opacity="0.3"/>'
+                        : '<path d="M24 336 L240 98 L330 98 L114 336 Z" fill="#ffffff" fill-opacity="0.06"/>',
                     "</g>",
-                    paid
-                        ? '<path d="M352 118 l4.5 11.5 11.5 4.5 -11.5 4.5 -4.5 11.5 -4.5 -11.5 -11.5 -4.5 11.5 -4.5 z" fill="#ffffff" fill-opacity="0.95"/><circle cx="66" cy="300" r="3" fill="#ffffff" fill-opacity="0.85"/><circle cx="330" cy="290" r="2.4" fill="#ffffff" fill-opacity="0.7"/>'
-                        : "",
-                    '<rect x="24" y="352" width="372" height="66" rx="8" fill="#ffffff" fill-opacity="0.08"/>',
+                    '<rect x="24" y="98" width="372" height="238" rx="10" fill="none" stroke="url(#fr)" stroke-opacity="0.65" stroke-width="1.5"/>',
+                    '<rect x="24" y="352" width="372" height="66" rx="8" fill="#000000" fill-opacity="0.32"/>',
+                    '<rect x="24" y="352" width="372" height="66" rx="8" fill="none" stroke="',
+                    paid ? "#f5d67a" : "#a5f3fc",
+                    '" stroke-opacity="',
+                    paid ? "0.55" : "0.35",
+                    '"/>',
                     '<text x="38" y="380" font-family="monospace" font-size="10.5" letter-spacing="2" fill="#f5d67a">ABILITY</text>',
                     '<text x="112" y="381" font-family="sans-serif" font-weight="bold" font-size="16.5" fill="#ffffff">',
                     abilityName,
@@ -328,26 +400,16 @@ contract AgentCard {
                     '<text x="38" y="418" font-family="sans-serif" font-size="12" fill="#ffffff" fill-opacity="0.82">',
                     line2,
                     "</text>",
-                    '<circle cx="40" cy="452" r="7" fill="',
-                    card.colorHex,
-                    '"/><circle cx="60" cy="452" r="7" fill="',
-                    card.colorHex,
-                    '"/>',
-                    '<text x="82" y="459" font-family="sans-serif" font-weight="bold" font-size="17" fill="#ffffff">',
+                    '<circle cx="40" cy="452" r="7.5" fill="url(#orb)"/><circle cx="61" cy="452" r="7.5" fill="url(#orb)"/>',
+                    '<text x="84" y="459" font-family="sans-serif" font-weight="bold" font-size="17" fill="#ffffff">',
                     m1,
                     "</text>",
                     '<text x="394" y="460" text-anchor="end" font-family="sans-serif" font-weight="bold" font-size="20" fill="#ffffff">',
                     d1,
                     "</text>",
-                    '<line x1="24" y1="476" x2="396" y2="476" stroke="#ffffff" stroke-opacity="0.15"/>',
-                    '<circle cx="40" cy="500" r="7" fill="',
-                    card.colorHex,
-                    '"/><circle cx="60" cy="500" r="7" fill="',
-                    card.colorHex,
-                    '"/><circle cx="80" cy="500" r="7" fill="',
-                    card.colorHex,
-                    '"/>',
-                    '<text x="102" y="507" font-family="sans-serif" font-weight="bold" font-size="17" fill="#ffffff">',
+                    '<line x1="24" y1="476" x2="396" y2="476" stroke="url(#fr)" stroke-opacity="0.35"/>',
+                    '<circle cx="40" cy="500" r="7.5" fill="url(#orb)"/><circle cx="61" cy="500" r="7.5" fill="url(#orb)"/><circle cx="82" cy="500" r="7.5" fill="url(#orb)"/>',
+                    '<text x="104" y="507" font-family="sans-serif" font-weight="bold" font-size="17" fill="#ffffff">',
                     m2,
                     "</text>",
                     '<text x="394" y="508" text-anchor="end" font-family="sans-serif" font-weight="bold" font-size="20" fill="#ffffff">',
@@ -360,7 +422,7 @@ contract AgentCard {
                     " / 10000</text>",
                     paid
                         ? '<text x="252" y="566" text-anchor="middle" font-family="monospace" font-size="12" font-weight="bold" fill="#f5d67a">PAID EDITION &#9733;</text><text x="396" y="566" text-anchor="end" font-family="monospace" font-size="11.5" fill="#f5d67a">&#9733; RARE HOLO</text>'
-                        : '<text x="252" y="566" text-anchor="middle" font-family="monospace" font-size="12" fill="#cfd4dc">FREE EDITION</text><text x="396" y="566" text-anchor="end" font-family="monospace" font-size="11.5" fill="#cfd4dc">&#9679; COMMON</text>',
+                        : '<text x="252" y="566" text-anchor="middle" font-family="monospace" font-size="12" fill="#a5f3fc">FREE EDITION</text><text x="396" y="566" text-anchor="end" font-family="monospace" font-size="11.5" fill="#a5f3fc">&#9679; COMMON</text>',
                     '<text x="24" y="581" font-family="monospace" font-size="8" fill="#ffffff" fill-opacity="0.45">BNB CHAIN COLLECTIBLE - NOT AN OFFICIAL BINANCE AGENT ID</text>',
                     "</svg>"
                 )
