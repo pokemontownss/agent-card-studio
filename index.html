@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f5f4ef" />
+  <meta name="description" content="Rancang kartu Agent ID dan mint sebagai NFT koleksi asli di BNB Chain. Metadata 100% on-chain, pembayaran BNB final." />
+  <meta property="og:title" content="Agent Card Studio — Kartu Agent ID" />
+  <meta property="og:description" content="Rancang kartu Agent ID, lalu mint sebagai NFT koleksi di BNB Chain. Metadata tersimpan 100% on-chain — bukan Agent ID resmi Binance." />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="id_ID" />
+  <meta property="og:image" content="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDk2IDk2Ij4KICA8cmVjdCB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHJ4PSIyNCIgZmlsbD0iI2Y1ZjRlZiIvPgogIDxnIGZpbGw9IiMyMDIzMWYiIHRyYW5zZm9ybT0icm90YXRlKC0xMCA0OCA0OCkiPgogICAgPHJlY3QgeD0iMjQiIHk9IjQ0IiB3aWR0aD0iMTIiIGhlaWdodD0iMjgiIHJ4PSI2Ii8+CiAgICA8cmVjdCB4PSI0MiIgeT0iMjYiIHdpZHRoPSIxMiIgaGVpZ2h0PSI0NiIgcng9IjYiLz4KICAgIDxyZWN0IHg9IjYwIiB5PSIzNiIgd2lkdGg9IjEyIiBoZWlnaHQ9IjM2IiByeD0iNiIvPgogIDwvZz4KICA8Y2lyY2xlIGN4PSI3NCIgY3k9IjI0IiByPSI3IiBmaWxsPSIjZDVmYTYxIi8+Cjwvc3ZnPgo=" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Agent Card Studio — Kartu Agent ID" />
+  <meta name="twitter:description" content="Mint kartu Agent ID sebagai NFT koleksi di BNB Chain. Metadata 100% on-chain." />
+  <title>Agent Card Studio — Kartu Agent ID</title>
+  <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDk2IDk2Ij4KICA8cmVjdCB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHJ4PSIyNCIgZmlsbD0iI2Y1ZjRlZiIvPgogIDxnIGZpbGw9IiMyMDIzMWYiIHRyYW5zZm9ybT0icm90YXRlKC0xMCA0OCA0OCkiPgogICAgPHJlY3QgeD0iMjQiIHk9IjQ0IiB3aWR0aD0iMTIiIGhlaWdodD0iMjgiIHJ4PSI2Ii8+CiAgICA8cmVjdCB4PSI0MiIgeT0iMjYiIHdpZHRoPSIxMiIgaGVpZ2h0PSI0NiIgcng9IjYiLz4KICAgIDxyZWN0IHg9IjYwIiB5PSIzNiIgd2lkdGg9IjEyIiBoZWlnaHQ9IjM2IiByeD0iNiIvPgogIDwvZz4KICA8Y2lyY2xlIGN4PSI3NCIgY3k9IjI0IiByPSI3IiBmaWxsPSIjZDVmYTYxIi8+Cjwvc3ZnPgo=" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDk2IDk2Ij4KICA8cmVjdCB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHJ4PSIyNCIgZmlsbD0iI2Y1ZjRlZiIvPgogIDxnIGZpbGw9IiMyMDIzMWYiIHRyYW5zZm9ybT0icm90YXRlKC0xMCA0OCA0OCkiPgogICAgPHJlY3QgeD0iMjQiIHk9IjQ0IiB3aWR0aD0iMTIiIGhlaWdodD0iMjgiIHJ4PSI2Ii8+CiAgICA8cmVjdCB4PSI0MiIgeT0iMjYiIHdpZHRoPSIxMiIgaGVpZ2h0PSI0NiIgcng9IjYiLz4KICAgIDxyZWN0IHg9IjYwIiB5PSIzNiIgd2lkdGg9IjEyIiBoZWlnaHQ9IjM2IiByeD0iNiIvPgogIDwvZz4KICA8Y2lyY2xlIGN4PSI3NCIgY3k9IjI0IiByPSI3IiBmaWxsPSIjZDVmYTYxIi8+Cjwvc3ZnPgo=" />
+  <script>window.__loadEthersFallback=function(){var s=document.createElement('script');s.src='https://unpkg.com/ethers@6.13.4/dist/ethers.umd.min.js';document.head.appendChild(s);};</script>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js" onerror="window.__loadEthersFallback()"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar" id="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="#top" aria-label="Agent Card Studio, ke atas">
+          <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="brand-name">agent<span>card</span></span>
+          <span class="brand-divider"></span>
+          <span class="brand-studio">STUDIO</span>
+        </a>
+        <nav class="topnav" aria-label="Navigasi utama">
+          <a class="nav-link" href="#top">BERANDA</a>
+          <a class="nav-link" href="#cara-kerja">CARA KERJA</a>
+          <a class="nav-link" href="#galeri">GALERI</a>
+          <a class="nav-link" href="#faq">FAQ</a>
+          <a class="nav-cta" href="#studio">BUAT KARTU →</a>
+        </nav>
+        <div class="topbar-actions">
+          <span class="demo-pill" id="chainStatusPill"><span class="status-dot"></span><span id="chainStatusText">BNB CHAIN · MEMERIKSA…</span></span>
+          <button class="wallet-button" id="walletButton" type="button">
+            <span class="wallet-icon" aria-hidden="true">◈</span>
+            <span id="walletButtonLabel">Hubungkan Wallet</span>
+          </button>
+          <a class="cta-button" href="#studio">Buat Kartu <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="hero-badge" id="heroBadge"><i aria-hidden="true"></i> BNB CHAIN · KONTRAK BELUM DITERBITKAN</p>
+          <p class="eyebrow"><span class="eyebrow-line"></span> IDENTITAS AGENT, JADI KARTU</p>
+          <h1 id="hero-title">Agent ID-mu pantas punya kartu sendiri.</h1>
+          <p class="hero-description">Rancang kartu koleksi dari nama Agent ID-mu — pilih persona, atur warna, lihat hasilnya seketika, lalu mint sebagai NFT di BNB Chain. Kartu dan metadatanya tersimpan on-chain, langsung masuk ke wallet-mu.</p>
+          <div class="hero-actions">
+            <a class="hero-cta" href="#studio" id="heroMainCta">Buat Kartumu di BNB Chain <span aria-hidden="true">→</span></a>
+            <a class="hero-cta-secondary" href="#galeri">Lihat Galeri <span aria-hidden="true">↓</span></a>
+          </div>
+          <p class="hero-hint" id="heroPriceNote">Kontrak belum diterbitkan — desain tetap bisa dicoba, mint dibuka setelah kontrak diterbitkan pemilik.</p>
+          <ul class="hero-trust" aria-label="Jaminan on-chain">
+            <li><span aria-hidden="true">✓</span> Metadata 100% on-chain</li>
+            <li><span aria-hidden="true">✓</span> Tanpa server gambar</li>
+            <li><span aria-hidden="true">✓</span> NFT masuk ke wallet Anda</li>
+          </ul>
+        </div>
+        <div class="hero-stage">
+          <div class="hero-float">
+            <div class="hero-tilt" id="heroTilt">
+              <div class="collectible-card theme-lime" id="heroCard" role="img" aria-label="Contoh kartu nara.ai, Guardian">
+                <span class="card-foil" aria-hidden="true"></span>
+                <div class="card-topline"><span class="card-brand"><span class="mini-mark">✳</span> AGENT CARD</span><span class="card-edition" id="heroEdition">GENESIS EDITION</span></div>
+                <span class="card-chip" aria-hidden="true">GENESIS</span>
+                <div class="card-artwork">
+                  <div class="card-halo"></div>
+                  <div class="card-orb orb-back"></div>
+                  <div class="card-orb orb-front"></div>
+                  <svg class="card-glyph" id="heroGlyph" viewBox="0 0 100 100" aria-hidden="true"></svg>
+                  <span class="art-coordinate">BNB<br />056</span>
+                </div>
+                <div class="card-bottomline"><div><span class="card-label">AGENT ID</span><strong id="heroCardName">nara.ai</strong><span class="card-serial" id="heroSerial">GENESIS EDITION · PRATINJAU</span></div><div class="card-role" id="heroCardRole">THE GUARDIAN</div></div>
+                <span class="card-watermark">AC</span>
+              </div>
+            </div>
+          </div>
+          <p class="hero-stage-caption"><span>COBA LANGSUNG DI SINI</span><span>GERAKKAN KURSOR / SENTUH KARTU</span></p>
+          <div class="hero-controls" aria-label="Coba desain kartu contoh">
+            <p class="hero-controls-label">COBA PERSONA &amp; WARNA — KARTU DI ATAS BERUBAH SEKETIKA</p>
+            <div class="hero-persona-row" role="group" aria-label="Pilih persona contoh">
+              <button type="button" class="hero-persona is-selected" data-persona="guardian" aria-pressed="true"><span aria-hidden="true">⬡</span> Guardian</button>
+              <button type="button" class="hero-persona" data-persona="builder" aria-pressed="false"><span aria-hidden="true">▧</span> Builder</button>
+              <button type="button" class="hero-persona" data-persona="explorer" aria-pressed="false"><span aria-hidden="true">✳</span> Explorer</button>
+            </div>
+            <div class="hero-color-row" role="group" aria-label="Pilih warna contoh">
+              <button class="color-swatch swatch-lime is-selected" type="button" data-color="lime" aria-label="Hijau limau" aria-pressed="true"></button>
+              <button class="color-swatch swatch-violet" type="button" data-color="violet" aria-label="Ungu" aria-pressed="false"></button>
+              <button class="color-swatch swatch-coral" type="button" data-color="coral" aria-label="Koral" aria-pressed="false"></button>
+              <button class="color-swatch swatch-blue" type="button" data-color="blue" aria-label="Biru" aria-pressed="false"></button>
+              <span class="color-name" id="heroColorName">Lime / 001</span>
+            </div>
+            <button class="hero-use" id="heroUseButton" type="button">Pakai desain ini di studio <span aria-hidden="true">→</span></button>
+          </div>
+        </div>
+      </section>
+
+      <section class="how" id="cara-kerja" aria-labelledby="how-title">
+        <div class="section-heading reveal">
+          <div>
+            <p class="eyebrow"><span class="eyebrow-line"></span> CARA KERJA</p>
+            <h2 id="how-title">Tiga langkah menuju kartu on-chain</h2>
+          </div>
+          <p class="section-note">Desain berjalan di browser;<br />mint dikirim lewat wallet-mu.</p>
+        </div>
+        <div class="how-grid">
+          <article class="how-card reveal">
+            <div class="how-top"><span class="how-number">LANGKAH 01</span><span class="how-glyph" aria-hidden="true">◈</span></div>
+            <h3>Hubungkan wallet</h3>
+            <p>Tekan tombol Hubungkan Wallet di atas dan setujui di wallet-mu. Pastikan jaringanmu BNB Smart Chain (56). Halaman ini tidak pernah meminta private key atau seed phrase.</p>
+          </article>
+          <article class="how-card reveal">
+            <div class="how-top"><span class="how-number">LANGKAH 02</span><span class="how-glyph" aria-hidden="true">✳</span></div>
+            <h3>Personalisasi kartu</h3>
+            <p>Tulis nama Agent ID, pilih persona Guardian, Builder, atau Explorer, lalu atur warnanya. Pratinjau berubah seketika.</p>
+          </article>
+          <article class="how-card reveal">
+            <div class="how-top"><span class="how-number">LANGKAH 03</span><span class="how-glyph" aria-hidden="true">↓</span></div>
+            <h3>Mint asli &amp; kartu masuk wallet</h3>
+            <p>Periksa harga mint live dari kontrak, setujui transaksi di wallet-mu, dan kartumu terbit sebagai NFT di BNB Chain — langsung masuk ke wallet-mu.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="reasons" id="kenapa" aria-labelledby="reasons-title">
+        <div class="section-heading reveal">
+          <div>
+            <p class="eyebrow"><span class="eyebrow-line"></span> KENAPA DI SINI</p>
+            <h2 id="reasons-title">Kenapa bikin kartu di sini?</h2>
+          </div>
+          <p class="section-note">Pratinjau desain gratis dicoba;<br />mint membayar harga kontrak + gas.</p>
+        </div>
+        <div class="reasons-grid">
+          <article class="reason-card reveal">
+            <span class="reason-icon" aria-hidden="true">◈</span>
+            <div><h3>Wallet-mu, milikmu</h3><p>Hubungkan wallet BNB Chain sungguhan dan mint dari alamatmu sendiri. Kartu yang terbit langsung menjadi milik wallet itu sebagai NFT.</p></div>
+          </article>
+          <article class="reason-card reveal">
+            <span class="reason-icon" aria-hidden="true">✦</span>
+            <div><h3>Desain instan, NFT &amp; PNG</h3><p>Setiap perubahan langsung terlihat di pratinjau. Setelah mint, kartumu juga tetap bisa diunduh sebagai PNG dan dibagikan ke teman.</p></div>
+          </article>
+          <article class="reason-card reveal">
+            <span class="reason-icon" aria-hidden="true">⬡</span>
+            <div><h3>Metadata 100% on-chain</h3><p>Tidak ada server gambar. Nama, persona, dan warna kartumu tersimpan di kontrak BNB Chain, dan gambar SVG-nya dirender langsung dari data on-chain itu.</p></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="studio" id="studio" aria-labelledby="studio-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow"><span class="eyebrow-line"></span> CARD BUILDER</p>
+            <h2 id="studio-title">Rancang versimu</h2>
+          </div>
+          <p class="section-note" id="studioNote">Kontrak belum diterbitkan.<br />Mint dibuka setelah diterbitkan pemilik.</p>
+        </div>
+
+        <div class="step-track" aria-label="Langkah pembuatan kartu">
+          <div class="step-item is-active" data-step="1"><span>01</span> PERSONA</div>
+          <span class="step-rule"></span>
+          <div class="step-item" data-step="2"><span>02</span> KONFIRMASI</div>
+          <span class="step-rule"></span>
+          <div class="step-item" data-step="3"><span>03</span> SELESAI</div>
+        </div>
+
+        <div class="editor-layout" id="editorView">
+          <div class="editor-panel">
+            <div class="form-block">
+              <div class="form-heading"><span class="form-index">01</span><div><h3>Identitas</h3><p>Nama ini tersimpan on-chain di NFT kartumu.</p></div></div>
+              <label class="field-label" for="agentName">NAMA AGENT ID</label>
+              <div class="name-field-wrap">
+                <input id="agentName" name="agentName" type="text" value="nara.ai" autocomplete="off" maxlength="32" aria-describedby="nameHelp nameError" />
+              </div>
+              <p class="field-hint" id="nameHelp">1–32 karakter. Hanya huruf, angka, spasi, titik, garis bawah, dan strip. Nama tersimpan persis seperti yang kamu tulis.</p>
+              <p class="field-error" id="nameError" aria-live="polite" hidden>Masukkan 1–32 karakter: huruf, angka, spasi, titik, garis bawah, atau strip saja.</p>
+            </div>
+
+            <div class="form-block">
+              <div class="form-heading"><span class="form-index">02</span><div><h3>Pilih persona</h3><p>Pilih energi yang paling cocok.</p></div></div>
+              <div class="persona-options" role="group" aria-label="Pilih persona kartu">
+                <button type="button" class="persona-option is-selected" data-persona="guardian" aria-pressed="true"><span class="persona-glyph">⬡</span><span>Guardian</span><small>Waspada & tenang</small></button>
+                <button type="button" class="persona-option" data-persona="builder" aria-pressed="false"><span class="persona-glyph">▧</span><span>Builder</span><small>Kreatif & tekun</small></button>
+                <button type="button" class="persona-option" data-persona="explorer" aria-pressed="false"><span class="persona-glyph">✳</span><span>Explorer</span><small>Penasaran & bebas</small></button>
+              </div>
+            </div>
+
+            <div class="form-block color-block">
+              <div class="form-heading"><span class="form-index">03</span><div><h3>Pilih warna</h3><p>Warna kartu bisa diubah kapan saja.</p></div></div>
+              <div class="color-options" role="group" aria-label="Pilih warna kartu">
+                <button class="color-swatch swatch-lime is-selected" type="button" data-color="lime" aria-label="Hijau limau" aria-pressed="true"></button>
+                <button class="color-swatch swatch-violet" type="button" data-color="violet" aria-label="Ungu" aria-pressed="false"></button>
+                <button class="color-swatch swatch-coral" type="button" data-color="coral" aria-label="Koral" aria-pressed="false"></button>
+                <button class="color-swatch swatch-blue" type="button" data-color="blue" aria-label="Biru" aria-pressed="false"></button>
+                <span class="color-name" id="colorName">Lime / 001</span>
+              </div>
+            </div>
+
+            <div class="wallet-notice" id="walletNotice">
+              <span class="notice-icon" aria-hidden="true">◈</span>
+              <span id="walletNoticeText"><strong>Wallet belum terhubung.</strong><br />Hubungkan wallet BNB Chain untuk mint kartu ini sebagai NFT.</span>
+              <button class="notice-connect" id="noticeConnect" type="button">Hubungkan</button>
+            </div>
+            <div class="wallet-connected" id="walletConnected" hidden>
+              <span class="connected-check" aria-hidden="true">✓</span>
+              <span><strong>Wallet terhubung</strong><br /><code id="connectedAddress">0x…</code> · <span id="connectedNetwork">BNB Smart Chain</span></span>
+              <button class="notice-connect" id="disconnectButton" type="button">Putuskan</button>
+            </div>
+
+            <button class="primary-button continue-button" id="continueButton" type="button" disabled>
+              Lanjut ke konfirmasi <span aria-hidden="true">→</span>
+            </button>
+            <p class="under-button-note" id="continueHint">Hubungkan wallet untuk melanjutkan.</p>
+          </div>
+
+          <aside class="preview-panel" aria-label="Pratinjau kartu Agent ID">
+            <div class="preview-topline"><span>LIVE PREVIEW</span><span class="preview-live"><i></i> LANGSUNG</span></div>
+            <div class="collectible-card theme-lime" id="cardPreview" role="img" aria-label="Pratinjau kartu Nara AI Guardian">
+              <span class="card-foil" aria-hidden="true"></span>
+              <div class="card-topline"><span class="card-brand"><span class="mini-mark">✳</span> AGENT CARD</span><span class="card-edition" id="previewEdition">GENESIS EDITION</span></div>
+              <span class="card-chip" aria-hidden="true">GENESIS</span>
+              <div class="card-artwork">
+                <div class="card-halo"></div>
+                <div class="card-orb orb-back"></div>
+                <div class="card-orb orb-front"></div>
+                <svg class="card-glyph" id="previewGlyph" viewBox="0 0 100 100" aria-hidden="true"></svg>
+                <span class="art-coordinate">BNB<br />056</span>
+              </div>
+              <div class="card-bottomline"><div><span class="card-label">AGENT ID</span><strong id="previewName">nara.ai</strong><span class="card-serial" id="previewSerial">GENESIS EDITION · PRATINJAU</span></div><div class="card-role" id="previewRole">THE GUARDIAN</div></div>
+              <span class="card-watermark">AC</span>
+            </div>
+            <div class="preview-caption"><span>01 <i></i> 999</span><span id="previewSupplyCaption">KOLEKSI 10.000 · GENESIS</span></div>
+            <div class="preview-details"><span class="preview-details-icon">✦</span><p>Desain kartu mengikuti nama dan pilihanmu. <strong>Nomor seri final ditentukan kontrak saat mint.</strong></p></div>
+          </aside>
+        </div>
+
+        <section class="state-view confirm-view" id="confirmView" hidden aria-labelledby="confirmTitle">
+          <div class="state-heading"><span class="state-backmark">02</span><div><p class="eyebrow"><span class="eyebrow-line"></span> LANGKAH KEDUA</p><h2 id="confirmTitle">Cek dulu sebelum mint</h2><p>Periksa ringkasan kartu dan harga live dari kontrak.</p></div></div>
+          <div class="confirm-layout">
+            <div class="confirm-card-slot" id="confirmCardSlot"></div>
+            <div class="confirm-details">
+              <div class="confirm-receipt-title"><span>RINGKASAN MINT</span><span class="demo-pill small" id="contractStatusPill"><span class="status-dot"></span> <span id="contractStatusText">KONTRAK BELUM DITERBITKAN</span></span></div>
+              <div class="receipt-row"><span>Kartu</span><strong id="confirmName">nara.ai · Guardian</strong></div>
+              <div class="receipt-row"><span>Jaringan</span><strong>BNB Smart Chain <em>CHAIN 56</em></strong></div>
+              <div class="receipt-row"><span>Kontrak</span><strong><a id="confirmContractLink" href="#" target="_blank" rel="noopener noreferrer">Belum diterbitkan</a></strong></div>
+              <div class="receipt-row"><span>Harga mint</span><strong id="confirmPrice">— BNB <em>LIVE DARI KONTRAK</em></strong></div>
+              <div class="receipt-row"><span>Gas</span><strong>Ditentukan jaringan <em>TERLIHAT DI WALLET</em></strong></div>
+              <div class="receipt-total"><span>Total harga mint</span><strong id="confirmTotal">— BNB</strong></div>
+              <div class="simulation-callout"><span aria-hidden="true">ⓘ</span><p>Ini transaksi <strong>asli di BNB Chain</strong> dan pembayaran BNB bersifat <strong>final</strong>. Gas ditentukan jaringan dan terlihat di wallet sebelum kamu menyetujui — periksa detailnya di wallet.</p></div>
+              <button class="primary-button mint-button" id="mintButton" type="button" disabled>Mint NFT <span aria-hidden="true">→</span></button>
+            </div>
+          </div>
+          <button class="back-button" id="backToEditor" type="button">← Kembali ke desain</button>
+        </section>
+
+        <section class="state-view process-view" id="processView" hidden aria-live="polite" aria-labelledby="processTitle">
+          <div class="process-card">
+            <div class="process-spinner" aria-hidden="true"><span></span></div>
+            <p class="eyebrow">MINT DI BNB CHAIN</p>
+            <h2 id="processTitle">Menunggu wallet-mu</h2>
+            <p id="processMessage">Setujui transaksi di wallet-mu. Harga dan gas terlihat di sana sebelum kamu menyetujui.</p>
+            <div class="process-steps"><span class="process-step" id="processStep1"><i></i> Menunggu tanda tangan di wallet</span><span class="process-step" id="processStep2"><i></i> Menunggu konfirmasi jaringan</span><span class="process-step" id="processStep3"><i></i> Kartu diterbitkan ke wallet-mu</span></div>
+          </div>
+        </section>
+
+        <section class="state-view error-view" id="errorView" hidden aria-labelledby="errorTitle">
+          <div class="result-card error-card">
+            <span class="result-symbol error-symbol" aria-hidden="true">!</span>
+            <p class="eyebrow">MINT GAGAL</p>
+            <h2 id="errorTitle">Mint belum berhasil</h2>
+            <p id="errorMessage">Transaksi tidak selesai. Tidak ada kartu yang diterbitkan dari percobaan ini.</p>
+            <div class="error-code" id="errorCode">ERROR</div>
+            <div class="result-actions"><button class="primary-button" id="retryButton" type="button">Coba lagi <span aria-hidden="true">↻</span></button><button class="subtle-button" id="errorBackButton" type="button">Kembali ke desain</button></div>
+          </div>
+        </section>
+
+        <section class="state-view success-view" id="successView" hidden aria-labelledby="successTitle">
+          <div class="success-heading"><span class="success-mark" aria-hidden="true">✓</span><p class="eyebrow">03 / SELESAI</p><h2 id="successTitle">Kartu NFT-mu sudah terbit.</h2><p id="successTokenLine">Kartu <strong>No. 0001</strong> kini milik wallet-mu di BNB Chain.</p></div>
+          <div class="success-layout"><div class="success-card-slot" id="successCardSlot"></div><div class="success-actions-panel"><span class="success-stamp">ON-CHAIN<br /><b id="successStampNo">No. 0001 · GENESIS</b></span><h3>Bagikan kartu Agent ID-mu</h3><p>Unduh gambarnya, atau bagikan bukti mint-nya lewat BscScan.</p><a class="outline-button" id="txLinkButton" href="#" target="_blank" rel="noopener noreferrer">Lihat transaksi di BscScan <span aria-hidden="true">↗</span></a><button class="primary-button" id="downloadButton" type="button">Unduh kartu PNG <span aria-hidden="true">↓</span></button><a class="outline-button x-share" id="xShareButton" href="https://x.com/intent/post" target="_blank" rel="noopener noreferrer">Bagikan ke X <span aria-hidden="true">↗</span></a><button class="outline-button" id="shareButton" type="button">Bagikan via perangkat <span aria-hidden="true">↗</span></button><button class="text-button" id="makeAnotherButton" type="button">← Buat kartu lain</button><p class="share-feedback" id="shareFeedback" aria-live="polite"></p><p class="success-invite">Kartu ini sampai ke temanmu? Mereka bisa <button id="inviteMakeButton" type="button">buat kartu versinya sendiri</button> di BNB Chain.</p></div></div>
+        </section>
+      </section>
+
+      <section class="my-cards" id="kartu-saya" aria-labelledby="my-cards-title">
+        <div class="section-heading reveal">
+          <div>
+            <p class="eyebrow"><span class="eyebrow-line"></span> KOLEKSIMU</p>
+            <h2 id="my-cards-title">Kartu Saya</h2>
+          </div>
+          <p class="section-note">Dibaca langsung dari kontrak<br />di BNB Chain.</p>
+        </div>
+        <p class="my-cards-status" id="myCardsStatus">Hubungkan wallet untuk melihat kartu NFT milikmu.</p>
+        <div class="my-cards-actions">
+          <button class="outline-button my-cards-refresh" id="refreshMyCardsButton" type="button">Muat ulang kartu saya <span aria-hidden="true">↻</span></button>
+        </div>
+        <div class="my-cards-grid" id="myCardsGrid"></div>
+      </section>
+
+      <section class="owner-panel" id="pemilik" hidden aria-labelledby="owner-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow"><span class="eyebrow-line"></span> PEMILIK</p>
+            <h2 id="owner-title">Terbitkan &amp; kelola kontrak</h2>
+          </div>
+          <button class="text-button owner-close" id="ownerCloseButton" type="button">Tutup panel ×</button>
+        </div>
+        <p class="owner-status" id="ownerStatusText">Kontrak belum diterbitkan.</p>
+        <div id="deployBlock">
+          <p class="owner-copy">Pemilik menerbitkan kontrak <strong>AgentCard (ACARD)</strong> langsung dari wallet-nya di BNB Chain. Deploy membayar gas jaringan; setelah terbit, alamat kontraknya tampil di bawah.</p>
+          <button class="primary-button" id="deployButton" type="button">Terbitkan Kontrak <span aria-hidden="true">→</span></button>
+          <p class="owner-feedback" id="deployStatus" aria-live="polite"></p>
+          <div class="deploy-result" id="deployResult" hidden>
+            <p class="deploy-result-label">KONTRAK TERBIT — SIMPAN ALAMAT INI</p>
+            <p class="deploy-address" id="deployAddressText"></p>
+            <p><a id="deployBscScanLink" href="#" target="_blank" rel="noopener noreferrer">Lihat kontrak di BscScan ↗</a></p>
+            <button class="outline-button" id="copyDeployAddressButton" type="button">Salin alamat kontrak <span aria-hidden="true">⧉</span></button>
+            <p class="owner-copy">Agar alamat ini permanen untuk semua pengunjung, salin alamat di atas ke <code>AGENT_CARD_CONFIG.contractAddress</code> di <code>index.html</code>, lalu terbitkan ulang halaman ini. Sampai saat itu, alamat ini hanya berlaku di sesi browser ini.</p>
+          </div>
+        </div>
+        <div id="ownerControls" hidden>
+          <p class="owner-copy" id="ownerControlsIntro">Kamu adalah owner kontrak ini. Kontrol di bawah mengirim transaksi asli dari wallet-mu.</p>
+          <div class="owner-grid">
+            <div class="owner-card">
+              <h3>Status mint</h3>
+              <p id="ownerMintStateText">Mint: —</p>
+              <button class="primary-button" id="toggleMintButton" type="button">Ubah status mint</button>
+            </div>
+            <div class="owner-card">
+              <h3>Harga mint</h3>
+              <p>Harga saat ini: <strong id="ownerCurrentPriceText">— BNB</strong></p>
+              <label class="field-label" for="ownerPriceInput">HARGA BARU (BNB)</label>
+              <input class="owner-input" id="ownerPriceInput" type="number" min="0" step="0.0001" placeholder="0.0005" inputmode="decimal" />
+              <button class="primary-button" id="setPriceButton" type="button">Ubah harga</button>
+            </div>
+            <div class="owner-card">
+              <h3>Saldo kontrak</h3>
+              <p>BNB terkumpul: <strong id="ownerBalanceText">— BNB</strong></p>
+              <button class="primary-button" id="withdrawButton" type="button">Tarik BNB ke owner</button>
+            </div>
+          </div>
+          <p class="owner-feedback" id="ownerFeedback" aria-live="polite"></p>
+        </div>
+        <p class="owner-copy" id="ownerNonOwnerNote" hidden>Kontrol pemilik hanya tampil untuk wallet yang beralamat sama dengan owner kontrak.</p>
+      </section>
+
+      <section class="gallery" id="galeri" aria-labelledby="gallery-title">
+        <div class="section-heading reveal">
+          <div>
+            <p class="eyebrow"><span class="eyebrow-line"></span> GALERI GAYA</p>
+            <h2 id="gallery-title">Tiga persona, tiga suasana</h2>
+          </div>
+          <p class="section-note">Contoh desain, bukan kartu<br />pengguna asli. Klik untuk mencoba.</p>
+        </div>
+        <div class="gallery-grid">
+          <button class="gallery-card reveal" type="button" data-persona="guardian" data-color="lime" data-label="Guardian · Lime">
+            <span class="collectible-card theme-lime" aria-hidden="true">
+              <span class="card-foil"></span>
+              <span class="card-topline"><span class="card-brand"><span class="mini-mark">✳</span> AGENT CARD</span><span class="card-edition">No. 0001</span></span>
+              <span class="card-chip">CONTOH DESAIN</span>
+              <span class="card-artwork"><span class="card-halo"></span><span class="card-orb orb-back"></span><span class="card-orb orb-front"></span><svg class="card-glyph" viewBox="0 0 100 100"><path d="M50 12 80 24v22c0 20-12 34-30 42C32 80 20 66 20 46V24l30-12Z" fill="none" stroke="currentColor" stroke-width="3"/><path d="m36 50 9 9 20-22" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="50" cy="50" r="44" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="2 5" opacity=".45"/></svg><span class="art-coordinate">BNB<br />056</span></span>
+              <span class="card-bottomline"><span><span class="card-label">AGENT ID</span><strong>sinta.ai</strong><span class="card-serial">GENESIS · CONTOH DESAIN</span></span><span class="card-role">THE GUARDIAN</span></span>
+              <span class="card-watermark">AC</span>
+            </span>
+            <span class="gallery-meta"><span><strong>sinta.ai</strong><span>CONTOH DESAIN · GUARDIAN · LIME</span></span><span class="gallery-cta">Coba gaya ini <i>→</i></span></span>
+          </button>
+          <button class="gallery-card reveal" type="button" data-persona="builder" data-color="violet" data-label="Builder · Violet">
+            <span class="collectible-card theme-violet" aria-hidden="true">
+              <span class="card-foil"></span>
+              <span class="card-topline"><span class="card-brand"><span class="mini-mark">✳</span> AGENT CARD</span><span class="card-edition">No. 0002</span></span>
+              <span class="card-chip">CONTOH DESAIN</span>
+              <span class="card-artwork"><span class="card-halo"></span><span class="card-orb orb-back"></span><span class="card-orb orb-front"></span><svg class="card-glyph" viewBox="0 0 100 100"><path d="M50 12 83 31v38L50 88 17 69V31L50 12Z" fill="none" stroke="currentColor" stroke-width="3"/><path d="m17 31 33 19 33-19M50 50v38M33 22l34 19M67 22 33 41" fill="none" stroke="currentColor" stroke-width="2"/><path d="M38 41h24v18H38z" fill="currentColor" opacity=".22"/></svg><span class="art-coordinate">BNB<br />056</span></span>
+              <span class="card-bottomline"><span><span class="card-label">AGENT ID</span><strong>raka.ai</strong><span class="card-serial">GENESIS · CONTOH DESAIN</span></span><span class="card-role">THE BUILDER</span></span>
+              <span class="card-watermark">AC</span>
+            </span>
+            <span class="gallery-meta"><span><strong>raka.ai</strong><span>CONTOH DESAIN · BUILDER · VIOLET</span></span><span class="gallery-cta">Coba gaya ini <i>→</i></span></span>
+          </button>
+          <button class="gallery-card reveal" type="button" data-persona="explorer" data-color="blue" data-label="Explorer · Sky">
+            <span class="collectible-card theme-blue" aria-hidden="true">
+              <span class="card-foil"></span>
+              <span class="card-topline"><span class="card-brand"><span class="mini-mark">✳</span> AGENT CARD</span><span class="card-edition">No. 0003</span></span>
+              <span class="card-chip">CONTOH DESAIN</span>
+              <span class="card-artwork"><span class="card-halo"></span><span class="card-orb orb-back"></span><span class="card-orb orb-front"></span><svg class="card-glyph" viewBox="0 0 100 100"><circle cx="50" cy="50" r="34" fill="none" stroke="currentColor" stroke-width="2"/><path d="m62 32-8 22-22 14 8-22 22-14Z" fill="currentColor"/><circle cx="50" cy="50" r="4" fill="#fff"/><path d="M50 8v9M50 83v9M8 50h9M83 50h9" stroke="currentColor" stroke-width="2"/></svg><span class="art-coordinate">BNB<br />056</span></span>
+              <span class="card-bottomline"><span><span class="card-label">AGENT ID</span><strong>luna.ai</strong><span class="card-serial">GENESIS · CONTOH DESAIN</span></span><span class="card-role">THE EXPLORER</span></span>
+              <span class="card-watermark">AC</span>
+            </span>
+            <span class="gallery-meta"><span><strong>luna.ai</strong><span>CONTOH DESAIN · EXPLORER · SKY</span></span><span class="gallery-cta">Coba gaya ini <i>→</i></span></span>
+          </button>
+        </div>
+      </section>
+
+      <section class="faq" id="faq" aria-labelledby="faq-title">
+        <div class="faq-grid">
+          <div class="faq-intro reveal">
+            <p class="eyebrow"><span class="eyebrow-line"></span> PERTANYAAN UMUM</p>
+            <h2 id="faq-title">Sering ditanyakan</h2>
+            <p>Jawaban singkat seputar mint NFT di halaman ini. Transaksi di sini asli di BNB Chain dan pembayaran BNB bersifat final.</p>
+          </div>
+          <div>
+            <details class="faq-item reveal">
+              <summary>Apakah ini mint sungguhan?</summary>
+              <p>Ya. Begitu kontrak diterbitkan pemilik, tombol Mint mengirim transaksi asli ke kontrak AgentCard di BNB Chain dan kartumu terbit sebagai NFT ERC-721. Sebelum kontrak diterbitkan, tombol mint nonaktif dan halaman tidak berpura-pura mint bekerja.</p>
+            </details>
+            <details class="faq-item reveal">
+              <summary>Apakah aman? Apakah saya perlu memasukkan private key?</summary>
+              <p>Tidak pernah memasukkan private key atau seed phrase di halaman ini. Kamu hanya menyetujui transaksi di wallet-mu sendiri (MetaMask, Trust Wallet, atau Binance Wallet), dan kamu bisa memeriksa harga serta gas di wallet sebelum menyetujui.</p>
+            </details>
+            <details class="faq-item reveal">
+              <summary>Apakah saya perlu BNB sungguhan?</summary>
+              <p>Ya. Kamu membayar harga mint yang ditetapkan kontrak — harga awalnya 0.0005 BNB dan bisa diubah owner — ditambah gas jaringan BNB Chain. Angka live-nya tampil di halaman konfirmasi begitu kontrak diterbitkan. Keduanya dibayar dalam BNB dan bersifat final.</p>
+            </details>
+            <details class="faq-item reveal">
+              <summary>Di mana kartu saya setelah mint?</summary>
+              <p>Di wallet-mu sebagai NFT. Nama, persona, dan warnanya tersimpan di kontrak, dan metadata beserta gambar SVG-nya dirender 100% on-chain dari data itu — tanpa server gambar. Kamu bisa melihatnya di seksi Kartu Saya di halaman ini atau di BscScan.</p>
+            </details>
+            <details class="faq-item reveal">
+              <summary>Apakah ini proyek resmi Binance?</summary>
+              <p>Bukan. Agent Card Studio adalah proyek komunitas. Kartunya adalah kartu koleksi digital di BNB Chain — bukan Agent ID resmi yang diterbitkan Binance — dan tidak berafiliasi dengan Binance.</p>
+            </details>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-about">
+          <a class="brand" href="#top" aria-label="Agent Card Studio, ke atas">
+            <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="brand-name">agent<span>card</span></span>
+            <span class="brand-divider"></span>
+            <span class="brand-studio">STUDIO</span>
+          </a>
+          <p>Studio untuk merancang kartu Agent ID dan mint sebagai NFT koleksi di BNB Chain: pilih persona, atur warna, pratinjau langsung, lalu mint dari wallet-mu. Metadata kartunya 100% on-chain.</p>
+        </div>
+        <nav class="footer-col" aria-label="Tautan footer">
+          <h3>JELAJAHI</h3>
+          <ul>
+            <li><a href="#top">Beranda</a></li>
+            <li><a href="#cara-kerja">Cara Kerja</a></li>
+            <li><a href="#galeri">Galeri Gaya</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#studio">Buat Kartu</a></li>
+          </ul>
+        </nav>
+        <div class="footer-col">
+          <h3>TRANSAKSI ASLI</h3>
+          <p>Transaksi di halaman ini adalah transaksi asli di BNB Chain dan pembayaran BNB bersifat final. Agent Card adalah kartu koleksi digital — bukan Agent ID resmi yang diterbitkan Binance, dan tidak berafiliasi dengan Binance.</p>
+          <p style="margin-top:10px"><a href="#pemilik" id="ownerFooterLink">Pemilik — Terbitkan Kontrak</a></p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>Proyek komunitas. Bukan produk resmi Binance dan tidak terafiliasi dengan Binance. Kartu Agent Card adalah kartu koleksi digital di BNB Chain — bukan Agent ID resmi yang diterbitkan Binance. Transaksi asli di BNB Chain; pembayaran BNB bersifat final. Periksa selalu alamat kontrak dan detail transaksi di wallet sebelum menyetujui.</p>
+        <span>© 2026 AGENT CARD STUDIO · AC / 2026</span>
+      </div>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <a class="floating-cta" id="floatingCta" href="#studio">Buat Kartu di BNB Chain <span aria-hidden="true">→</span></a>
+  <script src="app.js"></script>
+</body>
+</html>
