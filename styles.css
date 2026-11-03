@@ -459,3 +459,43 @@ h2 { font-size: 30px; line-height: 1.1; letter-spacing: -.055em; margin: 0; font
   .hero-tilt .collectible-card { transform: none; }
 }
   
+/* ---------- Edisi mint (Free / Paid) ---------- */
+.tier-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.tier-option { min-height: 72px; text-align: left; padding: 10px; border: 1px solid #dedfd6; background: #fffefa; cursor: pointer; display: flex; flex-direction: column; align-items: flex-start; gap: 5px; transition: border .18s, background .18s, transform .18s; }
+.tier-option:hover { transform: translateY(-2px); }
+.tier-option.is-selected { border-color: #8ea82b; background: #f2f9dc; box-shadow: inset 0 0 0 1px #8ea82b; }
+.tier-option.tier-paid.is-selected { border-color: #b98a1e; background: #fdf6dd; box-shadow: inset 0 0 0 1px #b98a1e; }
+.tier-option > span { font-size: 12px; font-weight: 800; }
+.tier-option small { font-size: 10px; line-height: 1.45; opacity: .72; }
+.tier-note { margin-top: 9px; font-size: 11px; line-height: 1.55; opacity: .75; }
+
+/* ---------- Kartu gaya TCG (portrait) ---------- */
+.collectible-card { aspect-ratio: 420 / 594; max-width: 340px; justify-content: flex-start; gap: 7px; padding: 15px 16px 13px; }
+.hero-stage .collectible-card { max-width: 400px; }
+.confirm-card-slot .collectible-card { max-width: 320px; }
+.success-card-slot .collectible-card { max-width: 360px; }
+.collectible-card .card-bottomline { margin-top: auto; position: relative; z-index: 2; }
+.card-artwork { position: relative; inset: auto; width: 100%; aspect-ratio: 372 / 238; flex: none; display: grid; place-items: center; border-radius: 8px; border: 1.5px solid rgba(37, 42, 30, .4); box-shadow: inset 0 0 0 3px rgba(255, 255, 255, .25), inset 0 -30px 50px rgba(20, 24, 16, .16); overflow: hidden; background: linear-gradient(155deg, rgba(255, 255, 255, .38), rgba(255, 255, 255, 0) 46%, rgba(20, 24, 16, .13)); }
+.card-halo { width: 54%; top: 6%; left: 44%; }
+.card-glyph { width: 36%; height: 64%; left: 50%; top: 18%; }
+.card-chip { top: 76px; right: 27px; z-index: 4; }
+.tcg-head { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--mono); font-size: 8px; font-weight: 700; letter-spacing: .14em; position: relative; z-index: 2; }
+.tcg-power b { font-size: 15px; }
+.tcg-ability { display: flex; gap: 8px; align-items: flex-start; background: rgba(24, 28, 18, .1); border: 1px solid rgba(37, 42, 30, .22); border-radius: 6px; padding: 7px 9px; position: relative; z-index: 2; }
+.tcg-ability-tag { font-family: var(--mono); font-size: 7px; font-weight: 700; letter-spacing: .12em; background: #252922; color: #f2f4e8; padding: 2px 5px; border-radius: 3px; flex: none; margin-top: 1px; }
+.tcg-ability-body { display: block; }
+.tcg-ability-name { display: block; font-size: 11.5px; font-weight: 800; line-height: 1.2; }
+.tcg-ability-text { display: block; font-size: 9.5px; line-height: 1.4; opacity: .78; margin-top: 2px; }
+.tcg-moves { display: flex; flex-direction: column; position: relative; z-index: 2; }
+.tcg-move { display: flex; align-items: center; gap: 7px; padding: 5px 1px; }
+.tcg-move + .tcg-move { border-top: 1px solid rgba(37, 42, 30, .18); }
+.tcg-dots { display: inline-flex; gap: 3px; flex: none; }
+.tcg-dots i { width: 8px; height: 8px; border-radius: 50%; background: #252922; box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, .5); }
+.tcg-move-name { font-size: 11.5px; font-weight: 800; }
+.tcg-move-dmg { margin-left: auto; font-size: 14px; font-weight: 800; }
+
+/* ---------- Paid Edition: bingkai emas + holo ---------- */
+.collectible-card.card-paid { box-shadow: 0 0 0 2px #b98a1e, 0 0 0 4px #f5d67a, 0 0 36px rgba(245, 214, 122, .5), 0 19px 48px rgba(51, 55, 42, .18), 0 2px 5px rgba(0, 0, 0, .08); }
+.collectible-card.card-paid .card-edition { opacity: 1; color: #7c5a08; font-weight: 700; }
+.collectible-card.card-paid .card-chip { background: linear-gradient(120deg, #f9e08a, #caa12f); color: #3d2c02; border-color: rgba(124, 90, 8, .5); }
+.collectible-card.card-paid .card-artwork::after { content: ''; position: absolute; inset: 0; z-index: 2; background: linear-gradient(115deg, rgba(255, 138, 138, .32), rgba(255, 217, 138, .32) 25%, rgba(168, 255, 176, .28) 50%, rgba(138, 198, 255, .32) 75%, rgba(211, 138, 255, .32)); mix-blend-mode: screen; pointer-events: none; }
