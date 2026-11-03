@@ -194,7 +194,7 @@ contract AgentCard {
         string memory json = string(abi.encodePacked(
             '{"name":"', c.agentName, ' - Agent Card #', _toString(tokenId), '",',
             '"description":"A premium metal Agent Card on BNB Chain. The metal card face (finish in the color stored on-chain, embossed agent name, persona artwork) is rendered by the official Agent Card Studio site from this on-chain data. A collectible card, not an official Binance Agent ID.",',
-            '"image":"https://pokemontownss.github.io/agent-card-studio/assets/', art, '",',
+            '"image":"https://agentcard.cloud/assets/', art, '",',
             '"attributes":[',
             '{"trait_type":"Persona","value":"', _persona(c.style), '"},',
             '{"trait_type":"Agent Name","value":"', c.agentName, '"},',
