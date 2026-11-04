@@ -350,10 +350,10 @@ function setChainStatus(mode) {
   let contractLabel = "CHECKING…";
   let price = "Checking the contract status on BNB Chain…";
   if (mode === "no-contract") {
-    pill = "BNB CHAIN · KONTRAK BELUM DITERBITKAN";
-    badgeText = "BNB CHAIN · KONTRAK BELUM DITERBITKAN";
+    pill = "BNB CHAIN · CONTRACT NOT DEPLOYED YET";
+    badgeText = "BNB CHAIN · CONTRACT NOT DEPLOYED YET";
     note = "The contract is not deployed yet.<br />Minting opens once the owner deploys it.";
-    contractLabel = "KONTRAK BELUM DITERBITKAN";
+    contractLabel = "CONTRACT NOT DEPLOYED YET";
     price = "Contract not deployed yet — you can still try the design; minting opens once the owner deploys the contract.";
   } else if (mode === "ok" || mode === "closed") {
     const total = chainState.totalMinted != null ? chainState.totalMinted.toLocaleString("en-US") : "—";
@@ -361,19 +361,19 @@ function setChainStatus(mode) {
     const priceBnb = "Free " + (chainState.freePrice != null ? formatBNB(chainState.freePrice) : "—") + " / Paid " + (chainState.paidPrice != null ? formatBNB(chainState.paidPrice) : "—");
     const openLabel = mode === "ok" ? "MINT OPEN" : "MINT CLOSED";
     pill = "BNB CHAIN · " + openLabel + " · " + total + "/" + max;
-    badgeText = "LIVE DI BNB CHAIN · " + openLabel;
+    badgeText = "LIVE ON BNB CHAIN · " + openLabel;
     note = openLabel.charAt(0) + openLabel.slice(1).toLowerCase() + " · " + total + " of " + max + " cards minted.<br />Price: " + priceBnb + " BNB + gas. Free max 1x per wallet.";
     contractLabel = openLabel;
     price = "Live price: " + priceBnb + " BNB + gas · " + total + "/" + max + " cards minted.";
   } else if (mode === "error") {
-    pill = "BNB CHAIN · DATA KONTRAK TIDAK TERBACA";
-    badgeText = "BNB CHAIN · DATA KONTRAK TIDAK TERBACA";
+    pill = "BNB CHAIN · CONTRACT DATA UNAVAILABLE";
+    badgeText = "BNB CHAIN · CONTRACT DATA UNAVAILABLE";
     note = "Contract data is unavailable right now.<br />Try reloading the page.";
-    contractLabel = "DATA TIDAK TERBACA";
+    contractLabel = "DATA UNAVAILABLE";
     price = "Contract data is unavailable right now — check your connection and reload the page.";
   } else if (mode === "no-ethers") {
-    pill = "BNB CHAIN · PUSTAKA WALLET GAGAL DIMUAT";
-    badgeText = "BNB CHAIN · PUSTAKA WALLET GAGAL DIMUAT";
+    pill = "BNB CHAIN · WALLET LIBRARY FAILED TO LOAD";
+    badgeText = "BNB CHAIN · WALLET LIBRARY FAILED TO LOAD";
     note = "The wallet library failed to load.<br />Check your connection and reload.";
     contractLabel = "PUSTAKA GAGAL DIMUAT";
     price = "The wallet library failed to load — check your connection and reload the page.";
@@ -463,12 +463,12 @@ function refreshMintUI() {
   const continueButton = $("#continueButton");
   const hint = $("#continueHint");
   const mintButton = $("#mintButton");
-  if (continueButton) continueButton.disabled = !validInputSilent();
+  if (continueButton) continueButton.disabled = false;
   if (hint) hint.textContent = !hasContract()
     ? "The contract is not deployed yet — the owner deploys it from their wallet, and minting opens right after."
     : "No wallet connection needed — the next step gives you a ready-to-paste prompt for your AI agent.";
   if (mintButton) {
-    mintButton.disabled = Boolean(blocked) || !validInputSilent();
+    mintButton.disabled = false;
     const price = activePrice() != null ? formatBNB(activePrice()) : null;
     mintButton.innerHTML = (state.tier === 1 ? "Mint Paid Edition" : "Mint Free Edition") + (price ? " — " + price + " BNB" : "") + ' <span aria-hidden="true">→</span>';
   }
@@ -2014,9 +2014,9 @@ refreshMintUI();
    two button states - never the prompt text the visitor may be copying. */
 function syncButtonStates() {
   var cb = $("#continueButton");
-  if (cb) cb.disabled = !validInputSilent();
+  if (cb) cb.disabled = false;
   var mb = $("#mintButton");
-  if (mb) mb.disabled = Boolean(mintBlockedReason()) || !validInputSilent();
+  if (mb) mb.disabled = false;
 }
 setInterval(syncButtonStates, 3000);
 window.addEventListener("focus", syncButtonStates);
