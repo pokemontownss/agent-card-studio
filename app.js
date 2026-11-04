@@ -269,7 +269,7 @@ function syncHeroCard() {
   if (role) role.textContent = personaConfig[heroState.persona].title.toUpperCase();
   if (glyph) glyph.src = artPath(heroState.persona);
   if (colorName) colorName.textContent = colorConfig[heroState.color].label;
-  card.setAttribute("aria-label", "Sample card nara.ai, " + personaConfig[heroState.persona].title);
+  card.setAttribute("aria-label", "Card nara.ai, " + personaConfig[heroState.persona].title);
   fillTcg(card, heroState.persona, 1);
   updateEditionLabels();
   $$(".hero-persona").forEach((button) => {

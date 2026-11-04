@@ -48,7 +48,7 @@ section[id] { scroll-margin-top: 96px; }
 .topbar-actions { display: flex; align-items: center; gap: 10px; margin-left: auto; }
 .cta-button { border: 0; border-radius: 7px; background: var(--lime); color: var(--ink); min-height: 40px; padding: 0 16px; font-size: 11px; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; box-shadow: inset 0 0 0 1px rgba(32, 35, 31, .08); transition: transform .2s, background .2s, box-shadow .2s; }
 .cta-button:hover { transform: translateY(-1px); background: #e2fb83; box-shadow: 0 8px 18px rgba(154, 184, 44, .25); }
-.demo-pill { min-height: 30px; border: 1px solid #dadbd3; border-radius: 100px; padding: 0 11px; display: inline-flex; align-items: center; gap: 7px; font: 9px var(--mono); letter-spacing: .08em; color: #5b5e57; background: rgba(255,255,255,.44); white-space: nowrap; }
+.chain-pill { min-height: 30px; border: 1px solid #dadbd3; border-radius: 100px; padding: 0 11px; display: inline-flex; align-items: center; gap: 7px; font: 9px var(--mono); letter-spacing: .08em; color: #5b5e57; background: rgba(255,255,255,.44); white-space: nowrap; }
 .status-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; background: #9ecb39; box-shadow: 0 0 0 3px rgba(158,203,57,.16); }
 .wallet-button { border: 0; border-radius: 7px; background: var(--ink); color: white; height: 40px; padding: 0 15px; font-size: 11px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: transform .2s, background .2s; }
 .wallet-button:hover { transform: translateY(-1px); background: #353a34; }
@@ -247,16 +247,16 @@ h2 { font-size: 30px; line-height: 1.1; letter-spacing: -.055em; margin: 0; font
 .confirm-card-slot .collectible-card { max-width: 430px; }
 .confirm-details { border-left: 1px solid var(--line); padding: 8px 0 8px 24px; }
 .confirm-receipt-title { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; font: 8px var(--mono); letter-spacing: .11em; color: #7d8077; }
-.demo-pill.small { min-height: 22px; padding: 0 8px; font-size: 7px; }
-.demo-pill.small .status-dot { width: 5px; height: 5px; }
+.chain-pill.small { min-height: 22px; padding: 0 8px; font-size: 7px; }
+.chain-pill.small .status-dot { width: 5px; height: 5px; }
 .receipt-row { display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px solid #e5e5de; padding: 10px 0; font-size: 10px; color: #81847b; }
 .receipt-row strong { color: #343830; font-size: 10px; text-align: right; }
 .receipt-row em { display: block; color: #a2a499; font: normal 7px var(--mono); letter-spacing: .08em; margin-top: 3px; }
 .receipt-total { display: flex; justify-content: space-between; padding: 15px 0; font-size: 10px; font-weight: 800; }
 .receipt-total strong { font-family: var(--mono); font-size: 11px; }
-.simulation-callout { display: flex; gap: 9px; align-items: flex-start; border: 1px solid #e1e4d4; background: #f1f4e8; padding: 10px; margin: 0 0 14px; color: #798050; }
-.simulation-callout p { margin: 0; color: #73766b; font-size: 9px; line-height: 1.6; }
-.simulation-callout strong { color: #454b36; }
+.info-callout { display: flex; gap: 9px; align-items: flex-start; border: 1px solid #e1e4d4; background: #f1f4e8; padding: 10px; margin: 0 0 14px; color: #798050; }
+.info-callout p { margin: 0; color: #73766b; font-size: 9px; line-height: 1.6; }
+.info-callout strong { color: #454b36; }
 .mint-button { width: 100%; }
 .subtle-button { background: none; border: 0; color: #777a72; font-size: 9px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
 .failure-link { width: 100%; margin-top: 12px; }
@@ -409,7 +409,7 @@ h2 { font-size: 30px; line-height: 1.1; letter-spacing: -.055em; margin: 0; font
   .nav-cta { display: inline-flex; margin-left: auto; align-items: center; gap: 5px; font: 8px var(--mono); letter-spacing: .1em; color: var(--ink); background: var(--lime); border-radius: 100px; padding: 6px 10px; text-decoration: none; font-weight: 500; }
   .cta-button { display: none; }
   .brand-name { font-size: 16px; }.brand-studio { font-size: 8px; }.brand-divider { margin-left: 4px; }
-  .topbar-actions { gap: 8px; }.topbar .demo-pill { display: none; }
+  .topbar-actions { gap: 8px; }.topbar .chain-pill { display: none; }
   .wallet-button { height: 36px; font-size: 9px; padding: 0 10px; gap: 6px; }
   main { padding: 0 18px; }
   .hero { padding: 24px 0 32px; gap: 18px; align-items: start; }
