@@ -23,7 +23,7 @@
   <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDk2IDk2Ij4KICA8cmVjdCB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHJ4PSIyNCIgZmlsbD0iI2Y1ZjRlZiIvPgogIDxnIGZpbGw9IiMyMDIzMWYiIHRyYW5zZm9ybT0icm90YXRlKC0xMCA0OCA0OCkiPgogICAgPHJlY3QgeD0iMjQiIHk9IjQ0IiB3aWR0aD0iMTIiIGhlaWdodD0iMjgiIHJ4PSI2Ii8+CiAgICA8cmVjdCB4PSI0MiIgeT0iMjYiIHdpZHRoPSIxMiIgaGVpZ2h0PSI0NiIgcng9IjYiLz4KICAgIDxyZWN0IHg9IjYwIiB5PSIzNiIgd2lkdGg9IjEyIiBoZWlnaHQ9IjM2IiByeD0iNiIvPgogIDwvZz4KICA8Y2lyY2xlIGN4PSI3NCIgY3k9IjI0IiByPSI3IiBmaWxsPSIjZDVmYTYxIi8+Cjwvc3ZnPgo=" />
   <script>window.__loadEthersFallback=function(){var s=document.createElement('script');s.src='https://unpkg.com/ethers@6.13.4/dist/ethers.umd.min.js';document.head.appendChild(s);};</script>
   <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js" onerror="window.__loadEthersFallback()"></script>
-  <link rel="stylesheet" href="styles.css?v=21">
+  <link rel="stylesheet" href="styles.css?v=22">
 </head>
 <body>
   <div class="page-shell">
@@ -473,14 +473,14 @@
         <div class="mint-tools">
           <div class="tool-card">
             <h3>Burn a card → 50,000 $ACARD</h3>
-            <p>Burning sends your card to the dead address <strong>forever</strong> and pays you 50,000 $ACARD from the burn pool. It cannot be undone. Your agent first approves the burn contract for your token, then calls burn(tokenId).</p>
+            <p>Burning sends your card to the dead address <strong>forever</strong> and pays you 50,000 $ACARD from the burn pool. It cannot be undone. Your agent first approves the burn contract for your token, then calls burn(tokenId) with a 0.0001 BNB fee.</p>
             <label class="field-label" for="burnPrompt">AGENT PROMPT — BURN</label>
             <textarea class="prompt-box" id="burnPrompt" rows="5" readonly></textarea>
             <button class="outline-button copy-btn" type="button" data-copy-target="burnPrompt">Copy burn prompt</button>
           </div>
           <div class="tool-card">
             <h3>Stake a card → 500 $ACARD / day</h3>
-            <p>Staking locks your card in the staking contract; it earns 500 $ACARD per day. Claim rewards anytime, and unstake anytime to get your card back — unstaking also pays what you earned. Your agent approves the staking contract, then calls stake(tokenId).</p>
+            <p>Staking locks your card in the staking contract; it earns 500 $ACARD per day. Claim rewards anytime, and unstake anytime to get your card back — unstaking also pays what you earned. Your agent approves the staking contract, then calls stake(tokenId) with a 0.0001 BNB fee. Claiming and unstaking are free.</p>
             <label class="field-label" for="stakePrompt">AGENT PROMPT — STAKE</label>
             <textarea class="prompt-box" id="stakePrompt" rows="5" readonly></textarea>
             <button class="outline-button copy-btn" type="button" data-copy-target="stakePrompt">Copy stake prompt</button>
@@ -636,6 +636,6 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <a class="floating-cta" id="floatingCta" href="#studio">Create a Card on BNB Chain <span aria-hidden="true">→</span></a>
-  <script src="app.js?v=21"></script>
+  <script src="app.js?v=22"></script>
 </body>
 </html>
