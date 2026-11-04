@@ -144,7 +144,7 @@ function syncTierUI() {
     } else if (hasContract()) {
       note.textContent = "Prices are read live from the contract once the data loads.";
     } else {
-      note.textContent = "Live prices appear once the contract is deployed. Free = a small anti-sybil fee, free 1x per wallet. Paid = a premium metal card. Max 2 mints per wallet in total.";
+      note.textContent = "Free 1x per wallet · max 2 cards per wallet in total. Live prices appear once the contract is deployed.";
     }
   }
 }

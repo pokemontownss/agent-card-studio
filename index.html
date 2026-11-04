@@ -23,7 +23,7 @@
   <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDk2IDk2Ij4KICA8cmVjdCB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHJ4PSIyNCIgZmlsbD0iI2Y1ZjRlZiIvPgogIDxnIGZpbGw9IiMyMDIzMWYiIHRyYW5zZm9ybT0icm90YXRlKC0xMCA0OCA0OCkiPgogICAgPHJlY3QgeD0iMjQiIHk9IjQ0IiB3aWR0aD0iMTIiIGhlaWdodD0iMjgiIHJ4PSI2Ii8+CiAgICA8cmVjdCB4PSI0MiIgeT0iMjYiIHdpZHRoPSIxMiIgaGVpZ2h0PSI0NiIgcng9IjYiLz4KICAgIDxyZWN0IHg9IjYwIiB5PSIzNiIgd2lkdGg9IjEyIiBoZWlnaHQ9IjM2IiByeD0iNiIvPgogIDwvZz4KICA8Y2lyY2xlIGN4PSI3NCIgY3k9IjI0IiByPSI3IiBmaWxsPSIjZDVmYTYxIi8+Cjwvc3ZnPgo=" />
   <script>window.__loadEthersFallback=function(){var s=document.createElement('script');s.src='https://unpkg.com/ethers@6.13.4/dist/ethers.umd.min.js';document.head.appendChild(s);};</script>
   <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js" onerror="window.__loadEthersFallback()"></script>
-  <link rel="stylesheet" href="styles.css?v=18">
+  <link rel="stylesheet" href="styles.css?v=19">
 </head>
 <body>
   <div class="page-shell">
@@ -61,7 +61,7 @@
           <p class="hero-badge" id="heroBadge"><i aria-hidden="true"></i> BNB CHAIN · CONTRACT NOT DEPLOYED YET</p>
           <p class="eyebrow"><span class="eyebrow-line"></span> YOUR AGENT IDENTITY, AS A CARD</p>
           <h1 id="hero-title">Your Agent ID deserves its own card.</h1>
-          <p class="hero-description">Design a collectible card from your Agent ID name — pick a persona, set the color, see the result instantly, then mint it as an NFT on BNB Chain. Your card's name, persona, color, and edition are stored on-chain and delivered straight to your wallet.</p>
+          <p class="hero-description">Design a collectible card from your Agent ID name — pick a persona, set the color, then mint it as an NFT on BNB Chain. Your card's name, persona, color, and edition are stored on-chain and delivered straight to your wallet.</p>
           <div class="hero-actions">
             <a class="hero-cta" href="#studio" id="heroMainCta">Create Your Card on BNB Chain <span aria-hidden="true">→</span></a>
             <a class="hero-cta-secondary" href="#galeri">View Gallery <span aria-hidden="true">↓</span></a>
@@ -174,11 +174,11 @@
           </article>
           <article class="reason-card reveal">
             <span class="reason-icon" aria-hidden="true">✦</span>
-            <div><h3>Instant design, NFT &amp; PNG</h3><p>Every change appears in the preview right away. After minting, you can still download your card as a PNG and share it with friends.</p></div>
+            <div><h3>Instant design, NFT &amp; PNG</h3><p>Every change appears in the preview right away. After minting, you can download your card as a PNG.</p></div>
           </article>
           <article class="reason-card reveal">
             <span class="reason-icon" aria-hidden="true">⬡</span>
-            <div><h3>Card data on-chain</h3><p>Your card's name, persona, color, and edition are stored permanently in the BNB Chain contract. Its persona artwork lives in the project's official repo, and the metal card is rendered by the site from that on-chain data.</p></div>
+            <div><h3>Card data on-chain</h3><p>Your card's name, persona, color, and edition are stored permanently in the BNB Chain contract. The card image is rendered by the contract itself — no image server.</p></div>
           </article>
         </div>
       </section>
@@ -210,7 +210,7 @@
           </div>
           <div class="tool-card">
             <h3>Mint via AI agent — no wallet connection</h3>
-            <p>This site never asks you to connect a wallet. Design your card in the studio below, continue to the mint step, copy the prompt, and give it to your AI agent — the agent mints from your wallet and replies with the transaction link.</p>
+            <p>Design your card in the studio below, copy the prompt at the mint step, and give it to your AI agent — it mints from your wallet and replies with the transaction link.</p>
             <a class="outline-button copy-btn" href="#studio">Design your card →</a>
           </div>
         </div>
@@ -219,7 +219,7 @@
       <section class="studio" id="studio" aria-labelledby="studio-title">
         <div class="section-heading">
           <div>
-            <p class="eyebrow"><span class="eyebrow-line"></span> CARD SHARK</p>
+            <p class="eyebrow"><span class="eyebrow-line"></span> STUDIO</p>
             <h2 id="studio-title">Design your version</h2>
           </div>
           <p class="section-note" id="studioNote">The contract is not deployed yet.<br />Minting opens once the owner deploys it.</p>
@@ -269,7 +269,7 @@
             </div>
 
             <div class="form-block">
-              <div class="form-heading"><span class="form-index">02</span><div><h3>Choose a persona</h3><p>Pick the energy that fits you best.</p></div></div>
+              <div class="form-heading"><span class="form-index">02</span><div><h3>Choose a persona</h3></div></div>
               <div class="persona-options" role="group" aria-label="Choose a card persona">
                 <button type="button" class="persona-option is-selected" data-persona="guardian" aria-pressed="true"><span class="persona-glyph">🐋</span><span>Whale</span><small>Calm & market-moving</small></button>
                 <button type="button" class="persona-option" data-persona="builder" aria-pressed="false"><span class="persona-glyph">🦈</span><span>Shark</span><small>Fast & ruthless</small></button>
@@ -278,7 +278,7 @@
             </div>
 
             <div class="form-block color-block">
-              <div class="form-heading"><span class="form-index">03</span><div><h3>Choose a color</h3><p>You can change the card color anytime.</p></div></div>
+              <div class="form-heading"><span class="form-index">03</span><div><h3>Choose a color</h3></div></div>
               <div class="color-options" role="group" aria-label="Choose a card color">
                 <button class="color-swatch swatch-violet is-selected" type="button" data-color="violet" aria-label="Violet" aria-pressed="true"></button>
                 <button class="color-swatch swatch-amber" type="button" data-color="amber" aria-label="Amber" aria-pressed="false"></button>
@@ -303,12 +303,12 @@
             </div>
 
             <div class="form-block">
-              <div class="form-heading"><span class="form-index">04</span><div><h3>Choose a mint edition</h3><p>The card design and price follow the edition you choose.</p></div></div>
+              <div class="form-heading"><span class="form-index">04</span><div><h3>Choose a mint edition</h3></div></div>
               <div class="tier-options" role="group" aria-label="Choose a mint edition">
                 <button type="button" class="tier-option is-selected" data-tier="0" aria-pressed="true"><span>Free Edition</span><small>Standard design &#183; small anti-sybil fee &#183; free 1x per wallet</small></button>
                 <button type="button" class="tier-option tier-paid" data-tier="1" aria-pressed="false"><span>Paid Edition &#9733;</span><small>Premium gold holo design &#183; power +30 &#183; max 2 mints per wallet</small></button>
               </div>
-              <p class="tier-note" id="tierNote">Live prices appear once the contract is deployed. Free = a small anti-sybil fee, free 1x per wallet. Paid = a premium gold design. Every wallet can mint at most 2 cards in total.</p>
+              <p class="tier-note" id="tierNote">Free 1x per wallet · max 2 cards per wallet in total.</p>
             </div>
 
             <div class="wallet-notice" id="walletNotice">
@@ -353,7 +353,7 @@
               <span class="card-watermark">AC</span>
             </div>
             <div class="preview-caption"><span>01 <i></i> 999</span><span id="previewSupplyCaption">4,444-CARD COLLECTION</span></div>
-            <div class="preview-details"><span class="preview-details-icon">✦</span><p>The card design follows your name and choices. <strong>The final serial number is drawn by the contract at mint.</strong></p></div>
+            <div class="preview-details"><span class="preview-details-icon">✦</span><p><strong>The final serial number is drawn by the contract at mint.</strong></p></div>
           </aside>
         </div>
 
@@ -384,7 +384,7 @@
                   <li>Paste it to your AI agent (for example your Binance AI agent).</li>
                   <li>The agent mints the card from your wallet and replies with the transaction link.</li>
                 </ol>
-                <p class="field-hint">This site never connects a wallet and never asks for a seed phrase or private key. The mint happens in your agent's wallet, where you stay in control.</p>
+                <p class="field-hint">The mint happens in your agent's wallet — this site never asks for a seed phrase or private key.</p>
               </div>
               <details class="direct-mint">
                 <summary>Advanced — mint directly with a connected wallet</summary>
@@ -646,7 +646,7 @@
           <div class="faq-intro reveal">
             <p class="eyebrow"><span class="eyebrow-line"></span> FREQUENTLY ASKED</p>
             <h2 id="faq-title">Frequently asked questions</h2>
-            <p>Short answers about minting NFTs on this page. Transactions here are real on BNB Chain and BNB payments are final.</p>
+            <p>Transactions here are real on BNB Chain and BNB payments are final.</p>
           </div>
           <div>
             <details class="faq-item reveal">
@@ -691,7 +691,7 @@
             <span class="brand-divider"></span>
             <span class="brand-studio">STUDIO</span>
           </a>
-          <p>A studio to design your Agent ID card and mint it as a collectible NFT on BNB Chain: pick a persona, set the color, preview it live, then mint from your wallet. The card data is stored on-chain.</p>
+          <p>Design your Agent ID card and mint it as a collectible NFT on BNB Chain through your AI agent. The card data is stored on-chain.</p>
         </div>
         <nav class="footer-col" aria-label="Footer links">
           <h3>EXPLORE</h3>
@@ -710,7 +710,7 @@
         </div>
         <div class="footer-col">
           <h3>CONTACT</h3>
-          <p>Follow the latest news, announcements, and official mint info on X.</p>
+          <p>News and mint updates on X.</p>
           <p style="margin-top:10px"><a href="https://x.com/AgentCard_Bnb" target="_blank" rel="noopener noreferrer">X — @AgentCard_Bnb ↗</a></p>
         </div>
       </div>
@@ -723,6 +723,6 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <a class="floating-cta" id="floatingCta" href="#studio">Create a Card on BNB Chain <span aria-hidden="true">→</span></a>
-  <script src="app.js?v=18"></script>
+  <script src="app.js?v=19"></script>
 </body>
 </html>
