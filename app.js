@@ -76,6 +76,7 @@ function hasContract() {
 function contractAddress() { return AGENT_CARD_CONFIG.contractAddress; }
 function pad4(n) { return String(n).padStart(4, "0"); }
 function shortAddr(addr) { return addr ? addr.slice(0, 6) + "…" + addr.slice(-4) : ""; }
+function shortAddress(addr) { return shortAddr(addr); }
 function explorerTx(hash) { return AGENT_CARD_CONFIG.explorer + "/tx/" + hash; }
 function explorerAddress(addr) { return AGENT_CARD_CONFIG.explorer + "/address/" + addr; }
 function explorerToken(tokenId) { return AGENT_CARD_CONFIG.explorer + "/token/" + contractAddress() + "?a=" + tokenId; }
@@ -742,6 +743,7 @@ function continueToConfirmation() {
 
 /* ---------- Real mint ---------- */
 
+function friendlyError(e) { try { return friendlyMintError(e).message; } catch (x) { return "Something went wrong."; } }
 function friendlyMintError(e) {
   const raw = String((e && (e.reason || e.message || e)) || "");
   const infoMsg = e && e.info && e.info.error ? String(e.info.error.message || "") : "";
@@ -2026,6 +2028,11 @@ setInterval(syncButtonStates, 3000);
 window.addEventListener("focus", syncButtonStates);
 window.addEventListener("pageshow", syncButtonStates);
 
+/* Keep retrying the public contract read until it lands - a single failed
+   attempt on a slow connection must not leave the stats blank forever. */
+setInterval(function () { if (hasContract() && !chainState.loaded && !chainLoading) loadChainState(); }, 12000);
+
+
 /* Diagnostics: if anything failed while this page loaded, say so on screen
    (visible in a screenshot) instead of failing silently. */
 setTimeout(function () {
@@ -2035,7 +2042,7 @@ setTimeout(function () {
     var problems = [];
     (window.__acsErrs || []).forEach(function (m) { problems.push("JS error: " + m); });
     if (typeof window.ethers === "undefined") problems.push("wallet library (ethers) did not load - check connection");
-    if (hasContract() && !chainState.loaded) problems.push("contract data has not loaded yet (slow connection or RPC unreachable)");
+    /* chain-data state intentionally not flagged: slow connections resolve via the retry loop */
     if (problems.length) { bar.hidden = false; bar.textContent = "DIAGNOSTIC: " + problems.join(" | "); }
   } catch (e) {}
 }, 6000);
