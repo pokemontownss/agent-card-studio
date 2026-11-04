@@ -537,3 +537,18 @@ h2 { font-size: 30px; line-height: 1.1; letter-spacing: -.055em; margin: 0; font
 .collectible-card .card-topline { position: relative; }
 .collectible-card .card-topline::before { content: ""; position: absolute; left: -8px; top: -13px; width: 158px; height: 32px; background: rgba(255,255,255,.16); border: 1px solid rgba(23,19,14,.15); transform: skewX(-14deg); z-index: -1; }
 .collectible-card .card-topline::after { left: 26px; top: 118px; }
+
+/* === Live mint feed (v10) === */
+.mint-feed { padding: 54px 0 50px; border-bottom: 1px solid var(--line); }
+.mint-feed-status { font-size: 11px; line-height: 1.7; color: #74776e; margin: 14px 0 0; max-width: 640px; }
+.mint-feed-viewport { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); }
+.mint-feed-track { display: flex; width: max-content; }
+.mint-feed-track.is-scrolling { animation: mintFeedScroll 40s linear infinite; }
+.mint-feed-viewport:hover .mint-feed-track.is-scrolling { animation-play-state: paused; }
+@keyframes mintFeedScroll { to { transform: translateX(-50%); } }
+.mint-feed-item { width: 148px; margin: 0 14px 0 0; flex: none; }
+.mint-feed-item img { width: 100%; display: block; border-radius: 10px; box-shadow: 0 10px 24px rgba(18,20,24,.18); }
+.mint-feed-item figcaption { display: grid; gap: 1px; margin-top: 8px; }
+.mint-feed-item figcaption strong { font-size: 11px; letter-spacing: .4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mint-feed-item figcaption span { font-size: 10px; color: #74776e; font-family: ui-monospace, monospace; }
+@media (prefers-reduced-motion: reduce) { .mint-feed-track.is-scrolling { animation: none; } }

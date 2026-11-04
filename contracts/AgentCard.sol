@@ -44,6 +44,7 @@ contract AgentCard {
     // ---------- ERC-721 storage ----------
     mapping(uint256 => address) private _owners;
     uint256[40] private _takenBits; // 10,000 bits: serial numbers already drawn
+    uint256[] private _mintOrder; // token IDs in mint order, for the live mint feed
     mapping(address => uint256) private _balances;
     mapping(uint256 => address) private _tokenApprovals;
     mapping(address => mapping(address => bool)) private _operatorApprovals;
@@ -102,12 +103,22 @@ contract AgentCard {
 
         tokenId = _drawId(msg.sender);
         _markTaken(tokenId);
+        _mintOrder.push(tokenId);
         totalMinted += 1;
         cards[tokenId] = Card(agentName, style, colorHex, tier, signature);
         _owners[tokenId] = msg.sender;
         _balances[msg.sender] += 1;
         emit Transfer(address(0), msg.sender, tokenId);
         emit CardMinted(msg.sender, tokenId, agentName, style, tier);
+    }
+
+    /// @notice The most recent minted token IDs, newest first (for live feeds).
+    function recentMintIds(uint256 limit) external view returns (uint256[] memory ids) {
+        uint256 n = totalMinted < limit ? totalMinted : limit;
+        ids = new uint256[](n);
+        for (uint256 i = 0; i < n; i++) {
+            ids[i] = _mintOrder[totalMinted - 1 - i];
+        }
     }
 
     // ---------- Owner controls ----------
