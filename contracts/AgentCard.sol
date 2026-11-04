@@ -33,7 +33,7 @@ contract AgentCard {
 
     struct Card {
         string agentName;
-        uint8 style; // 0 = Guardian, 1 = Builder, 2 = Explorer
+        uint8 style; // 0 = Whale, 1 = Shark, 2 = Sniper
         string colorHex; // "#RRGGBB"
         uint8 tier; // 0 = Free, 1 = Paid
         string signature; // optional, max 24 chars, drawn on the card
@@ -256,9 +256,9 @@ contract AgentCard {
     }
 
     function _persona(uint8 style) internal pure returns (string memory) {
-        if (style == 0) return "Guardian";
-        if (style == 1) return "Builder";
-        return "Explorer";
+        if (style == 0) return "Whale";
+        if (style == 1) return "Shark";
+        return "Sniper";
     }
 
     function _power(uint8 style, uint8 tier) internal pure returns (uint256) {
@@ -331,7 +331,7 @@ contract AgentCard {
             '<text x="210" y="356" text-anchor="middle" font-family="Arial, sans-serif" font-size="205" font-weight="800" fill="#17130E" fill-opacity="0.055">', _esc(_firstChar(c.agentName)), '</text>',
             '<text x="211.5" y="291" text-anchor="middle" font-family="Arial, sans-serif" font-size="', _nameSize(bytes(c.agentName).length), '" font-weight="800" letter-spacing="0.5" fill="#ffffff" fill-opacity="0.35">', _esc(c.agentName), '</text>',
             '<text x="210" y="289.5" text-anchor="middle" font-family="Arial, sans-serif" font-size="', _nameSize(bytes(c.agentName).length), '" font-weight="800" letter-spacing="0.5" fill="', paid ? 'url(#goldText)' : '#17130E', '">', _esc(c.agentName), '</text>',
-            '<text x="210" y="330" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="700" letter-spacing="4.5" fill="#17130E" fill-opacity="0.72">', c.style == 0 ? 'GUARDIAN' : (c.style == 1 ? 'BUILDER' : 'EXPLORER'), '</text>',
+            '<text x="210" y="330" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="700" letter-spacing="4.5" fill="#17130E" fill-opacity="0.72">', c.style == 0 ? 'WHALE' : (c.style == 1 ? 'SHARK' : 'SNIPER'), '</text>',
             classSvg,
             sigSvg,
             '<rect x="30" y="502" width="360" height="1.2" fill="#000000" fill-opacity="0.22"/><rect x="30" y="503.4" width="360" height="1" fill="#ffffff" fill-opacity="0.3"/>',

@@ -4,7 +4,7 @@ Mint your own Agent Card as a real NFT on BNB Chain.
 
 - **Network:** BNB Smart Chain (mainnet, chainId 56)
 - **Contract:** `AgentCard` (ERC-721, symbol ACARD) — address appears here once deployed
-- **Card data:** agent name, persona (Guardian / Builder / Explorer) and color are stored on-chain; the card image is an SVG rendered by the contract itself (tokenURI is fully on-chain, no external image server)
+- **Card data:** agent name, persona (Whale / Shark / Sniper) and color are stored on-chain; the card image is an SVG rendered by the contract itself (tokenURI is fully on-chain, no external image server)
 - **Two mint editions:** Free Mint (anti-sybil fee, default 0.0002 BNB, max 1 free mint per wallet, standard design) and Paid Mint (default 0.002 BNB, premium gold holographic trading-card design, Power +30). Every wallet can mint at most 2 cards in total across both editions, and all mint payments accumulate in the contract for the owner to withdraw — plus network gas, paid from your own wallet
 - **Card art:** premium MINIMAL metal card (Binance Agent ID card style) — brushed-metal finish in the minter's chosen color (10 colors), engraved concentric circles, a randomly drawn serial number (#1-#4444 shared pool, drawn by the contract at mint), the agent name as the hero in the center, persona in small caps, edition + rarity (Common for Free, Rare Holo for Paid). The card SVG is rendered fully on-chain by the contract (tokenURI image is a data URI); the site preview and PNG download mirror the same design. The persona illustrations in `assets/` remain available as promo art
 - **Supply:** max 4,444
