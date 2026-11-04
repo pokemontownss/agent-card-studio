@@ -41,7 +41,7 @@ const colorConfig = {
   slate: { label: "Slate / 018", hex: "#7C8DA6", ink: "#17130E", accent: "#4E6076" },
 };
 
-const state = { name: "nara.ai", nameMode: "free", mintCount: null, signature: "", persona: "guardian", color: "violet", tier: 0, freeUsed: false, connected: false, address: null, chainId: null };
+const state = { name: "nara.ai", nameMode: "free", mintCount: null, signMode: "type", signDrawn: "", signature: "", persona: "guardian", color: "violet", tier: 0, freeUsed: false, connected: false, address: null, chainId: null };
 const heroState = { persona: "guardian", color: "violet" };
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -199,7 +199,10 @@ function updateCard() {
   state.name = getName();
   state.signature = rawSignature();
   const signEl = $("#previewSign");
-  if (signEl) signEl.textContent = state.signature;
+  const useDrawn = state.signMode === "draw" && Boolean(state.signDrawn);
+  if (signEl) signEl.textContent = useDrawn ? "" : state.signature;
+  const signImg = $("#previewSignImg");
+  if (signImg) { signImg.hidden = !useDrawn; if (useDrawn) signImg.src = state.signDrawn; }
   const monoEl = $("#previewMono");
   if (monoEl) monoEl.textContent = (state.name || "").charAt(0);
   const card = $("#cardPreview");
@@ -236,6 +239,10 @@ function updateCardSlots() {
     if (roleEl) roleEl.textContent = personaConfig[state.persona].title.toUpperCase();
     const classEl = clone.querySelector(".card-class");
     if (classEl) classEl.textContent = mintedResult ? serialClassLabel(mintedResult.tokenId) : "";
+    const cSignImg = clone.querySelector(".card-sign-img");
+    if (cSignImg) { const ud = state.signMode === "draw" && Boolean(state.signDrawn); cSignImg.hidden = !ud; if (ud) cSignImg.src = state.signDrawn; }
+    const cSign = clone.querySelector(".card-sign");
+    if (cSign && state.signMode === "draw" && state.signDrawn) cSign.textContent = "";
     applyEditionToClone(clone, label);
     slot.replaceChildren(clone);
   });
@@ -767,6 +774,7 @@ async function runRealMint() {
       } catch (e) { tokenId = (chainState.totalMinted || 0) + 1; }
     }
     mintedResult = { tokenId: tokenId, txHash: receipt.hash || tx.hash, tier: state.tier };
+    if (state.signMode === "draw" && state.signDrawn) { try { localStorage.setItem("acs-sig-" + tokenId, state.signDrawn); } catch (e) { /* storage optional */ } }
     loadMintFeed(true);
     if (state.tier === 0) state.freeUsed = true;
     if (state.mintCount != null) state.mintCount += 1;
@@ -833,6 +841,7 @@ function buildMetalSvg(opts) {
   const frameSvg = paid ? '<use href="#fr" fill="none" stroke="#8a6a1f" stroke-opacity="0.5"/><use href="#fd" opacity="0.85"/>' : '';
   const cls = serialClassLabel(opts.serial);
   const classSvg = cls ? '<text x="210" y="364" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="700" letter-spacing="3.5" fill="#17130E" fill-opacity="0.78">&#9670; ' + cls + ' &#9670;</text>' : '';
+  const sigImgSvg = opts.signatureImage ? '<image href="' + opts.signatureImage + '" x="238" y="498" width="162" height="56" preserveAspectRatio="xMaxYMax meet"/>' : '';
   const sigSvg = sigText
     ? '<text x="390" y="480" text-anchor="end" transform="rotate(-3 390 480)" font-family="\'Brush Script MT\',\'Segoe Script\',\'Snell Roundhand\',cursive" font-size="21" fill="#17130E" fill-opacity="0.85">' + escapeXml(sigText) + '</text><path d="M302 489 Q345 495 388 487" stroke="#17130E" stroke-opacity="0.35" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
     : '';
@@ -861,6 +870,7 @@ function buildMetalSvg(opts) {
     + '<text x="210" y="330" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="700" letter-spacing="4.5" fill="' + ink + '" fill-opacity="0.72">' + persona + '</text>'
     + classSvg
     + sigSvg
+    + sigImgSvg
     + '<rect x="30" y="502" width="360" height="1.2" fill="#000000" fill-opacity="0.22"/><rect x="30" y="503.4" width="360" height="1" fill="#ffffff" fill-opacity="0.3"/>'
     + '<text x="30" y="540" font-family="Arial, sans-serif" font-size="13.5" font-weight="700" letter-spacing="1.6" fill="' + ink + '" fill-opacity="0.88">No. ' + pad4(opts.serial) + ' / ' + (chainState.maxSupply || 4444) + '</text>'
     + '<g transform="translate(291 533) rotate(45)" fill="#17130E" fill-opacity="0.8"><rect x="-4.5" y="-4.5" width="9" height="9"/></g>'
@@ -877,19 +887,30 @@ function buildCardSvg(tokenId) {
     colorHex: colorConfig[state.color].hex,
     tier: tier,
     serial: tokenId,
-    signature: state.signature,
+    signature: state.signMode === "draw" ? "" : state.signature,
+    signatureImage: state.signMode === "draw" ? state.signDrawn : "",
   });
+}
+
+function loadImageEl(src) {
+  return new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; });
+}
+function drawnSignatureFor(tokenId) {
+  if (mintedResult && tokenId === mintedResult.tokenId && state.signMode === "draw" && state.signDrawn) return state.signDrawn;
+  try { return localStorage.getItem("acs-sig-" + tokenId) || ""; } catch (e) { return ""; }
 }
 
 async function downloadCard() {
   const tokenId = mintedResult ? mintedResult.tokenId : (chainState.totalMinted != null ? chainState.totalMinted + 1 : 1);
   let svg = null;
+  let svgFromChain = false;
   if (mintedResult && readContract) {
     try {
       const meta = decodeTokenUri(await readContract.tokenURI(mintedResult.tokenId));
       if (meta && typeof meta.image === "string" && meta.image.startsWith("data:image/svg+xml;base64,")) {
         const b64img = meta.image.split(",")[1];
         svg = new TextDecoder().decode(Uint8Array.from(atob(b64img), (ch) => ch.charCodeAt(0)));
+        svgFromChain = true;
       }
     } catch (e) { /* fallback ke render studio di bawah */ }
   }
@@ -898,13 +919,22 @@ async function downloadCard() {
   const url = URL.createObjectURL(blob);
   try {
     const image = new Image();
-    image.onload = () => {
+    image.onload = async () => {
       const canvas = document.createElement("canvas");
       canvas.width = 840;
       canvas.height = 1188;
       const ctx = canvas.getContext("2d");
       ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
       URL.revokeObjectURL(url);
+      const sigData = drawnSignatureFor(tokenId);
+      if (svgFromChain && sigData) {
+        try {
+          const sigImg = await loadImageEl(sigData);
+          const sh = 96;
+          const sw = sh * (sigImg.width / sigImg.height);
+          ctx.drawImage(sigImg, 800 - sw, 1104 - sh, sw, sh);
+        } catch (e) { /* signature overlay is optional */ }
+      }
       canvas.toBlob((png) => {
         if (!png) { showToast("Failed to create the PNG. Try again."); return; }
         const downloadUrl = URL.createObjectURL(png);
@@ -1407,6 +1437,15 @@ async function downloadCertificate(id, cardData, meta) {
     const img = new Image();
     await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = meta.image; });
     ctx.drawImage(img, 76, 196, 309, 437);
+    const savedSig = drawnSignatureFor(id);
+    if (savedSig) {
+      try {
+        const sigImg = await loadImageEl(savedSig);
+        const sh2 = 30;
+        const sw2 = sh2 * (sigImg.width / sigImg.height);
+        ctx.drawImage(sigImg, 370 - sw2, 604 - sh2, sw2, sh2);
+      } catch (e) { /* signature overlay is optional */ }
+    }
     ctx.textAlign = "left";
     let y = 250;
     ctx.fillStyle = "#ffffff";
@@ -1490,6 +1529,65 @@ $$(".name-mode").forEach((btn) => btn.addEventListener("click", () => {
   validInput();
   refreshMintUI();
 }));
+
+$$(".sign-mode").forEach((btn) => btn.addEventListener("click", () => {
+  state.signMode = btn.dataset.signMode;
+  $$(".sign-mode").forEach((b) => {
+    const sel = b === btn;
+    b.classList.toggle("is-selected", sel);
+    b.setAttribute("aria-pressed", String(sel));
+  });
+  const wrap = $("#signPadWrap");
+  if (wrap) wrap.hidden = state.signMode !== "draw";
+  updateCard();
+}));
+
+const signPad = $("#signPad");
+if (signPad) {
+  const pctx = signPad.getContext("2d");
+  pctx.lineWidth = 3.4;
+  pctx.lineCap = "round";
+  pctx.lineJoin = "round";
+  pctx.strokeStyle = "#20231f";
+  let drawing = false;
+  let lastPos = null;
+  const padPos = (ev) => {
+    const r = signPad.getBoundingClientRect();
+    return { x: (ev.clientX - r.left) * (signPad.width / r.width), y: (ev.clientY - r.top) * (signPad.height / r.height) };
+  };
+  signPad.addEventListener("pointerdown", (ev) => {
+    drawing = true;
+    lastPos = padPos(ev);
+    try { signPad.setPointerCapture(ev.pointerId); } catch (e) {}
+    pctx.beginPath();
+    pctx.moveTo(lastPos.x, lastPos.y);
+    pctx.lineTo(lastPos.x + 0.1, lastPos.y + 0.1);
+    pctx.stroke();
+  });
+  signPad.addEventListener("pointermove", (ev) => {
+    if (!drawing) return;
+    const pos = padPos(ev);
+    pctx.beginPath();
+    pctx.moveTo(lastPos.x, lastPos.y);
+    pctx.lineTo(pos.x, pos.y);
+    pctx.stroke();
+    lastPos = pos;
+  });
+  const endDraw = () => {
+    if (!drawing) return;
+    drawing = false;
+    state.signDrawn = signPad.toDataURL("image/png");
+    updateCard();
+  };
+  signPad.addEventListener("pointerup", endDraw);
+  signPad.addEventListener("pointercancel", endDraw);
+  const clearBtn = $("#signClear");
+  if (clearBtn) clearBtn.addEventListener("click", () => {
+    pctx.clearRect(0, 0, signPad.width, signPad.height);
+    state.signDrawn = "";
+    updateCard();
+  });
+}
 
 const signInput = $("#agentSignature");
 if (signInput) signInput.addEventListener("input", () => {

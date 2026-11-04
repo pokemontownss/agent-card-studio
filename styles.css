@@ -587,3 +587,14 @@ h2 { font-size: 30px; line-height: 1.1; letter-spacing: -.055em; margin: 0; font
 .collectible-card .card-mono { color: rgba(23,19,14,.10); font-size: 185px; }
 .collectible-card::before { background: repeating-linear-gradient(0deg, rgba(255,255,255,.05) 0 1px, transparent 1px 3px, rgba(0,0,0,.045) 3px 4px, transparent 4px 6px), linear-gradient(130deg, transparent 44%, rgba(255,255,255,.28) 44.2%, transparent 44.7%), radial-gradient(ellipse at 70% 38%, rgba(255,255,255,.5), transparent 28%); }
 .collectible-card.card-paid::after { display: block; content: ''; position: absolute; inset: 6.5%; width: auto; height: auto; transform: none; border: 1px solid rgba(138,106,31,.55); border-radius: 10px; box-shadow: inset 0 0 0 3px rgba(0,0,0,0), inset 0 0 0 4px rgba(138,106,31,.32); background-image: linear-gradient(45deg, transparent 33%, rgba(138,106,31,.85) 33%, rgba(138,106,31,.85) 66%, transparent 66%), linear-gradient(45deg, transparent 33%, rgba(138,106,31,.85) 33%, rgba(138,106,31,.85) 66%, transparent 66%), linear-gradient(45deg, transparent 33%, rgba(138,106,31,.85) 33%, rgba(138,106,31,.85) 66%, transparent 66%), linear-gradient(45deg, transparent 33%, rgba(138,106,31,.85) 33%, rgba(138,106,31,.85) 66%, transparent 66%); background-size: 11px 11px; background-position: 0 0, 100% 0, 0 100%, 100% 100%; background-repeat: no-repeat; pointer-events: none; }
+
+/* === Hand-drawn signature pad === */
+.sign-mode-toggle { display: flex; gap: 8px; margin: 14px 0 0; }
+.sign-mode { flex: 1; padding: 9px 10px; border-radius: 10px; border: 1px solid var(--line); background: transparent; color: inherit; font-size: 12px; font-weight: 700; letter-spacing: .5px; cursor: pointer; }
+.sign-mode.is-selected { background: #17130e; border-color: #17130e; color: #f5efe2; }
+.sign-pad-wrap { margin-top: 10px; }
+#signPad { width: 100%; height: 130px; display: block; background: #fffdf7; border: 1.5px dashed rgba(32,35,31,.35); border-radius: 12px; touch-action: none; cursor: crosshair; }
+.sign-pad-actions { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 8px; }
+.sign-pad-hint { font-size: 12px; opacity: .75; }
+.sign-clear { padding: 7px 12px; font-size: 12px; }
+.collectible-card .card-sign-img { position: absolute; right: 16px; bottom: 30px; z-index: 2; height: 36px; max-width: 46%; object-fit: contain; object-position: right bottom; pointer-events: none; }
