@@ -22,6 +22,7 @@ contract CardStake {
     ICardNFT2 public nft;
     IACARD2 public token;
     uint256 public ratePerDay = 500 * 10 ** 18;
+    uint256 public actionFee = 0.0001 ether;
 
     struct StakeInfo {
         address owner;
@@ -49,6 +50,17 @@ contract CardStake {
         ratePerDay = rate_;
     }
 
+    function setActionFee(uint256 fee_) external {
+        require(msg.sender == owner, "Not owner");
+        actionFee = fee_;
+    }
+
+    function withdraw() external {
+        require(msg.sender == owner, "Not owner");
+        (bool ok, ) = payable(owner).call{value: address(this).balance}("");
+        require(ok, "Withdraw failed");
+    }
+
     function poolBalance() external view returns (uint256) {
         return token.balanceOf(address(this));
     }
@@ -59,7 +71,8 @@ contract CardStake {
         return (block.timestamp - info.since) * ratePerDay / 86400;
     }
 
-    function stake(uint256 tokenId) external {
+    function stake(uint256 tokenId) external payable {
+        require(msg.value >= actionFee, "Fee too low");
         require(address(nft) != address(0), "NFT not set");
         require(stakes[tokenId].owner == address(0), "Already staked");
         nft.transferFrom(msg.sender, address(this), tokenId);

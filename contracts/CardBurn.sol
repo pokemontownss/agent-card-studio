@@ -23,6 +23,7 @@ contract CardBurn {
     ICardNFT public nft;
     IACARD public token;
     uint256 public reward = 50_000 * 10 ** 18;
+    uint256 public actionFee = 0.0001 ether;
     uint256 public totalBurned;
 
     event Burned(address indexed user, uint256 indexed tokenId, uint256 rewardPaid);
@@ -42,11 +43,23 @@ contract CardBurn {
         reward = reward_;
     }
 
+    function setActionFee(uint256 fee_) external {
+        require(msg.sender == owner, "Not owner");
+        actionFee = fee_;
+    }
+
+    function withdraw() external {
+        require(msg.sender == owner, "Not owner");
+        (bool ok, ) = payable(owner).call{value: address(this).balance}("");
+        require(ok, "Withdraw failed");
+    }
+
     function poolBalance() external view returns (uint256) {
         return token.balanceOf(address(this));
     }
 
-    function burn(uint256 tokenId) external {
+    function burn(uint256 tokenId) external payable {
+        require(msg.value >= actionFee, "Fee too low");
         require(address(nft) != address(0), "NFT not set");
         require(nft.ownerOf(tokenId) == msg.sender, "Not your card");
         require(token.balanceOf(address(this)) >= reward, "Pool empty");
