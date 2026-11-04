@@ -574,3 +574,8 @@ h2 { font-size: 30px; line-height: 1.1; letter-spacing: -.055em; margin: 0; font
 .name-field-wrap { position: relative; }
 .name-field-wrap.has-suffix input { padding-right: 48px; }
 .name-suffix { position: absolute; right: 13px; top: 50%; transform: translateY(-50%); font-weight: 800; font-size: 14px; color: #8a6a1f; pointer-events: none; }
+
+/* === Preview parity polish (v12.1) === */
+.collectible-card .card-mono { color: rgba(23,19,14,.10); font-size: 185px; }
+.collectible-card::before { background: repeating-linear-gradient(0deg, rgba(255,255,255,.05) 0 1px, transparent 1px 3px, rgba(0,0,0,.045) 3px 4px, transparent 4px 6px), linear-gradient(130deg, transparent 44%, rgba(255,255,255,.28) 44.2%, transparent 44.7%), radial-gradient(ellipse at 70% 38%, rgba(255,255,255,.5), transparent 28%); }
+.collectible-card.card-paid::after { display: block; content: ''; position: absolute; inset: 6.5%; width: auto; height: auto; transform: none; border: 1px solid rgba(138,106,31,.55); border-radius: 10px; box-shadow: inset 0 0 0 3px rgba(0,0,0,0), inset 0 0 0 4px rgba(138,106,31,.32); background-image: linear-gradient(45deg, transparent 33%, rgba(138,106,31,.85) 33%, rgba(138,106,31,.85) 66%, transparent 66%), linear-gradient(45deg, transparent 33%, rgba(138,106,31,.85) 33%, rgba(138,106,31,.85) 66%, transparent 66%), linear-gradient(45deg, transparent 33%, rgba(138,106,31,.85) 33%, rgba(138,106,31,.85) 66%, transparent 66%), linear-gradient(45deg, transparent 33%, rgba(138,106,31,.85) 33%, rgba(138,106,31,.85) 66%, transparent 66%); background-size: 11px 11px; background-position: 0 0, 100% 0, 0 100%, 100% 100%; background-repeat: no-repeat; pointer-events: none; }
