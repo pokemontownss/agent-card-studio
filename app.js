@@ -330,7 +330,7 @@ function setStep(step) {
 }
 
 function showView(viewId, step) {
-  views.forEach((id) => { document.getElementById(id).hidden = id !== viewId; });
+  views.forEach((id) => { const el = document.getElementById(id); if (el) el.hidden = id !== viewId; });
   setStep(step);
   const studio = $("#studio");
   if (studio) window.scrollTo({ top: studio.offsetTop - 16, behavior: prefersReducedMotion ? "auto" : "smooth" });
@@ -725,15 +725,19 @@ function disconnectWallet() {
 }
 
 function continueToConfirmation() {
-  if (!validInput()) {
-    $("#agentName").focus();
-    showToast("Check the Agent ID name format.");
-    return;
+  try {
+    if (!validInput()) {
+      $("#agentName").focus();
+      showToast("Check the Agent ID name format.");
+      return;
+    }
+    updateCard();
+    updateConfirmReceipt();
+    refreshMintUI();
+    showView("confirmView", 2);
+  } catch (e) {
+    showErrorView("Something on this page stopped the mint step: " + String(e && e.message || e), "PAGE ERROR");
   }
-  updateCard();
-  updateConfirmReceipt();
-  refreshMintUI();
-  showView("confirmView", 2);
 }
 
 /* ---------- Real mint ---------- */
@@ -2021,6 +2025,21 @@ function syncButtonStates() {
 setInterval(syncButtonStates, 3000);
 window.addEventListener("focus", syncButtonStates);
 window.addEventListener("pageshow", syncButtonStates);
+
+/* Diagnostics: if anything failed while this page loaded, say so on screen
+   (visible in a screenshot) instead of failing silently. */
+setTimeout(function () {
+  try {
+    var bar = document.getElementById("debugBar");
+    if (!bar) return;
+    var problems = [];
+    (window.__acsErrs || []).forEach(function (m) { problems.push("JS error: " + m); });
+    if (typeof window.ethers === "undefined") problems.push("wallet library (ethers) did not load - check connection");
+    if (hasContract() && !chainState.loaded) problems.push("contract data has not loaded yet (slow connection or RPC unreachable)");
+    if (problems.length) { bar.hidden = false; bar.textContent = "DIAGNOSTIC: " + problems.join(" | "); }
+  } catch (e) {}
+}, 6000);
+
 loadChainState();
 startMintFeed();
 
