@@ -226,12 +226,14 @@ contract AgentCard {
         require(_owners[tokenId] != address(0), "Nonexistent token");
         Card memory c = cards[tokenId];
         string memory svg = _buildSvg(tokenId, c);
+        uint8 sCls = _serialClass(tokenId);
+        string memory classAttr = string(abi.encodePacked(',{"trait_type":"Serial Class","value":"', sCls == 1 ? 'Founder' : (sCls == 2 ? 'Rare' : 'Standard'), '"}'));
         string memory sigAttr = bytes(c.signature).length > 0
             ? string(abi.encodePacked(',{"trait_type":"Signature","value":"', c.signature, '"}'))
             : "";
         string memory json = string(abi.encodePacked(
             '{"name":"', c.agentName, ' - Agent Card #', _toString(tokenId), '",',
-            '"description":"A premium minimal metal Agent Card on BNB Chain: brushed-metal finish in the color chosen at mint, a randomly drawn serial number from the shared #1-#10000 pool, embossed agent name, rendered fully on-chain as SVG. A collectible card, not an official Binance Agent ID.",',
+            '"description":"A premium minimal metal Agent Card on BNB Chain. Random serial from the shared #1-#10000 pool, rendered fully on-chain as SVG. Not an official Binance Agent ID.",',
             '"image":"data:image/svg+xml;base64,', _base64(bytes(svg)), '",',
             '"attributes":[',
             '{"trait_type":"Persona","value":"', _persona(c.style), '"},',
@@ -240,7 +242,7 @@ contract AgentCard {
             '{"trait_type":"Edition","value":"', c.tier == 1 ? "Paid" : "Free", '"},',
             '{"trait_type":"Rarity","value":"', c.tier == 1 ? "Rare Holo" : "Common", '"},',
             '{"trait_type":"Power","value":', _toString(_power(c.style, c.tier)), '}',
-            sigAttr,
+            classAttr, sigAttr,
             ']}'
         ));
         return string(abi.encodePacked("data:application/json;base64,", _base64(bytes(json))));
@@ -257,6 +259,29 @@ contract AgentCard {
         return tier == 1 ? p + 30 : p;
     }
 
+    /// @notice 0 = Standard, 1 = Founder (serial #1-#100), 2 = Rare pattern.
+    function _serialClass(uint256 id) internal pure returns (uint8) {
+        if (id <= 100) return 1;
+        if (id == MAX_SUPPLY) return 2;
+        uint256 n = id;
+        uint256 rev = 0;
+        while (n > 0) { rev = rev * 10 + (n % 10); n /= 10; }
+        if (rev == id) return 2;
+        uint256 d = id % 10;
+        n = id / 10;
+        bool same = id >= 10;
+        while (n > 0) { if (n % 10 != d) { same = false; break; } n /= 10; }
+        return same ? 2 : 0;
+    }
+
+    function _firstChar(string memory str) internal pure returns (string memory) {
+        bytes memory b = bytes(str);
+        if (b.length == 0) return "";
+        bytes memory out = new bytes(1);
+        out[0] = b[0];
+        return string(out);
+    }
+
     function _buildSvg(uint256 tokenId, Card memory c) internal pure returns (string memory) {
         string memory L1 = _mixStr(c.colorHex, true, 55);
         string memory L2 = _mixStr(c.colorHex, true, 22);
@@ -264,8 +289,11 @@ contract AgentCard {
         string memory D2 = _mixStr(c.colorHex, false, 55);
         bool paid = c.tier == 1;
         string memory sparkles = paid
-            ? '<g fill="#ffffff"><use href="#st" transform="translate(56 128)" opacity="0.85"/><use href="#st" transform="translate(356 140) scale(0.7)" opacity="0.7"/><use href="#st" transform="translate(84 448) scale(0.6)" opacity="0.55"/><use href="#st" transform="translate(322 458) scale(0.85)" opacity="0.75"/><use href="#st" transform="translate(128 84) scale(0.45)" opacity="0.55"/><use href="#st" transform="translate(282 92) scale(0.5)" opacity="0.6"/></g><g fill="#FFE9A8"><use href="#st" transform="translate(210 118) scale(0.55)" opacity="0.95"/><use href="#st" transform="translate(38 302) scale(0.5)" opacity="0.75"/></g>'
-            : '<g fill="#ffffff"><use href="#st" transform="translate(56 128)" opacity="0.6"/><use href="#st" transform="translate(356 140) scale(0.7)" opacity="0.5"/><use href="#st" transform="translate(84 448) scale(0.6)" opacity="0.4"/><use href="#st" transform="translate(322 458) scale(0.85)" opacity="0.55"/><use href="#st" transform="translate(128 84) scale(0.45)" opacity="0.4"/><use href="#st" transform="translate(282 92) scale(0.5)" opacity="0.45"/></g>';
+            ? '<g fill="#ffffff"><use href="#st" transform="translate(56 128)" opacity="0.85"/><use href="#st" transform="translate(356 140) scale(0.7)" opacity="0.7"/><use href="#st" transform="translate(84 448) scale(0.6)" opacity="0.55"/><use href="#st" transform="translate(322 458) scale(0.85)" opacity="0.75"/></g><g fill="#FFE9A8"><use href="#st" transform="translate(210 118) scale(0.55)" opacity="0.95"/><use href="#st" transform="translate(38 302) scale(0.5)" opacity="0.75"/></g>'
+            : '<g fill="#ffffff"><use href="#st" transform="translate(56 128)" opacity="0.6"/><use href="#st" transform="translate(356 140) scale(0.7)" opacity="0.5"/><use href="#st" transform="translate(84 448) scale(0.6)" opacity="0.4"/><use href="#st" transform="translate(322 458) scale(0.85)" opacity="0.55"/></g>';
+        uint8 sClass = _serialClass(tokenId);
+        string memory classSvg = sClass == 0 ? "" : string(abi.encodePacked('<text x="210" y="364" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="700" letter-spacing="3.5" fill="#17130E" fill-opacity="0.78">&#9670; ', sClass == 1 ? 'FOUNDER SERIAL' : 'RARE SERIAL', ' &#9670;</text>'));
+        string memory frameSvg = paid ? '<use href="#fr" fill="none" stroke="#8a6a1f" stroke-opacity="0.5"/><use href="#fd" opacity="0.85"/>' : "";
         string memory sigSvg = bytes(c.signature).length > 0
             ? string(abi.encodePacked('<text x="390" y="480" text-anchor="end" transform="rotate(-3 390 480)" font-family="\'Brush Script MT\',\'Segoe Script\',\'Snell Roundhand\',cursive" font-size="21" fill="#17130E" fill-opacity="0.85">', _esc(c.signature), '</text><path d="M302 489 Q345 495 388 487" stroke="#17130E" stroke-opacity="0.35" stroke-width="1.3" fill="none" stroke-linecap="round"/>'))
             : "";
@@ -277,19 +305,21 @@ contract AgentCard {
             '<linearGradient id="metal" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="', L1, '"/><stop offset="0.2" stop-color="', c.colorHex, '"/><stop offset="0.42" stop-color="', D1, '"/><stop offset="0.62" stop-color="', L2, '"/><stop offset="0.82" stop-color="', D2, '"/><stop offset="1" stop-color="', L1, '"/></linearGradient>',
             '<linearGradient id="sheen" x1="0" y1="0" x2="0.7" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0.55"/><stop offset="0.45" stop-color="#ffffff" stop-opacity="0.05"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>',
             '<linearGradient id="holo" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff5f6d"/><stop offset="0.25" stop-color="#ffc371"/><stop offset="0.5" stop-color="#8aff80"/><stop offset="0.75" stop-color="#4dc9ff"/><stop offset="1" stop-color="#b18cff"/></linearGradient>',
-            '<pattern id="brush" width="3" height="3" patternUnits="userSpaceOnUse"><line x1="0" y1="0.5" x2="3" y2="0.5" stroke="#ffffff" stroke-opacity="0.05"/><line x1="0" y1="2" x2="3" y2="2" stroke="#000000" stroke-opacity="0.05"/></pattern><g id="geo"><circle cx="210" cy="282" r="120"/><circle cx="210" cy="282" r="76"/><line x1="86" y1="96" x2="86" y2="468"/><line x1="334" y1="96" x2="334" y2="468"/><line x1="90" y1="282" x2="330" y2="282"/><path d="M86 152 A56 56 0 0 0 142 96"/><path d="M334 152 A56 56 0 0 1 278 96"/><path d="M86 412 A56 56 0 0 1 142 468"/><path d="M334 412 A56 56 0 0 0 278 468"/><rect x="22" y="22" width="376" height="550" rx="16"/></g><path id="st" d="M0 -12 L3 -3 L12 0 L3 3 L0 12 L-3 3 L-12 0 L-3 -3 Z"/></defs>',
-            '<rect x="6" y="6" width="408" height="582" rx="26" fill="url(#metal)"/><rect x="6" y="6" width="408" height="582" rx="26" fill="url(#brush)"/>', overlay,
-            '<ellipse cx="105" cy="66" rx="195" ry="92" fill="#ffffff" opacity="0.10"/><rect x="-60" y="150" width="540" height="46" fill="#ffffff" opacity="0.06" transform="rotate(-24 210 297)"/>', sparkles,
-            '<use href="#geo" fill="none" stroke="#17130E" stroke-opacity="0.12"/><use href="#geo" transform="translate(0 1.3)" fill="none" stroke="#ffffff" stroke-opacity="0.13"/>',
+            '<linearGradient id="goldText" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8a6a1f"/><stop offset="0.5" stop-color="#f7e08b"/><stop offset="1" stop-color="#b8860b"/></linearGradient><g id="geo"><circle cx="210" cy="282" r="120"/><circle cx="210" cy="282" r="76"/><line x1="86" y1="96" x2="86" y2="468"/><line x1="334" y1="96" x2="334" y2="468"/><path d="M86 152 A56 56 0 0 0 142 96"/><path d="M334 152 A56 56 0 0 1 278 96"/><path d="M86 412 A56 56 0 0 1 142 468"/><path d="M334 412 A56 56 0 0 0 278 468"/><rect x="22" y="22" width="376" height="550" rx="16"/></g><path id="st" d="M0 -12 L3 -3 L12 0 L3 3 L0 12 L-3 3 L-12 0 L-3 -3 Z"/><g id="fr"><rect x="30" y="30" width="360" height="534" rx="12"/><path d="M22 22 l7 -7 M398 22 l-7 -7 M22 572 l7 7 M398 572 l-7 7" stroke-linecap="round"/></g><g id="fd" fill="#8a6a1f"><rect x="-4" y="-4" width="8" height="8" transform="translate(22 22) rotate(45)"/><rect x="-4" y="-4" width="8" height="8" transform="translate(398 22) rotate(45)"/><rect x="-4" y="-4" width="8" height="8" transform="translate(22 572) rotate(45)"/><rect x="-4" y="-4" width="8" height="8" transform="translate(398 572) rotate(45)"/></g></defs>',
+            '<rect x="6" y="6" width="408" height="582" rx="26" fill="url(#metal)"/>', overlay,
+            sparkles,
+            '<use href="#geo" fill="none" stroke="#17130E" stroke-opacity="0.12"/><use href="#geo" transform="translate(0 1.3)" fill="none" stroke="#ffffff" stroke-opacity="0.13"/>', frameSvg,
             '<rect x="14" y="14" width="392" height="566" rx="20" fill="none" stroke="#ffffff" stroke-opacity="0.38" stroke-width="1.5"/>',
             '<rect x="6" y="6" width="408" height="582" rx="26" fill="none" stroke="#000000" stroke-opacity="0.45" stroke-width="2"/>',
             '<path d="M6 34 L158 34 L146 60 L6 60 Z" fill="#ffffff" fill-opacity="0.16" stroke="#17130E" stroke-opacity="0.18"/>',
             '<text x="30" y="54" font-family="Arial, sans-serif" font-size="12.5" font-weight="700" letter-spacing="3.5" fill="#17130E" fill-opacity="0.88">AGENT CARD</text>',
             '<text x="390" y="54" text-anchor="end" font-family="Arial, sans-serif" font-size="11.5" font-weight="700" letter-spacing="2" fill="#17130E" fill-opacity="0.88">', 'ONE AND ONLY', '</text>',
             '<rect x="30" y="66" width="360" height="1.4" fill="#000000" fill-opacity="0.28"/><rect x="30" y="67.6" width="360" height="1" fill="#ffffff" fill-opacity="0.35"/>',
+            '<text x="210" y="356" text-anchor="middle" font-family="Arial, sans-serif" font-size="205" font-weight="800" fill="#17130E" fill-opacity="0.055">', _esc(_firstChar(c.agentName)), '</text>',
             '<text x="211.5" y="291" text-anchor="middle" font-family="Arial, sans-serif" font-size="', _nameSize(bytes(c.agentName).length), '" font-weight="800" letter-spacing="0.5" fill="#ffffff" fill-opacity="0.35">', _esc(c.agentName), '</text>',
-            '<text x="210" y="289.5" text-anchor="middle" font-family="Arial, sans-serif" font-size="', _nameSize(bytes(c.agentName).length), '" font-weight="800" letter-spacing="0.5" fill="#17130E">', _esc(c.agentName), '</text>',
+            '<text x="210" y="289.5" text-anchor="middle" font-family="Arial, sans-serif" font-size="', _nameSize(bytes(c.agentName).length), '" font-weight="800" letter-spacing="0.5" fill="', paid ? 'url(#goldText)' : '#17130E', '">', _esc(c.agentName), '</text>',
             '<text x="210" y="330" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="700" letter-spacing="4.5" fill="#17130E" fill-opacity="0.72">', c.style == 0 ? 'GUARDIAN' : (c.style == 1 ? 'BUILDER' : 'EXPLORER'), '</text>',
+            classSvg,
             sigSvg,
             '<rect x="30" y="502" width="360" height="1.2" fill="#000000" fill-opacity="0.22"/><rect x="30" y="503.4" width="360" height="1" fill="#ffffff" fill-opacity="0.3"/>',
             '<text x="30" y="540" font-family="Arial, sans-serif" font-size="13.5" font-weight="700" letter-spacing="1.6" fill="#17130E" fill-opacity="0.88">No. ', _pad4(tokenId), ' / 10000</text>',
