@@ -1877,6 +1877,7 @@ onScroll();
 
 const revealItems = $$(".reveal");
 if ("IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  document.documentElement.classList.add("reveal-armed");
   const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
