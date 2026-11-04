@@ -14,3 +14,9 @@ Agent Card is a collectible digital card. It is **not** an official Binance Agen
 ## Files
 - `index.html`, `styles.css`, `app.js` — the static site (GitHub Pages)
 - `contracts/AgentCard.sol` — the ERC-721 contract source (solc 0.8.26, optimizer 200, viaIR)
+- `contracts/ACARD.sol` — the $ACARD reward token (ERC-20, fixed supply 1,000,000,000)
+- `contracts/CardBurn.sol` — burn an Agent Card (sent to the dead address forever) for 50,000 $ACARD, paid from a funded pool of 222,200,000 $ACARD
+- `contracts/CardStake.sol` — stake an Agent Card to earn 500 $ACARD per day from a funded pool of 200,000,000 $ACARD; unstake anytime to get the card back
+
+## Minting via AI agent
+The Mint section also offers copy-ready agent prompts (free / paid, quantity 1–2) plus read-only "Check your mints" by wallet address — no wallet connection needed for those. The studio's direct wallet mint remains available.
