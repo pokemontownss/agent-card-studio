@@ -43,6 +43,7 @@ contract AgentCard {
 
     // ---------- ERC-721 storage ----------
     mapping(uint256 => address) private _owners;
+    uint256[40] private _takenBits; // 10,000 bits: serial numbers already drawn
     mapping(address => uint256) private _balances;
     mapping(uint256 => address) private _tokenApprovals;
     mapping(address => mapping(address => bool)) private _operatorApprovals;
@@ -71,6 +72,25 @@ contract AgentCard {
         return _issue(agentName, style, colorHex, signature, TIER_PAID);
     }
 
+    function _isTaken(uint256 id) internal view returns (bool) {
+        uint256 bit = id - 1;
+        return (_takenBits[bit / 256] >> (bit % 256)) & 1 == 1;
+    }
+
+    function _markTaken(uint256 id) internal {
+        uint256 bit = id - 1;
+        _takenBits[bit / 256] |= (uint256(1) << (bit % 256));
+    }
+
+    /// @notice Draws a random unused serial from the shared #1-#10000 pool.
+    function _drawId(address minter) internal view returns (uint256) {
+        uint256 probe = uint256(keccak256(abi.encodePacked(blockhash(block.number - 1), block.timestamp, minter, totalMinted))) % MAX_SUPPLY;
+        while (_isTaken(probe + 1)) {
+            probe = (probe + 1) % MAX_SUPPLY;
+        }
+        return probe + 1;
+    }
+
     function _issue(string calldata agentName, uint8 style, string calldata colorHex, string calldata signature, uint8 tier) internal returns (uint256 tokenId) {
         require(mintOpen, "Mint is closed");
         require(totalMinted < MAX_SUPPLY, "Sold out");
@@ -80,7 +100,9 @@ contract AgentCard {
         require(bytes(colorHex).length == 7, "Color must be #RRGGBB");
         require(bytes(signature).length <= 24, "Signature max 24 chars");
 
-        tokenId = ++totalMinted;
+        tokenId = _drawId(msg.sender);
+        _markTaken(tokenId);
+        totalMinted += 1;
         cards[tokenId] = Card(agentName, style, colorHex, tier, signature);
         _owners[tokenId] = msg.sender;
         _balances[msg.sender] += 1;
@@ -198,7 +220,7 @@ contract AgentCard {
             : "";
         string memory json = string(abi.encodePacked(
             '{"name":"', c.agentName, ' - Agent Card #', _toString(tokenId), '",',
-            '"description":"A premium minimal metal Agent Card on BNB Chain: brushed-metal finish in the color chosen at mint, embossed agent name, rendered fully on-chain as SVG. A collectible card, not an official Binance Agent ID.",',
+            '"description":"A premium minimal metal Agent Card on BNB Chain: brushed-metal finish in the color chosen at mint, a randomly drawn serial number from the shared #1-#10000 pool, embossed agent name, rendered fully on-chain as SVG. A collectible card, not an official Binance Agent ID.",',
             '"image":"data:image/svg+xml;base64,', _base64(bytes(svg)), '",',
             '"attributes":[',
             '{"trait_type":"Persona","value":"', _persona(c.style), '"},',
