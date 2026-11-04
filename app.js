@@ -2008,6 +2008,19 @@ if (linkNftBtn) linkNftBtn.addEventListener("click", async () => {
 
 updateCard();
 refreshMintUI();
+
+/* Safety net: button states must never go stale (mobile webviews can miss
+   events or restore the page from cache with old state). Recompute ONLY the
+   two button states - never the prompt text the visitor may be copying. */
+function syncButtonStates() {
+  var cb = $("#continueButton");
+  if (cb) cb.disabled = !validInputSilent();
+  var mb = $("#mintButton");
+  if (mb) mb.disabled = Boolean(mintBlockedReason()) || !validInputSilent();
+}
+setInterval(syncButtonStates, 3000);
+window.addEventListener("focus", syncButtonStates);
+window.addEventListener("pageshow", syncButtonStates);
 loadChainState();
 startMintFeed();
 

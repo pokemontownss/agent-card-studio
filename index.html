@@ -28,7 +28,7 @@
   <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDk2IDk2Ij4KICA8cmVjdCB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHJ4PSIyNCIgZmlsbD0iI2Y1ZjRlZiIvPgogIDxnIGZpbGw9IiMyMDIzMWYiIHRyYW5zZm9ybT0icm90YXRlKC0xMCA0OCA0OCkiPgogICAgPHJlY3QgeD0iMjQiIHk9IjQ0IiB3aWR0aD0iMTIiIGhlaWdodD0iMjgiIHJ4PSI2Ii8+CiAgICA8cmVjdCB4PSI0MiIgeT0iMjYiIHdpZHRoPSIxMiIgaGVpZ2h0PSI0NiIgcng9IjYiLz4KICAgIDxyZWN0IHg9IjYwIiB5PSIzNiIgd2lkdGg9IjEyIiBoZWlnaHQ9IjM2IiByeD0iNiIvPgogIDwvZz4KICA8Y2lyY2xlIGN4PSI3NCIgY3k9IjI0IiByPSI3IiBmaWxsPSIjZDVmYTYxIi8+Cjwvc3ZnPgo=" />
   <script>window.__loadEthersFallback=function(){var s=document.createElement('script');s.src='https://unpkg.com/ethers@6.13.4/dist/ethers.umd.min.js';document.head.appendChild(s);};</script>
   <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js" onerror="window.__loadEthersFallback()"></script>
-  <link rel="stylesheet" href="styles.css?v=24">
+  <link rel="stylesheet" href="styles.css?v=25">
 </head>
 <body>
   <div class="page-shell">
@@ -431,7 +431,7 @@
             <p class="eyebrow"><span class="eyebrow-line"></span> LIVE FROM THE CONTRACT</p>
             <h2 id="mint-feed-title">Latest mints</h2>
           </div>
-          <p class="section-note" id="mintFeedCount">The live mint feed appears here<br />once the contract is deployed.</p>
+          <p class="section-note" id="mintFeedCount">Loading the live mint feed from the contract…</p>
         </div>
         <div class="mint-feed-viewport" id="mintFeedViewport">
           <div class="mint-feed-track" id="mintFeedTrack"></div>
@@ -641,6 +641,16 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <a class="floating-cta" id="floatingCta" href="#studio">Create a Card on BNB Chain <span aria-hidden="true">→</span></a>
-  <script src="app.js?v=24"></script>
+  <script>
+  (function () { var V = 25; try {
+    if (sessionStorage.getItem("acs-fresh") === String(V)) return;
+    fetch(location.pathname + "?fresh=" + Date.now(), { cache: "no-store" }).then(function (r) { return r.text(); }).then(function (t) {
+      var m = t.match(/app\.js\?v=(\d+)/); if (!m) return;
+      if (Number(m[1]) !== V) { sessionStorage.setItem("acs-fresh", m[1]); location.replace(location.pathname + "?v=" + m[1]); }
+      else sessionStorage.setItem("acs-fresh", String(V));
+    }).catch(function () {});
+  } catch (e) {} })();
+  </script>
+  <script src="app.js?v=25"></script>
 </body>
 </html>
