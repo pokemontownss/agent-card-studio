@@ -228,6 +228,9 @@ contract AgentCard {
         string memory svg = _buildSvg(tokenId, c);
         uint8 sCls = _serialClass(tokenId);
         string memory classAttr = string(abi.encodePacked(',{"trait_type":"Serial Class","value":"', sCls == 1 ? 'Founder' : (sCls == 2 ? 'Rare' : 'Standard'), '"}'));
+        string memory aiAttr = _endsWithAi(c.agentName)
+            ? string(abi.encodePacked(',{"trait_type":"Agent ID","value":"', c.agentName, '"}'))
+            : "";
         string memory sigAttr = bytes(c.signature).length > 0
             ? string(abi.encodePacked(',{"trait_type":"Signature","value":"', c.signature, '"}'))
             : "";
@@ -242,7 +245,7 @@ contract AgentCard {
             '{"trait_type":"Edition","value":"', c.tier == 1 ? "Paid" : "Free", '"},',
             '{"trait_type":"Rarity","value":"', c.tier == 1 ? "Rare Holo" : "Common", '"},',
             '{"trait_type":"Power","value":', _toString(_power(c.style, c.tier)), '}',
-            classAttr, sigAttr,
+            classAttr, aiAttr, sigAttr,
             ']}'
         ));
         return string(abi.encodePacked("data:application/json;base64,", _base64(bytes(json))));
@@ -272,6 +275,12 @@ contract AgentCard {
         bool same = id >= 10;
         while (n > 0) { if (n % 10 != d) { same = false; break; } n /= 10; }
         return same ? 2 : 0;
+    }
+
+    function _endsWithAi(string memory str) internal pure returns (bool) {
+        bytes memory b = bytes(str);
+        if (b.length < 3) return false;
+        return b[b.length - 3] == "." && b[b.length - 2] == "a" && b[b.length - 1] == "i";
     }
 
     function _firstChar(string memory str) internal pure returns (string memory) {

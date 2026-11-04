@@ -566,3 +566,11 @@ h2 { font-size: 30px; line-height: 1.1; letter-spacing: -.055em; margin: 0; font
 @keyframes burstFly { from { transform: translate(-50%, -50%) scale(.4) rotate(0deg); opacity: 1; } to { transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(1.1) rotate(var(--rot)); opacity: 0; } }
 .my-card-cert { margin-top: 10px; }
 @media (prefers-reduced-motion: reduce) { .card-celebrate, .burst-star { animation: none; } .burst-star { display: none; } }
+
+/* === Agent ID .ai mint mode (v12) === */
+.name-mode-toggle { display: flex; gap: 8px; margin: 0 0 12px; }
+.name-mode { flex: 1; padding: 9px 10px; border-radius: 10px; border: 1px solid var(--line); background: transparent; color: inherit; font-size: 12px; font-weight: 700; letter-spacing: .5px; cursor: pointer; }
+.name-mode.is-selected { background: #17130e; border-color: #17130e; color: #f5efe2; }
+.name-field-wrap { position: relative; }
+.name-field-wrap.has-suffix input { padding-right: 48px; }
+.name-suffix { position: absolute; right: 13px; top: 50%; transform: translateY(-50%); font-weight: 800; font-size: 14px; color: #8a6a1f; pointer-events: none; }

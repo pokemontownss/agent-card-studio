@@ -189,9 +189,14 @@
           <div class="editor-panel">
             <div class="form-block">
               <div class="form-heading"><span class="form-index">01</span><div><h3>Identitas</h3><p>Nama ini tersimpan on-chain di NFT kartumu.</p></div></div>
+              <div class="name-mode-toggle" role="group" aria-label="Sumber nama kartu">
+                <button type="button" class="name-mode is-selected" data-name-mode="free" aria-pressed="true">Nama Bebas</button>
+                <button type="button" class="name-mode" data-name-mode="ai" aria-pressed="false">Agent ID .ai (Binance)</button>
+              </div>
               <label class="field-label" for="agentName">NAMA AGENT ID</label>
               <div class="name-field-wrap">
                 <input id="agentName" name="agentName" type="text" value="nara.ai" autocomplete="off" maxlength="32" aria-describedby="nameHelp nameError" />
+                <span class="name-suffix" id="nameSuffix" hidden>.ai</span>
               </div>
               <p class="field-hint" id="nameHelp">1–32 karakter. Hanya huruf, angka, spasi, titik, garis bawah, dan strip. Nama tersimpan persis seperti yang kamu tulis.</p>
               <p class="field-error" id="nameError" aria-live="polite" hidden>Masukkan 1–32 karakter: huruf, angka, spasi, titik, garis bawah, atau strip saja.</p>
