@@ -255,10 +255,10 @@
             <div class="form-block">
               <div class="form-heading"><span class="form-index">04</span><div><h3>Choose a mint edition</h3><p>The card design and price follow the edition you choose.</p></div></div>
               <div class="tier-options" role="group" aria-label="Choose a mint edition">
-                <button type="button" class="tier-option is-selected" data-tier="0" aria-pressed="true"><span>Free Edition</span><small>Standard design &#183; small anti-sybil fee &#183; 1x per wallet</small></button>
-                <button type="button" class="tier-option tier-paid" data-tier="1" aria-pressed="false"><span>Paid Edition &#9733;</span><small>Premium gold holo design &#183; power +30 &#183; unlimited mints</small></button>
+                <button type="button" class="tier-option is-selected" data-tier="0" aria-pressed="true"><span>Free Edition</span><small>Standard design &#183; small anti-sybil fee &#183; free 1x per wallet</small></button>
+                <button type="button" class="tier-option tier-paid" data-tier="1" aria-pressed="false"><span>Paid Edition &#9733;</span><small>Premium gold holo design &#183; power +30 &#183; max 2 mints per wallet</small></button>
               </div>
-              <p class="tier-note" id="tierNote">Live prices appear once the contract is deployed. Free = a small anti-sybil fee, 1x per wallet. Paid = a premium gold design, unlimited.</p>
+              <p class="tier-note" id="tierNote">Live prices appear once the contract is deployed. Free = a small anti-sybil fee, free 1x per wallet. Paid = a premium gold design. Every wallet can mint at most 2 cards in total.</p>
             </div>
 
             <div class="wallet-notice" id="walletNotice">
@@ -301,7 +301,7 @@
               <span class="card-mono" id="previewMono"></span>
               <span class="card-watermark">AC</span>
             </div>
-            <div class="preview-caption"><span>01 <i></i> 999</span><span id="previewSupplyCaption">10,000-CARD COLLECTION</span></div>
+            <div class="preview-caption"><span>01 <i></i> 999</span><span id="previewSupplyCaption">4,444-CARD COLLECTION</span></div>
             <div class="preview-details"><span class="preview-details-icon">✦</span><p>The card design follows your name and choices. <strong>The final serial number is drawn by the contract at mint.</strong></p></div>
           </aside>
         </div>
@@ -414,14 +414,14 @@
               <h3>Free mint price</h3>
               <p>Current price: <strong id="ownerCurrentFreeText">— BNB</strong></p>
               <label class="field-label" for="ownerFreePriceInput">NEW PRICE (BNB)</label>
-              <input class="owner-input" id="ownerFreePriceInput" type="number" min="0" step="0.0001" placeholder="0.0001" inputmode="decimal" />
+              <input class="owner-input" id="ownerFreePriceInput" type="number" min="0" step="0.0001" placeholder="0.0002" inputmode="decimal" />
               <button class="primary-button" id="setFreePriceButton" type="button">Change free price</button>
             </div>
             <div class="owner-card">
               <h3>Paid mint price</h3>
               <p>Current price: <strong id="ownerCurrentPaidText">— BNB</strong></p>
               <label class="field-label" for="ownerPaidPriceInput">NEW PRICE (BNB)</label>
-              <input class="owner-input" id="ownerPaidPriceInput" type="number" min="0" step="0.0001" placeholder="0.0005" inputmode="decimal" />
+              <input class="owner-input" id="ownerPaidPriceInput" type="number" min="0" step="0.0001" placeholder="0.002" inputmode="decimal" />
               <button class="primary-button" id="setPaidPriceButton" type="button">Change paid price</button>
             </div>
             <div class="owner-card">
@@ -516,7 +516,7 @@
             </details>
             <details class="faq-item reveal">
               <summary>Do I need real BNB?</summary>
-              <p>Yes, and there are two editions. Free Edition: just a 0.0001 BNB anti-sybil fee (starting price, changeable by the owner), max 1x per wallet, standard design. Paid Edition: 0.0005 BNB (starting price), a premium gold holo design with power +30, unlimited mints. Both add BNB Chain network gas, are paid in BNB, and are final. The live numbers appear on the confirmation page once the contract is deployed.</p>
+              <p>Yes, and there are two editions. Free Edition: just a 0.0002 BNB anti-sybil fee (starting price, changeable by the owner), max 1 free mint per wallet, standard design. Paid Edition: 0.002 BNB (starting price), a premium gold holo design with power +30, unlimited mints — but every wallet can mint at most 2 cards in total across both editions. Both add BNB Chain network gas, are paid in BNB, and are final. The live numbers appear on the confirmation page once the contract is deployed.</p>
             </details>
             <details class="faq-item reveal">
               <summary>Where is my card after minting?</summary>

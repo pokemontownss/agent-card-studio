@@ -22,10 +22,10 @@ contract AgentCard {
     }
 
     // ---------- Collection state ----------
-    uint256 public constant MAX_SUPPLY = 10000;
+    uint256 public constant MAX_SUPPLY = 4444;
     uint256 public totalMinted;
-    uint256 public freeMintPrice = 0.0001 ether; // anti-sybil fee
-    uint256 public paidMintPrice = 0.0005 ether;
+    uint256 public freeMintPrice = 0.0002 ether; // anti-sybil fee
+    uint256 public paidMintPrice = 0.002 ether;
     bool public mintOpen = true;
 
     uint8 public constant TIER_FREE = 0;
@@ -40,10 +40,12 @@ contract AgentCard {
     }
     mapping(uint256 => Card) public cards;
     mapping(address => bool) public freeMintUsed;
+    uint256 public constant MAX_PER_WALLET = 2;
+    mapping(address => uint256) public mintCount;
 
     // ---------- ERC-721 storage ----------
     mapping(uint256 => address) private _owners;
-    uint256[40] private _takenBits; // 10,000 bits: serial numbers already drawn
+    uint256[18] private _takenBits; // 4,444 bits: serial numbers already drawn
     uint256[] private _mintOrder; // token IDs in mint order, for the live mint feed
     mapping(address => uint256) private _balances;
     mapping(uint256 => address) private _tokenApprovals;
@@ -61,13 +63,13 @@ contract AgentCard {
     // ---------- Minting ----------
     /// @notice Free mint: one per wallet, small anti-sybil fee, standard design.
     function freeMint(string calldata agentName, uint8 style, string calldata colorHex, string calldata signature) external payable returns (uint256) {
-        require(!freeMintUsed[msg.sender], "Free mint already used");
+        require(!freeMintUsed[msg.sender], "Free mint used");
         require(msg.value >= freeMintPrice, "Insufficient BNB");
         freeMintUsed[msg.sender] = true;
         return _issue(agentName, style, colorHex, signature, TIER_FREE);
     }
 
-    /// @notice Paid mint: unlimited, premium gold design.
+    /// @notice Paid mint: premium gold design. Each wallet can mint at most MAX_PER_WALLET cards in total.
     function paidMint(string calldata agentName, uint8 style, string calldata colorHex, string calldata signature) external payable returns (uint256) {
         require(msg.value >= paidMintPrice, "Insufficient BNB");
         return _issue(agentName, style, colorHex, signature, TIER_PAID);
@@ -83,7 +85,7 @@ contract AgentCard {
         _takenBits[bit / 256] |= (uint256(1) << (bit % 256));
     }
 
-    /// @notice Draws a random unused serial from the shared #1-#10000 pool.
+    /// @notice Draws a random unused serial from the shared #1-#4444 pool.
     function _drawId(address minter) internal view returns (uint256) {
         uint256 probe = uint256(keccak256(abi.encodePacked(blockhash(block.number - 1), block.timestamp, minter, totalMinted))) % MAX_SUPPLY;
         while (_isTaken(probe + 1)) {
@@ -94,12 +96,13 @@ contract AgentCard {
 
     function _issue(string calldata agentName, uint8 style, string calldata colorHex, string calldata signature, uint8 tier) internal returns (uint256 tokenId) {
         require(mintOpen, "Mint is closed");
+        require(mintCount[msg.sender] < MAX_PER_WALLET, "Mint limit");
         require(totalMinted < MAX_SUPPLY, "Sold out");
         uint256 nameLength = bytes(agentName).length;
-        require(nameLength >= 1 && nameLength <= 32, "Name must be 1-32 chars");
-        require(style <= 2, "Unknown style");
-        require(bytes(colorHex).length == 7, "Color must be #RRGGBB");
-        require(bytes(signature).length <= 24, "Signature max 24 chars");
+        require(nameLength >= 1 && nameLength <= 32, "Name must be 1-32");
+        require(style <= 2);
+        require(bytes(colorHex).length == 7);
+        require(bytes(signature).length <= 24);
 
         tokenId = _drawId(msg.sender);
         _markTaken(tokenId);
@@ -108,6 +111,7 @@ contract AgentCard {
         cards[tokenId] = Card(agentName, style, colorHex, tier, signature);
         _owners[tokenId] = msg.sender;
         _balances[msg.sender] += 1;
+        mintCount[msg.sender] += 1;
         emit Transfer(address(0), msg.sender, tokenId);
         emit CardMinted(msg.sender, tokenId, agentName, style, tier);
     }
@@ -236,7 +240,7 @@ contract AgentCard {
             : "";
         string memory json = string(abi.encodePacked(
             '{"name":"', c.agentName, ' - Agent Card #', _toString(tokenId), '",',
-            '"description":"A premium minimal metal Agent Card on BNB Chain. Random serial from the shared #1-#10000 pool, rendered fully on-chain as SVG. Not an official Binance Agent ID.",',
+            '"description":"A premium metal Agent Card on BNB Chain. Random serial from the shared pool, rendered fully on-chain as SVG. Not an official Binance Agent ID.",',
             '"image":"data:image/svg+xml;base64,', _base64(bytes(svg)), '",',
             '"attributes":[',
             '{"trait_type":"Persona","value":"', _persona(c.style), '"},',
@@ -331,7 +335,7 @@ contract AgentCard {
             classSvg,
             sigSvg,
             '<rect x="30" y="502" width="360" height="1.2" fill="#000000" fill-opacity="0.22"/><rect x="30" y="503.4" width="360" height="1" fill="#ffffff" fill-opacity="0.3"/>',
-            '<text x="30" y="540" font-family="Arial, sans-serif" font-size="13.5" font-weight="700" letter-spacing="1.6" fill="#17130E" fill-opacity="0.88">No. ', _pad4(tokenId), ' / 10000</text>',
+            '<text x="30" y="540" font-family="Arial, sans-serif" font-size="13.5" font-weight="700" letter-spacing="1.6" fill="#17130E" fill-opacity="0.88">No. ', _pad4(tokenId), ' / 4444</text>',
             '<g transform="translate(291 533) rotate(45)" fill="#17130E" fill-opacity="0.8"><rect x="-4.5" y="-4.5" width="9" height="9"/></g>',
             '<text x="390" y="540" text-anchor="end" font-family="Arial, sans-serif" font-size="12" font-weight="700" letter-spacing="2.2" fill="#17130E" fill-opacity="0.8">BNB CHAIN</text>',
             '<text x="210" y="570" text-anchor="middle" font-family="Arial, sans-serif" font-size="7.5" letter-spacing="1.4" fill="#17130E" fill-opacity="0.55">COLLECTIBLE CARD &#183; NOT AN OFFICIAL BINANCE AGENT ID</text>',
