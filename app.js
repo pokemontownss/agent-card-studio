@@ -536,11 +536,13 @@ function agentPromptText(tier, qty) {
   const fp = chainState.freePrice != null ? formatBNB(chainState.freePrice) : "0.0002";
   const pp = chainState.paidPrice != null ? formatBNB(chainState.paidPrice) : "0.002";
   const call = (fn) => fn + "(\"" + nm + "\", " + style + ", \"" + hex + "\", \"" + sig + "\")";
-  const head = "Mint " + qty + " Agent Card NFT(s) for me on BNB Chain. Contract: " + addr + ". Card design: name \"" + nm + "\", style " + style + " (" + personaConfig[state.persona].title + "), color \"" + hex + "\", signature \"" + sig + "\". Token IDs are drawn randomly from the shared pool #1-#4444. Max 2 cards per wallet in total. ";
-  if (tier === 0 && qty === 1) return head + "First check on-chain that mintOpen() is true, my freeMintUsed is false, and my mintCount is below 2. Then call " + call("freeMint") + " with exactly " + fp + " BNB (anti-sybil fee). Do it now - no preview needed. Reply with the transaction link when done.";
-  if (tier === 0) return head + "First check on-chain that mintOpen() is true, my freeMintUsed is false, and my mintCount is 0. Then (1) call " + call("freeMint") + " with exactly " + fp + " BNB (anti-sybil fee), and (2) call " + call("paidMint") + " with exactly " + pp + " BNB. Do it now - no preview needed. Reply with both transaction links when done.";
-  if (qty === 1) return head + "First check on-chain that mintOpen() is true and my mintCount is below 2. Then call " + call("paidMint") + " with exactly " + pp + " BNB - the full price, nothing extra. Do it now - no preview needed. Reply with the transaction link when done.";
-  return head + "First check on-chain that mintOpen() is true and my mintCount is 0 (two paid mints need both wallet slots). Then call " + call("paidMint") + " twice, each with exactly " + pp + " BNB - the full price, nothing extra. Do it now - no preview needed. Reply with both transaction links when done.";
+  const head = "Mint " + qty + " Agent Card NFT" + (qty > 1 ? "s" : "") + " for me on BNB Chain (BSC). Contract: " + addr + ". ";
+  const guard = "If any check fails, stop and tell me - never switch editions or pay a different amount. ";
+  const tail = " Token ID is drawn randomly from #1-#4444; max 2 cards per wallet. Do it now - no preview needed. ";
+  if (tier === 0 && qty === 1) return head + "Check for my wallet: mintOpen() = true, freeMintUsed = false, mintCount < 2. " + guard + "Then call " + call("freeMint") + " with exactly " + fp + " BNB (anti-sybil fee)." + tail + "Reply with the transaction link when done.";
+  if (tier === 0) return head + "Check for my wallet: mintOpen() = true, freeMintUsed = false, mintCount = 0. " + guard + "Then (1) call " + call("freeMint") + " with exactly " + fp + " BNB (anti-sybil fee), and (2) call " + call("paidMint") + " with exactly " + pp + " BNB." + tail + "Reply with both transaction links when done.";
+  if (qty === 1) return head + "Check for my wallet: mintOpen() = true, mintCount < 2. " + guard + "Then call " + call("paidMint") + " with exactly " + pp + " BNB - the full price, nothing extra." + tail + "Reply with the transaction link when done.";
+  return head + "Check for my wallet: mintOpen() = true, mintCount = 0 (two paid mints need both wallet slots). " + guard + "Then call " + call("paidMint") + " twice, each with exactly " + pp + " BNB - the full price, nothing extra." + tail + "Reply with both transaction links when done.";
 }
 
 function renderAgentPrompts() {
@@ -560,11 +562,11 @@ function renderRewardPrompts() {
   const tk = tokenAddress();
   const bp = $("#burnPrompt");
   if (bp) bp.value = b
-    ? "Burn 1 of my Agent Card NFTs for 50,000 ACARD. NFT contract: " + nft + ". Burn contract: " + b + ". Use my token #___ (fill in the token ID). Steps: (1) verify I own that token and the burn pool holds at least 50,000 ACARD; (2) approve the burn contract for my token on the NFT contract; (3) call burn(tokenId) on the burn contract with value 0.0001 BNB (the action fee). The card goes to the dead address forever and 50,000 ACARD goes to my wallet. Burning is permanent - ask me to confirm the token ID before executing. Reply with the transaction link when done."
+    ? "Burn 1 of my Agent Card NFTs for 50,000 ACARD. NFT contract: " + nft + ". Burn contract: " + b + ". Use my token #___ (fill in the token ID). Steps: (1) verify for my wallet that I own that token and the burn pool holds at least 50,000 ACARD - if either fails, stop and tell me; (2) approve the burn contract for my token on the NFT contract; (3) call burn(tokenId) on the burn contract with value 0.0001 BNB (the action fee). The card goes to the dead address forever and 50,000 ACARD goes to my wallet. Burning is permanent - ask me to confirm the token ID before executing. Reply with the transaction link when done."
     : "The burn contract is not deployed yet. Check agentcard.cloud for the address once it is live.";
   const sp = $("#stakePrompt");
   if (sp) sp.value = st
-    ? "Stake 1 of my Agent Card NFTs to earn 500 ACARD per day. NFT contract: " + nft + ". Staking contract: " + st + ". Use my token #___ (fill in the token ID). Steps: (1) verify I own that token; (2) approve the staking contract for my token on the NFT contract; (3) call stake(tokenId) on the staking contract with value 0.0001 BNB (the action fee). Later, claim(tokenId) (free) pays my earned ACARD and unstake(tokenId) (free) pays and returns my card. Do it now - no preview needed. Reply with the transaction link when done."
+    ? "Stake 1 of my Agent Card NFTs to earn 500 ACARD per day. NFT contract: " + nft + ". Staking contract: " + st + ". Use my token #___ (fill in the token ID). Steps: (1) verify for my wallet that I own that token - if not, stop and tell me; (2) approve the staking contract for my token on the NFT contract; (3) call stake(tokenId) on the staking contract with value 0.0001 BNB (the action fee). Later, claim(tokenId) (free) pays my earned ACARD and unstake(tokenId) (free) pays and returns my card. Do it now - no preview needed. Reply with the transaction link when done."
     : "The staking contract is not deployed yet. Check agentcard.cloud for the address once it is live.";
   const line = $("#tokenAddressLine");
   if (line) line.textContent = tk ? ("$ACARD " + tk + " - Burn " + (b || "-") + " - Stake " + (st || "-")) : "not deployed yet";
