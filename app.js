@@ -162,7 +162,7 @@ function updateEditionLabels() {
   const heroEdition = $("#heroEdition");
   const heroSerial = $("#heroSerial");
   if (heroEdition) heroEdition.textContent = "ONE AND ONLY";
-  if (heroSerial) heroSerial.textContent = label ? label + " · PAID EDITION ★" : "PAID EDITION ★ · NOMOR ACAK";
+  if (heroSerial) heroSerial.textContent = label ? label + " · PAID EDITION ★" : "PAID EDITION ★ · RANDOM NUMBER";
   const caption = $("#previewSupplyCaption");
   if (caption) {
     caption.textContent = chainState.totalMinted != null
