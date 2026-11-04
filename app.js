@@ -490,7 +490,7 @@ function updateConfirmReceipt() {
       link.href = explorerAddress(contractAddress());
     } else {
       link.textContent = "Not deployed yet";
-      link.href = "#pemilik";
+      link.href = "https://agentcard.cloud/deploy.html";
     }
   }
   if (priceEl) {

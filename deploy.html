@@ -126,6 +126,27 @@
     <button id="linkBtn" type="button" disabled>SET NFT ON BURN &amp; STAKE</button>
   </section>
 
+
+  <section class="step" id="step7">
+    <div class="step-head"><span class="step-num">07</span><h2>Manage AgentCard (owner only)</h2></div>
+    <p>For an already-deployed AgentCard contract: check its status, open or close minting, change the mint prices, and withdraw the BNB the contract has collected. Only the contract owner's wallet can make changes — other wallets can only view.</p>
+    <p class="status" id="status7">Enter the AgentCard address and load its status.</p>
+    <div class="row" style="margin-bottom:12px">
+      <div><label class="f" for="manageAddr">AGENTCARD CONTRACT ADDRESS</label><input type="text" id="manageAddr" style="width:340px" placeholder="0x…" /></div>
+      <button id="loadManageBtn" type="button" disabled>LOAD STATUS</button>
+    </div>
+    <div class="row" style="margin-bottom:12px">
+      <button id="toggleMintBtn" type="button" disabled>OPEN / CLOSE MINT</button>
+      <button id="withdrawBtn" type="button" disabled>WITHDRAW BNB</button>
+    </div>
+    <div class="row">
+      <div><label class="f" for="freePriceInput">NEW FREE PRICE (BNB)</label><input type="text" id="freePriceInput" placeholder="0.0002" /></div>
+      <button id="setFreeBtn" type="button" disabled>SET FREE PRICE</button>
+      <div><label class="f" for="paidPriceInput">NEW PAID PRICE (BNB)</label><input type="text" id="paidPriceInput" placeholder="0.002" /></div>
+      <button id="setPaidBtn" type="button" disabled>SET PAID PRICE</button>
+    </div>
+  </section>
+
   <section class="summary">
     <h2>Contract addresses</h2>
     <p>When all steps are done, copy these four addresses and send them to Muse — they get wired into agentcard.cloud permanently so the mint, burn and stake features go live for everyone. Addresses are also kept in this browser, so you can reload this page without losing them.</p>
@@ -178,6 +199,8 @@ function refresh() {
   if (state.token && !state.stake) setStatus(4, "Ready — $ACARD is deployed.");
   if (state.burn && state.stake) setStatus(5, "Ready — fund one or both pools.");
   if (state.nft && state.burn && state.stake) setStatus(6, "Ready — link the NFT contract.");
+  const lm = $("loadManageBtn"); if (lm) lm.disabled = !ready;
+  const ma = $("manageAddr"); if (ma && state.nft && !ma.value) ma.value = state.nft;
   $("summaryBox").value = state.nft || state.token || state.burn || state.stake
     ? "AgentCard (NFT): " + (state.nft || "-") + "\n$ACARD token: " + (state.token || "-") + "\nBurn contract: " + (state.burn || "-") + "\nStake contract: " + (state.stake || "-")
     : "Not deployed yet.";
@@ -260,6 +283,42 @@ $("fundStakeBtn").addEventListener("click", () => fund("stake", 5));
 $("linkBtn").addEventListener("click", link);
 document.querySelectorAll("[data-copy]").forEach((b) => b.addEventListener("click", () => { const t = $(b.dataset.copy).textContent; if (t) navigator.clipboard.writeText(t); b.textContent = "COPIED ✓"; setTimeout(() => { b.textContent = "COPY"; }, 1400); }));
 $("copyAllBtn").addEventListener("click", () => { navigator.clipboard.writeText($("summaryBox").value); $("copyAllBtn").textContent = "COPIED ✓"; setTimeout(() => { $("copyAllBtn").textContent = "COPY ALL ADDRESSES"; }, 1400); });
+
+
+const NFT_MANAGE_ABI = ["function owner() view returns (address)", "function mintOpen() view returns (bool)", "function setMintOpen(bool open)", "function freeMintPrice() view returns (uint256)", "function setFreeMintPrice(uint256 price)", "function paidMintPrice() view returns (uint256)", "function setPaidMintPrice(uint256 price)", "function withdraw()"];
+let manageState = { isOwner: false, mintOpen: null };
+function manageContract(signerRequired) {
+  const addr = ($("manageAddr").value || "").trim();
+  if (!/^0x[0-9a-fA-F]{40}$/.test(addr)) return null;
+  const runner = signerRequired ? state.signer : (state.signer || new ethers.BrowserProvider(window.ethereum));
+  return new ethers.Contract(addr, NFT_MANAGE_ABI, runner);
+}
+async function loadManage() {
+  const c = manageContract(false);
+  if (!c) { setStatus(7, "That does not look like a contract address.", "error"); return; }
+  if (!state.signer) { setStatus(7, "Connect the wallet first.", "error"); return; }
+  try {
+    setStatus(7, "Loading…", "working");
+    const [owner, open, free, paid, bal] = await Promise.all([c.owner(), c.mintOpen(), c.freeMintPrice(), c.paidMintPrice(), c.runner.provider.getBalance(await c.getAddress())]);
+    manageState.mintOpen = open;
+    manageState.isOwner = owner.toLowerCase() === state.address.toLowerCase();
+    setStatus(7, "Owner: " + owner + " · Mint: " + (open ? "OPEN" : "CLOSED") + " · Free: " + ethers.formatEther(free) + " BNB · Paid: " + ethers.formatEther(paid) + " BNB · Contract balance: " + ethers.formatEther(bal) + " BNB" + (manageState.isOwner ? " · You are the owner." : " · Your wallet is not the owner — view only."), "done");
+    const dis = !manageState.isOwner;
+    $("toggleMintBtn").disabled = dis; $("withdrawBtn").disabled = dis; $("setFreeBtn").disabled = dis; $("setPaidBtn").disabled = dis;
+    $("toggleMintBtn").textContent = open ? "CLOSE MINT" : "OPEN MINT";
+  } catch (e) { setStatus(7, "Could not load that contract: " + (e.shortMessage || e.message || e), "error"); }
+}
+async function manageTx(label, fn) {
+  const c = manageContract(true);
+  if (!c) return;
+  try { setStatus(7, label + " — approve in your wallet…", "working"); await (await fn(c)).wait(); setStatus(7, label + " done.", "done"); loadManage(); }
+  catch (e) { setStatus(7, "Failed: " + (e.shortMessage || e.message || e), "error"); }
+}
+$("loadManageBtn").addEventListener("click", loadManage);
+$("toggleMintBtn").addEventListener("click", () => manageTx(manageState.mintOpen ? "Closing mint" : "Opening mint", (c) => c.setMintOpen(!manageState.mintOpen)));
+$("withdrawBtn").addEventListener("click", () => manageTx("Withdrawing BNB", (c) => c.withdraw()));
+$("setFreeBtn").addEventListener("click", () => { const v = ($("freePriceInput").value || "").trim(); if (v) manageTx("Setting free price", (c) => c.setFreeMintPrice(ethers.parseEther(v))); });
+$("setPaidBtn").addEventListener("click", () => { const v = ($("paidPriceInput").value || "").trim(); if (v) manageTx("Setting paid price", (c) => c.setPaidMintPrice(ethers.parseEther(v))); });
 
 for (const k of Object.keys(KEYS)) { const v = localStorage.getItem(KEYS[k]); if (v && /^0x[0-9a-fA-F]{40}$/.test(v)) state[k] = v; }
 refresh();
