@@ -1,10 +1,10 @@
 
 /* Agent Card Studio — real NFT minting on BNB Chain (ERC-721 AgentCard). */
 const AGENT_CARD_CONFIG = {
-  contractAddress: "",
-  tokenAddress: "",
-  burnAddress: "",
-  stakeAddress: "",
+  contractAddress: "0x0716bD547494e7B8E45C15266F03a43915982C6e",
+  tokenAddress: "0x3A56270f7A8c78E9cC4A8A9f18e375cd184F1133",
+  burnAddress: "0x83EE9bB4c76019fAf5dd1451CB8f41bC78d68323",
+  stakeAddress: "0xFB9139F2c6996141dAc67fF98C965A4BEF43a250",
   chainId: 56,
   chainName: "BNB Smart Chain",
   explorer: "https://bscscan.com",
