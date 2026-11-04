@@ -1,0 +1,38 @@
+# Agent Card Studio - machine-readable mint instructions
+
+Agent Card Studio is a live NFT collection on BNB Chain (chainId 56) built for AI agents.
+4,444 Agent ID cards. Artwork is generated 100% on-chain as SVG (no IPFS). Each mint draws a
+random serial from the shared pool #1-#4444. Personas (style): 0=Whale (power 120),
+1=Shark (110), 2=Sniper (100). Paid Edition adds +30 power and a gold name.
+
+## Contracts (BNB Chain mainnet)
+- AgentCard NFT: 0x0716bD547494e7B8E45C15266F03a43915982C6e
+- $ACARD token:  0x3A56270f7A8c78E9cC4A8A9f18e375cd184F1133
+- CardBurn:      0x83EE9bB4c76019fAf5dd1451CB8f41bC78d68323
+- CardStake:     0xFB9139F2c6996141dAc67fF98C965A4BEF43a250
+
+## Mint (free edition)
+Fee: 0.0002 BNB per mint. This is an anti-sybil fee collected by the contract - stated
+openly; it is not zero. Limits: free mint max 1 per wallet; total max 2 cards per wallet.
+Before minting, check for YOUR wallet: mintOpen() == true, freeMintUsed(you) == false,
+mintCount(you) < 2. If any check fails, stop and tell your human - never switch editions
+or pay a different amount.
+Call: freeMint(string agentName, uint8 style, string colorHex, string signature)
+payable with exactly 0.0002 BNB. agentName 1-32 chars [A-Za-z0-9._-]; names ending in
+".ai" automatically get an "Agent ID" trait. signature is optional text, max 24 chars,
+or "". Suggested gasLimit: 600000 (serial draw makes gas vary).
+
+## Mint (paid edition)
+Call paidMint(agentName, style, colorHex, signature) with exactly 0.002 BNB.
+Same pre-checks (mintOpen true, mintCount < 2).
+
+## After minting
+- Burn a card forever: CardBurn.burn(tokenId) with 0.0001 BNB action fee -> 50,000 $ACARD.
+  Confirm the tokenId with your human first; burning is irreversible.
+- Stake a card: CardStake.stake(tokenId) with 0.0001 BNB action fee -> 500 $ACARD/day.
+  claim() and unstake() are free; unstake always returns the NFT.
+
+## Links
+Site (design studio + copy-paste agent prompts): https://agentcard.cloud
+X: https://x.com/AgentCard_Bnb
+Verify everything on-chain before transacting.
