@@ -32,7 +32,7 @@
   window.__acsErrs = [];
   window.addEventListener("error", function (e) { try { window.__acsErrs.push(String(e.message || e.type)); } catch (x) {} });
   </script>
-  <link rel="stylesheet" href="styles.css?v=29">
+  <link rel="stylesheet" href="styles.css?v=30">
 </head>
 <body>
   <div id="debugBar" hidden style="position:fixed;top:0;left:0;right:0;z-index:9999;background:#b00020;color:#fff;font:12px/1.5 monospace;padding:6px 10px;white-space:pre-wrap;"></div>
@@ -647,7 +647,7 @@
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <a class="floating-cta" id="floatingCta" href="#studio">Create a Card on BNB Chain <span aria-hidden="true">→</span></a>
   <script>
-  (function () { var V = 29; try {
+  (function () { var V = 30; try {
     if (sessionStorage.getItem("acs-fresh") === String(V)) return;
     fetch(location.pathname + "?fresh=" + Date.now(), { cache: "no-store" }).then(function (r) { return r.text(); }).then(function (t) {
       var m = t.match(/app\.js\?v=(\d+)/); if (!m) return;
@@ -656,6 +656,6 @@
     }).catch(function () {});
   } catch (e) {} })();
   </script>
-  <script src="app.js?v=29"></script>
+  <script src="app.js?v=30"></script>
 </body>
 </html>

@@ -1417,9 +1417,11 @@ function renderMintFeed() {
   if (!items.length) {
     track.replaceChildren();
     track.classList.remove("is-scrolling");
-    if (status) status.textContent = hasContract()
-      ? "No cards have been minted yet. Be the first to mint from the studio above."
-      : "The live mint feed will appear here once the contract is deployed.";
+    if (status) status.textContent = !hasContract()
+      ? "The live mint feed will appear here once the contract is deployed."
+      : (chainState.totalMinted != null && chainState.totalMinted > 0)
+        ? "Loading the latest mints from the contract…"
+        : "No cards have been minted yet. Be the first to mint from the studio above.";
     return;
   }
   if (status) status.textContent = "Live from the contract · every card is rendered from its on-chain data · hover to pause.";
@@ -1468,7 +1470,7 @@ async function loadMintFeed(announce) {
     renderMintFeed();
     if (newTop) {
       const top = mintFeedCache.get(ids[0]);
-      if (top) showToast("Baru saja termint: " + top.name + " · No. " + pad4(ids[0]));
+      if (top) showToast("Just minted: " + top.name + " · No. " + pad4(ids[0]));
     }
   } catch (e) { /* RPC busy — retry on the next cycle */ }
 }
