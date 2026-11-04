@@ -36,6 +36,7 @@ contract AgentCard {
         uint8 style; // 0 = Guardian, 1 = Builder, 2 = Explorer
         string colorHex; // "#RRGGBB"
         uint8 tier; // 0 = Free, 1 = Paid
+        string signature; // optional, max 24 chars, drawn on the card
     }
     mapping(uint256 => Card) public cards;
     mapping(address => bool) public freeMintUsed;
@@ -57,29 +58,30 @@ contract AgentCard {
 
     // ---------- Minting ----------
     /// @notice Free mint: one per wallet, small anti-sybil fee, standard design.
-    function freeMint(string calldata agentName, uint8 style, string calldata colorHex) external payable returns (uint256) {
+    function freeMint(string calldata agentName, uint8 style, string calldata colorHex, string calldata signature) external payable returns (uint256) {
         require(!freeMintUsed[msg.sender], "Free mint already used");
         require(msg.value >= freeMintPrice, "Insufficient BNB");
         freeMintUsed[msg.sender] = true;
-        return _issue(agentName, style, colorHex, TIER_FREE);
+        return _issue(agentName, style, colorHex, signature, TIER_FREE);
     }
 
     /// @notice Paid mint: unlimited, premium gold design.
-    function paidMint(string calldata agentName, uint8 style, string calldata colorHex) external payable returns (uint256) {
+    function paidMint(string calldata agentName, uint8 style, string calldata colorHex, string calldata signature) external payable returns (uint256) {
         require(msg.value >= paidMintPrice, "Insufficient BNB");
-        return _issue(agentName, style, colorHex, TIER_PAID);
+        return _issue(agentName, style, colorHex, signature, TIER_PAID);
     }
 
-    function _issue(string calldata agentName, uint8 style, string calldata colorHex, uint8 tier) internal returns (uint256 tokenId) {
+    function _issue(string calldata agentName, uint8 style, string calldata colorHex, string calldata signature, uint8 tier) internal returns (uint256 tokenId) {
         require(mintOpen, "Mint is closed");
         require(totalMinted < MAX_SUPPLY, "Sold out");
         uint256 nameLength = bytes(agentName).length;
         require(nameLength >= 1 && nameLength <= 32, "Name must be 1-32 chars");
         require(style <= 2, "Unknown style");
         require(bytes(colorHex).length == 7, "Color must be #RRGGBB");
+        require(bytes(signature).length <= 24, "Signature max 24 chars");
 
         tokenId = ++totalMinted;
-        cards[tokenId] = Card(agentName, style, colorHex, tier);
+        cards[tokenId] = Card(agentName, style, colorHex, tier, signature);
         _owners[tokenId] = msg.sender;
         _balances[msg.sender] += 1;
         emit Transfer(address(0), msg.sender, tokenId);
@@ -191,6 +193,9 @@ contract AgentCard {
         require(_owners[tokenId] != address(0), "Nonexistent token");
         Card memory c = cards[tokenId];
         string memory svg = _buildSvg(tokenId, c);
+        string memory sigAttr = bytes(c.signature).length > 0
+            ? string(abi.encodePacked(',{"trait_type":"Signature","value":"', c.signature, '"}'))
+            : "";
         string memory json = string(abi.encodePacked(
             '{"name":"', c.agentName, ' - Agent Card #', _toString(tokenId), '",',
             '"description":"A premium minimal metal Agent Card on BNB Chain: brushed-metal finish in the color chosen at mint, embossed agent name, rendered fully on-chain as SVG. A collectible card, not an official Binance Agent ID.",',
@@ -202,6 +207,7 @@ contract AgentCard {
             '{"trait_type":"Edition","value":"', c.tier == 1 ? "Paid" : "Free", '"},',
             '{"trait_type":"Rarity","value":"', c.tier == 1 ? "Rare Holo" : "Common", '"},',
             '{"trait_type":"Power","value":', _toString(_power(c.style, c.tier)), '}',
+            sigAttr,
             ']}'
         ));
         return string(abi.encodePacked("data:application/json;base64,", _base64(bytes(json))));
@@ -224,6 +230,12 @@ contract AgentCard {
         string memory D1 = _mixStr(c.colorHex, false, 38);
         string memory D2 = _mixStr(c.colorHex, false, 55);
         bool paid = c.tier == 1;
+        string memory sparkles = paid
+            ? '<g fill="#ffffff"><path transform="translate(56 128)" d="M0 -12 L3 -3 L12 0 L3 3 L0 12 L-3 3 L-12 0 L-3 -3 Z" opacity="0.85"/><path transform="translate(356 140) scale(0.7)" d="M0 -12 L3 -3 L12 0 L3 3 L0 12 L-3 3 L-12 0 L-3 -3 Z" opacity="0.7"/><path transform="translate(84 448) scale(0.6)" d="M0 -12 L3 -3 L12 0 L3 3 L0 12 L-3 3 L-12 0 L-3 -3 Z" opacity="0.55"/><path transform="translate(322 458) scale(0.85)" d="M0 -12 L3 -3 L12 0 L3 3 L0 12 L-3 3 L-12 0 L-3 -3 Z" opacity="0.75"/><path transform="translate(128 84) scale(0.45)" d="M0 -12 L3 -3 L12 0 L3 3 L0 12 L-3 3 L-12 0 L-3 -3 Z" opacity="0.55"/><path transform="translate(282 92) scale(0.5)" d="M0 -12 L3 -3 L12 0 L3 3 L0 12 L-3 3 L-12 0 L-3 -3 Z" opacity="0.6"/></g><g fill="#FFE9A8"><path transform="translate(210 118) scale(0.55)" d="M0 -12 L3 -3 L12 0 L3 3 L0 12 L-3 3 L-12 0 L-3 -3 Z" opacity="0.95"/><path transform="translate(38 302) scale(0.5)" d="M0 -12 L3 -3 L12 0 L3 3 L0 12 L-3 3 L-12 0 L-3 -3 Z" opacity="0.75"/></g>'
+            : '<g fill="#ffffff"><path transform="translate(56 128)" d="M0 -12 L3 -3 L12 0 L3 3 L0 12 L-3 3 L-12 0 L-3 -3 Z" opacity="0.6"/><path transform="translate(356 140) scale(0.7)" d="M0 -12 L3 -3 L12 0 L3 3 L0 12 L-3 3 L-12 0 L-3 -3 Z" opacity="0.5"/><path transform="translate(84 448) scale(0.6)" d="M0 -12 L3 -3 L12 0 L3 3 L0 12 L-3 3 L-12 0 L-3 -3 Z" opacity="0.4"/><path transform="translate(322 458) scale(0.85)" d="M0 -12 L3 -3 L12 0 L3 3 L0 12 L-3 3 L-12 0 L-3 -3 Z" opacity="0.55"/><path transform="translate(128 84) scale(0.45)" d="M0 -12 L3 -3 L12 0 L3 3 L0 12 L-3 3 L-12 0 L-3 -3 Z" opacity="0.4"/><path transform="translate(282 92) scale(0.5)" d="M0 -12 L3 -3 L12 0 L3 3 L0 12 L-3 3 L-12 0 L-3 -3 Z" opacity="0.45"/></g>';
+        string memory sigSvg = bytes(c.signature).length > 0
+            ? string(abi.encodePacked('<text x="390" y="480" text-anchor="end" transform="rotate(-3 390 480)" font-family="\'Brush Script MT\',\'Segoe Script\',\'Snell Roundhand\',cursive" font-size="21" fill="#17130E" fill-opacity="0.85">', _esc(c.signature), '</text><path d="M302 489 Q345 495 388 487" stroke="#17130E" stroke-opacity="0.35" stroke-width="1.3" fill="none" stroke-linecap="round"/>'))
+            : "";
         string memory overlay = paid
             ? '<rect x="6" y="6" width="408" height="582" rx="26" fill="url(#holo)" opacity="0.16"/><rect x="6" y="6" width="408" height="582" rx="26" fill="url(#sheen)" opacity="0.5"/>'
             : '<rect x="6" y="6" width="408" height="582" rx="26" fill="url(#sheen)" opacity="0.28"/>';
@@ -234,6 +246,7 @@ contract AgentCard {
             '<linearGradient id="holo" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff5f6d"/><stop offset="0.25" stop-color="#ffc371"/><stop offset="0.5" stop-color="#8aff80"/><stop offset="0.75" stop-color="#4dc9ff"/><stop offset="1" stop-color="#b18cff"/></linearGradient>',
             '<pattern id="brush" width="3" height="3" patternUnits="userSpaceOnUse"><line x1="0" y1="0.5" x2="3" y2="0.5" stroke="#ffffff" stroke-opacity="0.05"/><line x1="0" y1="2" x2="3" y2="2" stroke="#000000" stroke-opacity="0.05"/></pattern></defs>',
             '<rect x="6" y="6" width="408" height="582" rx="26" fill="url(#metal)"/><rect x="6" y="6" width="408" height="582" rx="26" fill="url(#brush)"/>', overlay,
+            '<ellipse cx="105" cy="66" rx="195" ry="92" fill="#ffffff" opacity="0.10"/><rect x="-60" y="150" width="540" height="46" fill="#ffffff" opacity="0.06" transform="rotate(-24 210 297)"/>', sparkles,
             '<g fill="none" stroke="#17130E" stroke-opacity="0.10"><circle cx="210" cy="272" r="66"/><circle cx="210" cy="272" r="100"/><circle cx="210" cy="272" r="134"/></g>',
             '<g fill="none" stroke="#ffffff" stroke-opacity="0.13"><circle cx="210" cy="273.5" r="66"/><circle cx="210" cy="273.5" r="100"/><circle cx="210" cy="273.5" r="134"/></g>',
             '<rect x="14" y="14" width="392" height="566" rx="20" fill="none" stroke="#ffffff" stroke-opacity="0.38" stroke-width="1.5"/>',
@@ -244,6 +257,7 @@ contract AgentCard {
             '<text x="211.5" y="291" text-anchor="middle" font-family="Arial, sans-serif" font-size="', _nameSize(bytes(c.agentName).length), '" font-weight="800" letter-spacing="0.5" fill="#ffffff" fill-opacity="0.35">', _esc(c.agentName), '</text>',
             '<text x="210" y="289.5" text-anchor="middle" font-family="Arial, sans-serif" font-size="', _nameSize(bytes(c.agentName).length), '" font-weight="800" letter-spacing="0.5" fill="#17130E">', _esc(c.agentName), '</text>',
             '<text x="210" y="330" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="700" letter-spacing="4.5" fill="#17130E" fill-opacity="0.72">', c.style == 0 ? 'GUARDIAN' : (c.style == 1 ? 'BUILDER' : 'EXPLORER'), '</text>',
+            sigSvg,
             '<rect x="30" y="502" width="360" height="1.2" fill="#000000" fill-opacity="0.22"/><rect x="30" y="503.4" width="360" height="1" fill="#ffffff" fill-opacity="0.3"/>',
             '<text x="30" y="540" font-family="Arial, sans-serif" font-size="13.5" font-weight="700" letter-spacing="1.6" fill="#17130E" fill-opacity="0.88">No. ', _pad4(tokenId), ' / 10000</text>',
             '<text x="390" y="540" text-anchor="end" font-family="Arial, sans-serif" font-size="12" font-weight="700" letter-spacing="2.2" fill="#17130E" fill-opacity="0.8">BNB CHAIN</text>',

@@ -523,3 +523,10 @@ h2 { font-size: 30px; line-height: 1.1; letter-spacing: -.055em; margin: 0; font
 .collectible-card .card-role { letter-spacing: 4px; font-size: 11px; }
 .collectible-card .card-serial { position: absolute; left: 19px; bottom: 14px; }
 .collectible-card .card-edition { letter-spacing: 2px; }
+
+/* === Signature + sparkle (v7) === */
+.collectible-card .card-sign { position: absolute; right: 19px; bottom: 34px; z-index: 2; font-family: 'Brush Script MT', 'Segoe Script', 'Snell Roundhand', cursive; font-size: 20px; color: rgba(23,19,14,.85); transform: rotate(-3deg); pointer-events: none; }
+.collectible-card .card-topline::after { content: "\2726"; position: absolute; left: 9%; top: 21%; font-size: 15px; color: rgba(255,255,255,.9); text-shadow: 0 0 7px rgba(255,255,255,.95), 0 0 2px rgba(23,19,14,.35); pointer-events: none; }
+.collectible-card .card-bottomline::before { content: "\2726"; position: absolute; right: 11%; top: 60%; font-size: 11px; color: rgba(255,255,255,.85); text-shadow: 0 0 6px rgba(255,255,255,.9), 0 0 2px rgba(23,19,14,.3); pointer-events: none; }
+.collectible-card.card-paid .card-bottomline::before { color: #FFE9A8; }
+.card-foil { opacity: .3; }

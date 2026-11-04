@@ -84,7 +84,8 @@
                 <div class="tcg-ability"><span class="tcg-ability-tag">ABILITY</span><span class="tcg-ability-body"><span class="tcg-ability-name">Shield Protocol</span><span class="tcg-ability-text">Once active, its guard covers the whole party.</span></span></div>
 <div class="tcg-moves"><span class="tcg-move"><span class="tcg-dots"><i></i><i></i></span><span class="tcg-move-name">Aegis Slam</span><span class="tcg-move-dmg">60</span></span><span class="tcg-move"><span class="tcg-dots"><i></i><i></i><i></i></span><span class="tcg-move-name">Moon Guard</span><span class="tcg-move-dmg">90</span></span></div>
                 <div class="card-bottomline"><div><span class="card-label">AGENT ID</span><strong id="heroCardName">nara.ai</strong><span class="card-serial" id="heroSerial">PAID EDITION &#9733; · CONTOH</span></div><div class="card-role" id="heroCardRole">THE GUARDIAN</div></div>
-                <span class="card-watermark">AC</span>
+                <span class="card-sign" aria-hidden="true">Nara</span>
+              <span class="card-watermark">AC</span>
               </div>
             </div>
           </div>
@@ -192,6 +193,12 @@
               </div>
               <p class="field-hint" id="nameHelp">1–32 karakter. Hanya huruf, angka, spasi, titik, garis bawah, dan strip. Nama tersimpan persis seperti yang kamu tulis.</p>
               <p class="field-error" id="nameError" aria-live="polite" hidden>Masukkan 1–32 karakter: huruf, angka, spasi, titik, garis bawah, atau strip saja.</p>
+              <label class="field-label" for="agentSignature">TANDA TANGAN DI KARTU (OPSIONAL)</label>
+              <div class="name-field-wrap">
+                <input id="agentSignature" name="agentSignature" type="text" value="" autocomplete="off" maxlength="24" placeholder="cth. Nara" aria-describedby="signHelp signError" />
+              </div>
+              <p class="field-hint" id="signHelp">Maks 24 karakter. Tampil di sudut kartu dengan gaya tulisan tangan dan tersimpan on-chain. Kosongkan bila tidak ingin tanda tangan.</p>
+              <p class="field-error" id="signError" aria-live="polite" hidden>Tanda tangan hanya boleh huruf, angka, spasi, titik, garis bawah, dan strip (maks 24 karakter).</p>
             </div>
 
             <div class="form-block">
@@ -263,6 +270,7 @@
               <div class="tcg-ability"><span class="tcg-ability-tag">ABILITY</span><span class="tcg-ability-body"><span class="tcg-ability-name">Shield Protocol</span><span class="tcg-ability-text">Once active, its guard covers the whole party.</span></span></div>
 <div class="tcg-moves"><span class="tcg-move"><span class="tcg-dots"><i></i><i></i></span><span class="tcg-move-name">Aegis Slam</span><span class="tcg-move-dmg">60</span></span><span class="tcg-move"><span class="tcg-dots"><i></i><i></i><i></i></span><span class="tcg-move-name">Moon Guard</span><span class="tcg-move-dmg">90</span></span></div>
               <div class="card-bottomline"><div><span class="card-label">AGENT ID</span><strong id="previewName">nara.ai</strong><span class="card-serial" id="previewSerial">FREE EDITION · PRATINJAU</span></div><div class="card-role" id="previewRole">THE GUARDIAN</div></div>
+              <span class="card-sign" id="previewSign"></span>
               <span class="card-watermark">AC</span>
             </div>
             <div class="preview-caption"><span>01 <i></i> 999</span><span id="previewSupplyCaption">KOLEKSI 10.000 KARTU</span></div>
@@ -404,6 +412,7 @@
               <span class="tcg-ability"><span class="tcg-ability-tag">ABILITY</span><span class="tcg-ability-body"><span class="tcg-ability-name">Shield Protocol</span><span class="tcg-ability-text">Once active, its guard covers the whole party.</span></span></span>
 <span class="tcg-moves"><span class="tcg-move"><span class="tcg-dots"><i></i><i></i></span><span class="tcg-move-name">Aegis Slam</span><span class="tcg-move-dmg">60</span></span><span class="tcg-move"><span class="tcg-dots"><i></i><i></i><i></i></span><span class="tcg-move-name">Moon Guard</span><span class="tcg-move-dmg">90</span></span></span>
               <span class="card-bottomline"><span><span class="card-label">AGENT ID</span><strong>sinta.ai</strong><span class="card-serial">FREE EDITION · CONTOH DESAIN</span></span><span class="card-role">THE GUARDIAN</span></span>
+              <span class="card-sign" aria-hidden="true">Sinta</span>
               <span class="card-watermark">AC</span>
             </span>
             <span class="gallery-meta"><span><strong>sinta.ai</strong><span>CONTOH DESAIN · GUARDIAN · GREEN</span></span><span class="gallery-cta">Coba gaya ini <i>→</i></span></span>
@@ -418,6 +427,7 @@
               <span class="tcg-ability"><span class="tcg-ability-tag">ABILITY</span><span class="tcg-ability-body"><span class="tcg-ability-name">Rapid Construct</span><span class="tcg-ability-text">Builds faster than anyone alive.</span></span></span>
 <span class="tcg-moves"><span class="tcg-move"><span class="tcg-dots"><i></i><i></i></span><span class="tcg-move-name">Pixel Forge</span><span class="tcg-move-dmg">50</span></span><span class="tcg-move"><span class="tcg-dots"><i></i><i></i><i></i></span><span class="tcg-move-name">Chain Build</span><span class="tcg-move-dmg">100</span></span></span>
               <span class="card-bottomline"><span><span class="card-label">AGENT ID</span><strong>raka.ai</strong><span class="card-serial">PAID EDITION &#9733; · CONTOH DESAIN</span></span><span class="card-role">THE BUILDER</span></span>
+              <span class="card-sign" aria-hidden="true">Raka</span>
               <span class="card-watermark">AC</span>
             </span>
             <span class="gallery-meta"><span><strong>raka.ai</strong><span>CONTOH DESAIN · BUILDER · VIOLET</span></span><span class="gallery-cta">Coba gaya ini <i>→</i></span></span>
@@ -432,6 +442,7 @@
               <span class="tcg-ability"><span class="tcg-ability-tag">ABILITY</span><span class="tcg-ability-body"><span class="tcg-ability-name">Star Pathfinding</span><span class="tcg-ability-text">Always finds a brand-new path.</span></span></span>
 <span class="tcg-moves"><span class="tcg-move"><span class="tcg-dots"><i></i><i></i></span><span class="tcg-move-name">Comet Dash</span><span class="tcg-move-dmg">40</span></span><span class="tcg-move"><span class="tcg-dots"><i></i><i></i><i></i></span><span class="tcg-move-name">Nova Trail</span><span class="tcg-move-dmg">110</span></span></span>
               <span class="card-bottomline"><span><span class="card-label">AGENT ID</span><strong>luna.ai</strong><span class="card-serial">FREE EDITION · CONTOH DESAIN</span></span><span class="card-role">THE EXPLORER</span></span>
+              <span class="card-sign" aria-hidden="true">Luna</span>
               <span class="card-watermark">AC</span>
             </span>
             <span class="gallery-meta"><span><strong>luna.ai</strong><span>CONTOH DESAIN · EXPLORER · SKY</span></span><span class="gallery-cta">Coba gaya ini <i>→</i></span></span>
