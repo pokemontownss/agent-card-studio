@@ -168,7 +168,7 @@ h2 { font-size: 30px; line-height: 1.1; letter-spacing: -.055em; margin: 0; font
 .color-swatch { height: 25px; width: 25px; border: 2px solid #f8f7f2; border-radius: 50%; cursor: pointer; box-shadow: 0 0 0 1px #d7d8d0; transition: transform .18s, box-shadow .18s; }
 .color-swatch:hover { transform: scale(1.09); }
 .color-swatch.is-selected { box-shadow: 0 0 0 2px var(--ink); }
-.swatch-violet { background: #7C4DFF; } .swatch-amber { background: #F59E0B; } .swatch-pink { background: #EC4899; } .swatch-red { background: #EF4444; } .swatch-cyan { background: #06B6D4; } .swatch-orange { background: #F97316; } .swatch-sky { background: #0EA5E9; } .swatch-green { background: #22C55E; } .swatch-teal { background: #14B8A6; } .swatch-indigo { background: #6366F1; }
+.swatch-violet { background: #7C4DFF; } .swatch-amber { background: #F59E0B; } .swatch-pink { background: #EC4899; } .swatch-red { background: #EF4444; } .swatch-cyan { background: #06B6D4; } .swatch-orange { background: #F97316; } .swatch-sky { background: #0EA5E9; } .swatch-green { background: #22C55E; } .swatch-teal { background: #14B8A6; } .swatch-indigo { background: #6366F1; } .swatch-gold { background: #C9A227; } .swatch-bronze { background: #B08D57; } .swatch-silver { background: #B9C0CC; } .swatch-rose { background: #E75480; } .swatch-magenta { background: #D946EF; } .swatch-lavender { background: #A78BFA; } .swatch-cornflower { background: #5B8DEF; } .swatch-slate { background: #7C8DA6; }
 .color-name { font: 8px var(--mono); color: #787b72; margin-left: 4px; }
 .wallet-notice, .wallet-connected { min-height: 53px; background: #efeee8; border: 1px solid #e1e1d9; display: flex; align-items: center; gap: 10px; padding: 9px 12px; font-size: 9px; line-height: 1.55; color: #6f7269; }
 .notice-icon { font-size: 15px; color: #969a8f; }
@@ -204,6 +204,14 @@ h2 { font-size: 30px; line-height: 1.1; letter-spacing: -.055em; margin: 0; font
 .theme-green { background: linear-gradient(140deg, #9ce5b7, #22C55E 28%, #157a3a 52%, #53d281 76%, #9ce5b7); background-color: #22C55E; }
 .theme-teal { background: linear-gradient(140deg, #95dfd7, #14B8A6 28%, #0c7267 52%, #48c8ba 76%, #95dfd7); background-color: #14B8A6; }
 .theme-indigo { background: linear-gradient(140deg, #b9baf9, #6366F1 28%, #3d3f95 52%, #8588f4 76%, #b9baf9); background-color: #6366F1; }
+.theme-gold { background: linear-gradient(140deg, #e6d49c, #C9A227 28%, #7d6418 52%, #d5b657 76%, #e6d49c); background-color: #C9A227; }
+.theme-bronze { background: linear-gradient(140deg, #dbcbb2, #B08D57 28%, #6d5736 52%, #c1a67c 76%, #dbcbb2); background-color: #B08D57; }
+.theme-silver { background: linear-gradient(140deg, #dfe2e8, #B9C0CC 28%, #73777e 52%, #c8ced7 76%, #dfe2e8); background-color: #B9C0CC; }
+.theme-rose { background: linear-gradient(140deg, #f4b0c5, #E75480 28%, #8f344f 52%, #ec7a9c 76%, #f4b0c5); background-color: #E75480; }
+.theme-magenta { background: linear-gradient(140deg, #eeaaf8, #D946EF 28%, #872b94 52%, #e16ff3 76%, #eeaaf8); background-color: #D946EF; }
+.theme-lavender { background: linear-gradient(140deg, #d7cafd, #A78BFA 28%, #68569b 52%, #baa5fb 76%, #d7cafd); background-color: #A78BFA; }
+.theme-cornflower { background: linear-gradient(140deg, #b4cbf8, #5B8DEF 28%, #385794 52%, #7fa6f3 76%, #b4cbf8); background-color: #5B8DEF; }
+.theme-slate { background: linear-gradient(140deg, #c3cbd6, #7C8DA6 28%, #4d5767 52%, #99a6ba 76%, #c3cbd6); background-color: #7C8DA6; }
 .card-topline, .card-bottomline { display: flex; justify-content: space-between; align-items: flex-start; position: relative; z-index: 2; }
 .card-brand { display: flex; align-items: center; gap: 6px; font: 8px var(--mono); letter-spacing: .1em; }
 .mini-mark { font-size: 14px; line-height: 1; }

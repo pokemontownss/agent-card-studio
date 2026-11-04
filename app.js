@@ -31,6 +31,14 @@ const colorConfig = {
   green: { label: "Green / 008", hex: "#22C55E", ink: "#17130E", accent: "#15803D" },
   teal: { label: "Teal / 009", hex: "#14B8A6", ink: "#17130E", accent: "#0F766E" },
   indigo: { label: "Indigo / 010", hex: "#6366F1", ink: "#17130E", accent: "#4338CA" },
+  gold: { label: "Gold / 011", hex: "#C9A227", ink: "#17130E", accent: "#8A6A1F" },
+  bronze: { label: "Bronze / 012", hex: "#B08D57", ink: "#17130E", accent: "#7D5F36" },
+  silver: { label: "Silver / 013", hex: "#B9C0CC", ink: "#17130E", accent: "#7E8896" },
+  rose: { label: "Rose / 014", hex: "#E75480", ink: "#17130E", accent: "#B02A52" },
+  magenta: { label: "Magenta / 015", hex: "#D946EF", ink: "#17130E", accent: "#A21CAF" },
+  lavender: { label: "Lavender / 016", hex: "#A78BFA", ink: "#17130E", accent: "#7C5CD6" },
+  cornflower: { label: "Cornflower / 017", hex: "#5B8DEF", ink: "#17130E", accent: "#2F5FB3" },
+  slate: { label: "Slate / 018", hex: "#7C8DA6", ink: "#17130E", accent: "#4E6076" },
 };
 
 const state = { name: "nara.ai", nameMode: "free", signature: "", persona: "guardian", color: "violet", tier: 0, freeUsed: false, connected: false, address: null, chainId: null };
