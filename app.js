@@ -1,5 +1,5 @@
 
-/* Agent Card Studio — mint NFT asli di BNB Chain (ERC-721 AgentCard). */
+/* Agent Card Studio — real NFT minting on BNB Chain (ERC-721 AgentCard). */
 const AGENT_CARD_CONFIG = {
   contractAddress: "",
   chainId: 56,
@@ -14,9 +14,9 @@ const AGENT_CARD_BYTECODE = "0x60806040523461013e57610014600054610143565b601f811
 const READ_RPCS = ["https://bsc-dataseed.binance.org", "https://bsc.publicnode.com"];
 
 const personaConfig = {
-  guardian: { title: "Guardian", cardTitle: "THE GUARDIAN", tagline: "Waspada & tenang", styleIndex: 0 },
-  builder: { title: "Builder", cardTitle: "THE BUILDER", tagline: "Kreatif & tekun", styleIndex: 1 },
-  explorer: { title: "Explorer", cardTitle: "THE EXPLORER", tagline: "Penasaran & bebas", styleIndex: 2 },
+  guardian: { title: "Guardian", cardTitle: "THE GUARDIAN", tagline: "Calm & vigilant", styleIndex: 0 },
+  builder: { title: "Builder", cardTitle: "THE BUILDER", tagline: "Creative & persistent", styleIndex: 1 },
+  explorer: { title: "Explorer", cardTitle: "THE EXPLORER", tagline: "Curious & free", styleIndex: 2 },
 };
 const personaByIndex = ["guardian", "builder", "explorer"];
 
@@ -69,7 +69,7 @@ function formatBNB(wei) {
   } catch (e) { return "—"; }
 }
 function withTimeout(promise, ms) {
-  return Promise.race([promise, new Promise((_, reject) => setTimeout(() => reject(new Error("Waktu habis saat membaca jaringan.")), ms))]);
+  return Promise.race([promise, new Promise((_, reject) => setTimeout(() => reject(new Error("Timed out while reading the network.")), ms))]);
 }
 function escapeXml(value) {
   return String(value).replace(/[<>&'"]/g, (char) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", "'": "&apos;", '"': "&quot;" }[char]));
@@ -100,8 +100,8 @@ function validInput() {
   }
   const nameErrorEl = $("#nameError");
   if (nameErrorEl) nameErrorEl.textContent = state.nameMode === "ai"
-    ? "Masukkan Agent ID-mu: 3\u201324 karakter huruf kecil, angka, strip, atau garis bawah (tanpa .ai \u2014 ditambahkan otomatis)."
-    : "Masukkan 1\u201332 karakter: huruf, angka, spasi, titik, garis bawah, atau strip saja.";
+    ? "Enter your Agent ID: 3\u201324 characters of lowercase letters, numbers, dashes, or underscores (without .ai \u2014 it is added automatically)."
+    : "Enter 1\u201332 characters: letters, numbers, spaces, dots, underscores, or dashes only.";
   const sig = rawSignature();
   const sigValid = sig.length <= 24 && /^[A-Za-z0-9 ._-]*$/.test(sig);
   $("#nameError").hidden = nameValid;
@@ -110,7 +110,7 @@ function validInput() {
   if (signError) signError.hidden = sigValid;
   return nameValid && sigValid;
 }
-function getName() { if (state.nameMode === "ai") return (aiBase() || "agent") + ".ai"; return rawName() || "nama-agent"; }
+function getName() { if (state.nameMode === "ai") return (aiBase() || "agent") + ".ai"; return rawName() || "agent-name"; }
 
 function activePrice() { return state.tier === 1 ? chainState.paidPrice : chainState.freePrice; }
 function editionName(tier) { const t = tier == null ? state.tier : tier; return t === 1 ? "PAID EDITION ★" : "FREE EDITION"; }
@@ -123,17 +123,17 @@ function syncTierUI() {
   const note = $("#tierNote");
   if (note) {
     if (chainState.freePrice != null && chainState.paidPrice != null) {
-      note.textContent = "Live dari kontrak — Free: " + formatBNB(chainState.freePrice) + " BNB (1x per wallet)" + (state.freeUsed ? " · free mint wallet ini sudah dipakai" : "") + " · Paid: " + formatBNB(chainState.paidPrice) + " BNB (tanpa batas).";
+      note.textContent = "Live from the contract — Free: " + formatBNB(chainState.freePrice) + " BNB (1x per wallet)" + (state.freeUsed ? " · this wallet's free mint is already used" : "") + " · Paid: " + formatBNB(chainState.paidPrice) + " BNB (unlimited).";
     } else if (hasContract()) {
-      note.textContent = "Harga dibaca live dari kontrak begitu data termuat.";
+      note.textContent = "Prices are read live from the contract once the data loads.";
     } else {
-      note.textContent = "Harga live tampil begitu kontrak diterbitkan. Free = fee anti-sybil kecil, 1x per wallet. Paid = kartu logam premium, tanpa batas.";
+      note.textContent = "Live prices appear once the contract is deployed. Free = a small anti-sybil fee, 1x per wallet. Paid = a premium metal card, unlimited.";
     }
   }
 }
 
 function nextTokenLabel() {
-  return null; // nomor seri diundi acak on-chain dari pool #1-#10000 saat mint
+  return null; // the serial number is drawn randomly on-chain from the #1-#10000 pool at mint
 }
 
 function updateEditionLabels() {
@@ -149,7 +149,7 @@ function updateEditionLabels() {
   const caption = $("#previewSupplyCaption");
   if (caption) {
     caption.textContent = chainState.totalMinted != null
-      ? chainState.totalMinted.toLocaleString("id-ID") + " / " + (chainState.maxSupply || 10000).toLocaleString("id-ID") + " TERMINT"
+      ? chainState.totalMinted.toLocaleString("en-US") + " / " + (chainState.maxSupply || 10000).toLocaleString("en-US") + " TERMINT"
       : "KOLEKSI 10.000 KARTU";
   }
 }
@@ -203,7 +203,7 @@ function updateCard() {
   $("#previewRole").textContent = personaConfig[state.persona].title.toUpperCase();
   $("#colorName").textContent = colorConfig[state.color].label;
   const previewArt = $("#previewGlyph"); if (previewArt) previewArt.src = artPath(state.persona);
-  card.setAttribute("aria-label", "Pratinjau kartu " + state.name + ", " + personaConfig[state.persona].title);
+  card.setAttribute("aria-label", "Card preview: " + state.name + ", " + personaConfig[state.persona].title);
   fillTcg(card, state.persona, state.tier);
   updateEditionLabels();
   updateCardSlots();
@@ -245,7 +245,7 @@ function syncHeroCard() {
   if (role) role.textContent = personaConfig[heroState.persona].title.toUpperCase();
   if (glyph) glyph.src = artPath(heroState.persona);
   if (colorName) colorName.textContent = colorConfig[heroState.color].label;
-  card.setAttribute("aria-label", "Contoh kartu nara.ai, " + personaConfig[heroState.persona].title);
+  card.setAttribute("aria-label", "Sample card nara.ai, " + personaConfig[heroState.persona].title);
   fillTcg(card, heroState.persona, 1);
   updateEditionLabels();
   $$(".hero-persona").forEach((button) => {
@@ -265,9 +265,9 @@ function updateXShare() {
   if (!link) return;
   let text;
   if (mintedResult) {
-    text = "Aku baru saja mint Agent Card #" + pad4(mintedResult.tokenId) + " (" + state.name + ", " + personaConfig[state.persona].title + ") di BNB Chain — data kartu tersimpan on-chain. Bukan Agent ID resmi Binance. Bukti mint: " + explorerTx(mintedResult.txHash);
+    text = "I just minted Agent Card #" + pad4(mintedResult.tokenId) + " (" + state.name + ", " + personaConfig[state.persona].title + ") on BNB Chain — the card data is stored on-chain. Not an official Binance Agent ID. Mint proof: " + explorerTx(mintedResult.txHash);
   } else {
-    text = "Aku merancang kartu Agent ID " + state.name + " (" + personaConfig[state.persona].title + ") di Agent Card Studio — mint NFT koleksi di BNB Chain, data kartu tersimpan on-chain. Bukan Agent ID resmi Binance.";
+    text = "I designed an Agent ID card " + state.name + " (" + personaConfig[state.persona].title + ") at Agent Card Studio — a collectible NFT mint on BNB Chain, with the card data stored on-chain. Not an official Binance Agent ID.";
   }
   link.href = "https://x.com/intent/post?text=" + encodeURIComponent(text);
 }
@@ -312,7 +312,7 @@ function showView(viewId, step) {
   if (studio) window.scrollTo({ top: studio.offsetTop - 16, behavior: prefersReducedMotion ? "auto" : "smooth" });
 }
 
-/* ---------- Status & data publik dari kontrak ---------- */
+/* ---------- Contract status & public data ---------- */
 
 function setChainStatus(mode) {
   const pillText = $("#chainStatusText");
@@ -320,39 +320,39 @@ function setChainStatus(mode) {
   const studioNote = $("#studioNote");
   const contractText = $("#contractStatusText");
   const priceNote = $("#heroPriceNote");
-  let pill = "BNB CHAIN · MEMERIKSA…";
-  let badgeText = "BNB CHAIN · MEMERIKSA STATUS KONTRAK";
-  let note = "Memeriksa status kontrak di BNB Chain…";
-  let contractLabel = "MEMERIKSA…";
-  let price = "Memeriksa status kontrak di BNB Chain…";
+  let pill = "BNB CHAIN · CHECKING…";
+  let badgeText = "BNB CHAIN · CHECKING CONTRACT STATUS";
+  let note = "Checking the contract status on BNB Chain…";
+  let contractLabel = "CHECKING…";
+  let price = "Checking the contract status on BNB Chain…";
   if (mode === "no-contract") {
     pill = "BNB CHAIN · KONTRAK BELUM DITERBITKAN";
     badgeText = "BNB CHAIN · KONTRAK BELUM DITERBITKAN";
-    note = "Kontrak belum diterbitkan.<br />Mint dibuka setelah diterbitkan pemilik.";
+    note = "The contract is not deployed yet.<br />Minting opens once the owner deploys it.";
     contractLabel = "KONTRAK BELUM DITERBITKAN";
-    price = "Kontrak belum diterbitkan — desain tetap bisa dicoba, mint dibuka setelah kontrak diterbitkan pemilik.";
+    price = "Contract not deployed yet — you can still try the design; minting opens once the owner deploys the contract.";
   } else if (mode === "ok" || mode === "closed") {
-    const total = chainState.totalMinted != null ? chainState.totalMinted.toLocaleString("id-ID") : "—";
-    const max = (chainState.maxSupply || 10000).toLocaleString("id-ID");
+    const total = chainState.totalMinted != null ? chainState.totalMinted.toLocaleString("en-US") : "—";
+    const max = (chainState.maxSupply || 10000).toLocaleString("en-US");
     const priceBnb = "Free " + (chainState.freePrice != null ? formatBNB(chainState.freePrice) : "—") + " / Paid " + (chainState.paidPrice != null ? formatBNB(chainState.paidPrice) : "—");
-    const openLabel = mode === "ok" ? "MINT TERBUKA" : "MINT DITUTUP";
+    const openLabel = mode === "ok" ? "MINT OPEN" : "MINT CLOSED";
     pill = "BNB CHAIN · " + openLabel + " · " + total + "/" + max;
     badgeText = "LIVE DI BNB CHAIN · " + openLabel;
-    note = openLabel.charAt(0) + openLabel.slice(1).toLowerCase() + " · " + total + " dari " + max + " kartu terbit.<br />Harga: " + priceBnb + " BNB + gas. Free maks 1x per wallet.";
+    note = openLabel.charAt(0) + openLabel.slice(1).toLowerCase() + " · " + total + " of " + max + " cards minted.<br />Price: " + priceBnb + " BNB + gas. Free max 1x per wallet.";
     contractLabel = openLabel;
-    price = "Harga live: " + priceBnb + " BNB + gas · " + total + "/" + max + " kartu sudah terbit.";
+    price = "Live price: " + priceBnb + " BNB + gas · " + total + "/" + max + " cards minted.";
   } else if (mode === "error") {
     pill = "BNB CHAIN · DATA KONTRAK TIDAK TERBACA";
     badgeText = "BNB CHAIN · DATA KONTRAK TIDAK TERBACA";
-    note = "Data kontrak tidak terbaca saat ini.<br />Coba muat ulang halaman.";
+    note = "Contract data is unavailable right now.<br />Try reloading the page.";
     contractLabel = "DATA TIDAK TERBACA";
-    price = "Data kontrak tidak terbaca saat ini — periksa koneksimu lalu muat ulang halaman.";
+    price = "Contract data is unavailable right now — check your connection and reload the page.";
   } else if (mode === "no-ethers") {
     pill = "BNB CHAIN · PUSTAKA WALLET GAGAL DIMUAT";
     badgeText = "BNB CHAIN · PUSTAKA WALLET GAGAL DIMUAT";
-    note = "Pustaka wallet gagal dimuat.<br />Periksa koneksi lalu muat ulang.";
+    note = "The wallet library failed to load.<br />Check your connection and reload.";
     contractLabel = "PUSTAKA GAGAL DIMUAT";
-    price = "Pustaka wallet gagal dimuat — periksa koneksimu lalu muat ulang halaman.";
+    price = "The wallet library failed to load — check your connection and reload the page.";
   }
   if (pillText) pillText.textContent = pill;
   if (badge) badge.innerHTML = "<i aria-hidden=\"true\"></i> " + escapeXml(badgeText);
@@ -420,13 +420,13 @@ async function loadChainState() {
 }
 
 function mintBlockedReason() {
-  if (!hasContract()) return "Kontrak belum diterbitkan — pemilik akan menerbitkannya dari wallet-nya.";
-  if (!chainState.loaded) return "Data kontrak masih dimuat / tidak terbaca.";
-  if (!chainState.mintOpen) return "Mint sedang ditutup oleh pemilik kontrak.";
-  if (chainState.totalMinted != null && chainState.totalMinted >= chainState.maxSupply) return "Koleksi sudah habis (10.000 kartu).";
-  if (!state.connected) return "Hubungkan wallet untuk melanjutkan.";
-  if (state.chainId != null && state.chainId !== AGENT_CARD_CONFIG.chainId) return "Ganti jaringan wallet ke BNB Smart Chain (56).";
-  if (state.tier === 0 && state.freeUsed) return "Free mint sudah dipakai wallet ini — pilih Paid Edition untuk mint lagi.";
+  if (!hasContract()) return "The contract is not deployed yet — the owner will deploy it from their wallet.";
+  if (!chainState.loaded) return "Contract data is still loading / unavailable.";
+  if (!chainState.mintOpen) return "Minting is currently closed by the contract owner.";
+  if (chainState.totalMinted != null && chainState.totalMinted >= chainState.maxSupply) return "The collection is sold out (10,000 cards).";
+  if (!state.connected) return "Connect your wallet to continue.";
+  if (state.chainId != null && state.chainId !== AGENT_CARD_CONFIG.chainId) return "Switch your wallet network to BNB Smart Chain (56).";
+  if (state.tier === 0 && state.freeUsed) return "This wallet already used its free mint — choose the Paid Edition to mint again.";
   return null;
 }
 
@@ -436,7 +436,7 @@ function refreshMintUI() {
   const hint = $("#continueHint");
   const mintButton = $("#mintButton");
   if (continueButton) continueButton.disabled = Boolean(blocked) || !validInputSilent();
-  if (hint) hint.textContent = blocked || "Harga mint dibaca live dari kontrak; gas terlihat di wallet sebelum menyetujui.";
+  if (hint) hint.textContent = blocked || "The mint price is read live from the contract; gas is shown in your wallet before you approve.";
   if (mintButton) {
     mintButton.disabled = Boolean(blocked) || !validInputSilent();
     const price = activePrice() != null ? formatBNB(activePrice()) : null;
@@ -459,7 +459,7 @@ function updateConfirmReceipt() {
       link.textContent = shortAddr(contractAddress());
       link.href = explorerAddress(contractAddress());
     } else {
-      link.textContent = "Belum diterbitkan";
+      link.textContent = "Not deployed yet";
       link.href = "#pemilik";
     }
   }
@@ -484,20 +484,20 @@ function updateWalletUI() {
     if (addrEl) addrEl.textContent = state.address;
     if (netEl) netEl.textContent = state.chainId === 56 ? "BNB Smart Chain (56)" : (state.chainId ? "Jaringan lain (" + state.chainId + ") — ganti ke 56" : "BNB Smart Chain");
   } else {
-    if (label) label.textContent = "Hubungkan Wallet";
+    if (label) label.textContent = "Connect Wallet";
     if (notice) notice.hidden = false;
     if (connectedBox) connectedBox.hidden = true;
   }
 }
 
-/* ---------- Wallet asli ---------- */
+/* ---------- Real wallet ---------- */
 
 function showNoWalletGuidance() {
   const text = $("#walletNoticeText");
   if (text) {
-    text.innerHTML = "<strong>Tidak ada wallet terdeteksi.</strong><br />Buka halaman ini di browser dalam aplikasi wallet (MetaMask, Trust Wallet, atau Binance Wallet), atau pasang ekstensi wallet di browser desktop.";
+    text.innerHTML = "<strong>No wallet detected.</strong><br />Open this page in a wallet app's built-in browser (MetaMask, Trust Wallet, or Binance Wallet), or install a wallet extension in your desktop browser.";
   }
-  showToast("Tidak ada wallet terdeteksi di browser ini.");
+  showToast("No wallet detected in this browser.");
 }
 
 async function setupSigner() {
@@ -540,19 +540,19 @@ async function ensureChain() {
         });
         state.chainId = 56;
       } catch (e2) {
-        showToast("Tambahkan jaringan BNB Smart Chain (56) di wallet-mu.");
+        showToast("Add the BNB Smart Chain (56) network in your wallet.");
       }
     } else if (err && err.code === 4001) {
-      showToast("Ganti jaringan ke BNB Smart Chain (56) untuk mint.");
+      showToast("Switch to BNB Smart Chain (56) to mint.");
     } else {
-      showToast("Wallet masih di jaringan lain — ganti ke BNB Smart Chain (56).");
+      showToast("Your wallet is on another network — switch to BNB Smart Chain (56).");
     }
   }
 }
 
 async function connectWallet() {
   if (!window.ethers) {
-    showToast("Pustaka wallet belum termuat — periksa koneksi lalu coba lagi.");
+    showToast("The wallet library is not loaded yet — check your connection and try again.");
     return false;
   }
   if (!window.ethereum) { showNoWalletGuidance(); return false; }
@@ -567,13 +567,13 @@ async function connectWallet() {
     refreshMintUI();
     updateOwnerPanel();
     loadMyCards();
-    showToast("Wallet terhubung: " + shortAddr(state.address));
+    showToast("Wallet connected: " + shortAddr(state.address));
     return true;
   } catch (e) {
     if (e && (e.code === 4001 || /rejected/i.test(String(e.message || "")))) {
       showToast("Permintaan koneksi ditolak di wallet.");
     } else {
-      showToast("Gagal menghubungkan wallet. Coba lagi.");
+      showToast("Failed to connect the wallet. Try again.");
     }
     return false;
   }
@@ -589,16 +589,16 @@ function disconnectWallet() {
   refreshMintUI();
   updateOwnerPanel();
   const status = $("#myCardsStatus");
-  if (status) status.textContent = "Hubungkan wallet untuk melihat kartu NFT milikmu.";
+  if (status) status.textContent = "Connect your wallet to see your NFT cards.";
   const grid = $("#myCardsGrid");
   if (grid) grid.replaceChildren();
-  showToast("Wallet diputuskan di halaman ini.");
+  showToast("Wallet disconnected on this page.");
 }
 
 function continueToConfirmation() {
   if (!validInput()) {
     $("#agentName").focus();
-    showToast("Periksa format nama Agent ID.");
+    showToast("Check the Agent ID name format.");
     return;
   }
   const blocked = mintBlockedReason();
@@ -613,31 +613,31 @@ function continueToConfirmation() {
   showView("confirmView", 2);
 }
 
-/* ---------- Mint asli ---------- */
+/* ---------- Real mint ---------- */
 
 function friendlyMintError(e) {
   const raw = String((e && (e.reason || e.message || e)) || "");
   const infoMsg = e && e.info && e.info.error ? String(e.info.error.message || "") : "";
   const hay = (raw + " " + infoMsg).toLowerCase();
   if (e && (e.code === 4001 || e.code === "ACTION_REJECTED") || hay.includes("user rejected") || hay.includes("user denied")) {
-    return { message: "Kamu menolak transaksi di wallet. Tidak ada BNB yang berpindah dan tidak ada kartu yang diterbitkan.", code: "DITOLAK DI WALLET" };
+    return { message: "You rejected the transaction in your wallet. No BNB moved and no card was issued.", code: "REJECTED IN WALLET" };
   }
   if (hay.includes("insufficient funds") || hay.includes("insufficient balance") || hay.includes("saldo")) {
-    return { message: "Saldo BNB tidak cukup untuk harga mint ditambah gas jaringan.", code: "SALDO TIDAK CUKUP" };
+    return { message: "Not enough BNB for the mint price plus network gas.", code: "INSUFFICIENT FUNDS" };
   }
   if (hay.includes("mint is closed")) {
-    return { message: "Mint sedang ditutup oleh pemilik kontrak. Coba lagi nanti.", code: "MINT DITUTUP" };
+    return { message: "Minting is closed by the contract owner. Try again later.", code: "MINT CLOSED" };
   }
   if (hay.includes("sold out")) {
-    return { message: "Koleksi sudah habis — 10.000 kartu telah terbit.", code: "SOLD OUT" };
+    return { message: "The collection is sold out — all 10,000 cards have been minted.", code: "SOLD OUT" };
   }
   if (hay.includes("name must")) {
-    return { message: "Nama harus 1–32 karakter sesuai aturan di studio.", code: "NAMA TIDAK VALID" };
+    return { message: "The name must be 1–32 characters following the studio rules.", code: "INVALID NAME" };
   }
   if (hay.includes("insufficient bnb")) {
-    return { message: "BNB yang dikirim kurang dari harga mint kontrak.", code: "BNB KURANG" };
+    return { message: "The BNB sent is less than the contract's mint price.", code: "INSUFFICIENT BNB" };
   }
-  return { message: "Transaksi gagal. Periksa detailnya, pastikan saldo dan jaringan benar, lalu coba lagi.", code: (e && e.code ? String(e.code) : "TRANSACTION_ERROR").slice(0, 60) };
+  return { message: "The transaction failed. Check the details, make sure your balance and network are right, then try again.", code: (e && e.code ? String(e.code) : "TRANSACTION_ERROR").slice(0, 60) };
 }
 
 function showErrorView(message, codeText) {
@@ -663,7 +663,7 @@ function clearProcessTimers() {
 async function runRealMint() {
   if (!validInput()) {
     $("#agentName").focus();
-    showToast("Periksa format nama Agent ID.");
+    showToast("Check the Agent ID name format.");
     return;
   }
   if (!state.connected) {
@@ -671,17 +671,17 @@ async function runRealMint() {
     if (!ok || !state.connected) return;
   }
   if (!hasContract()) {
-    showErrorView("Kontrak belum diterbitkan — pemilik akan menerbitkannya dari wallet-nya.", "KONTRAK BELUM DITERBITKAN");
+    showErrorView("The contract is not deployed yet — the owner will deploy it from their wallet.", "CONTRACT NOT DEPLOYED");
     return;
   }
   await ensureChain();
   if (state.chainId !== AGENT_CARD_CONFIG.chainId) {
-    showErrorView("Wallet-mu masih di jaringan lain. Ganti ke BNB Smart Chain (56), lalu coba lagi.", "JARINGAN SALAH");
+    showErrorView("Your wallet is on another network. Switch to BNB Smart Chain (56), then try again.", "WRONG NETWORK");
     return;
   }
   if (!walletContract) await setupSigner();
   if (!walletContract || !signer) {
-    showErrorView("Wallet belum siap. Hubungkan ulang wallet-mu lalu coba lagi.", "WALLET BELUM SIAP");
+    showErrorView("Your wallet is not ready. Reconnect your wallet and try again.", "WALLET NOT READY");
     return;
   }
   try {
@@ -697,23 +697,23 @@ async function runRealMint() {
     if (state.tier === 0) state.freeUsed = Boolean(used);
     updateConfirmReceipt();
     if (!chainState.mintOpen) {
-      showErrorView("Mint sedang ditutup oleh pemilik kontrak. Coba lagi nanti.", "MINT DITUTUP");
+      showErrorView("Minting is closed by the contract owner. Try again later.", "MINT CLOSED");
       return;
     }
     if (state.tier === 0 && state.freeUsed) {
-      showErrorView("Free mint sudah pernah dipakai wallet ini (maks 1x per wallet). Pilih Paid Edition untuk mint kartu lagi.", "FREE MINT SUDAH DIPAKAI");
+      showErrorView("This wallet already used its free mint (max 1x per wallet). Choose the Paid Edition to mint another card.", "FREE MINT ALREADY USED");
       return;
     }
   } catch (e) {
-    showErrorView("Harga mint live tidak bisa dibaca dari kontrak. Periksa koneksi lalu coba lagi.", "HARGA TIDAK TERBACA");
+    showErrorView("The live mint price could not be read from the contract. Check your connection and try again.", "PRICE UNAVAILABLE");
     return;
   }
 
   clearProcessTimers();
   showView("processView", 2);
   setProcessStep(0);
-  $("#processTitle").textContent = "Menunggu wallet-mu";
-  $("#processMessage").textContent = "Setujui transaksi di wallet-mu. Harga " + formatBNB(activePrice()) + " BNB + gas terlihat di sana sebelum kamu menyetujui. Pembayaran BNB bersifat final.";
+  $("#processTitle").textContent = "Waiting for your wallet";
+  $("#processMessage").textContent = "Approve the transaction in your wallet. The price of " + formatBNB(activePrice()) + " BNB + gas is shown there before you approve. BNB payments are final.";
 
   try {
     const mintFn = state.tier === 1 ? walletContract.paidMint : walletContract.freeMint;
@@ -725,8 +725,8 @@ async function runRealMint() {
       { value: activePrice(), gasLimit: 600000 }
     );
     setProcessStep(1);
-    $("#processTitle").textContent = "Transaksi terkirim";
-    $("#processMessage").textContent = "Hash: " + tx.hash + ". Menunggu konfirmasi di BNB Chain…";
+    $("#processTitle").textContent = "Transaction sent";
+    $("#processMessage").textContent = "Hash: " + tx.hash + ". Waiting for confirmation on BNB Chain…";
     const receipt = await tx.wait();
     setProcessStep(2);
     let tokenId = null;
@@ -766,7 +766,7 @@ async function runRealMint() {
 function showSuccess() {
   const tokenId = mintedResult.tokenId;
   const line = $("#successTokenLine");
-  if (line) line.innerHTML = "Kartu <strong>No. " + pad4(tokenId) + "</strong> — " + escapeXml(state.name) + " · " + personaConfig[state.persona].title + " — kini milik wallet-mu di BNB Chain.";
+  if (line) line.innerHTML = "Card <strong>No. " + pad4(tokenId) + "</strong> — " + escapeXml(state.name) + " · " + personaConfig[state.persona].title + " — now belongs to your wallet on BNB Chain.";
   const stamp = $("#successStampNo");
   if (stamp) stamp.textContent = "No. " + pad4(tokenId) + " · " + editionName(mintedResult ? mintedResult.tier : state.tier);
   const txLink = $("#txLinkButton");
@@ -778,7 +778,7 @@ function showSuccess() {
   launchConfetti();
 }
 
-/* ---------- Unduh PNG & bagikan ---------- */
+/* ---------- PNG download & sharing ---------- */
 
 function hexMix(hex, target, f) {
   const a = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
@@ -887,7 +887,7 @@ async function downloadCard() {
       ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
       URL.revokeObjectURL(url);
       canvas.toBlob((png) => {
-        if (!png) { showToast("Gagal membuat PNG. Coba lagi."); return; }
+        if (!png) { showToast("Failed to create the PNG. Try again."); return; }
         const downloadUrl = URL.createObjectURL(png);
         const link = document.createElement("a");
         link.href = downloadUrl;
@@ -896,22 +896,22 @@ async function downloadCard() {
         link.click();
         link.remove();
         URL.revokeObjectURL(downloadUrl);
-        showToast("Kartu PNG tersimpan.");
+        showToast("Card PNG saved.");
       }, "image/png");
     };
-    image.onerror = () => { URL.revokeObjectURL(url); showToast("Gagal membuat gambar. Coba lagi."); };
+    image.onerror = () => { URL.revokeObjectURL(url); showToast("Failed to create the image. Try again."); };
     image.src = url;
   } catch (error) {
     URL.revokeObjectURL(url);
-    showToast("Browser tidak dapat membuat gambar saat ini.");
+    showToast("The browser cannot create an image right now.");
   }
 }
 
 function shareText() {
   if (mintedResult) {
-    return "Aku baru saja mint Agent Card #" + pad4(mintedResult.tokenId) + " (" + state.name + ", " + personaConfig[state.persona].title + ") di BNB Chain — data kartu tersimpan on-chain. Bukan Agent ID resmi Binance. Bukti mint: " + explorerTx(mintedResult.txHash);
+    return "I just minted Agent Card #" + pad4(mintedResult.tokenId) + " (" + state.name + ", " + personaConfig[state.persona].title + ") on BNB Chain — the card data is stored on-chain. Not an official Binance Agent ID. Mint proof: " + explorerTx(mintedResult.txHash);
   }
-  return "Aku merancang kartu Agent ID " + state.name + " (" + personaConfig[state.persona].title + ") di Agent Card Studio — mint NFT koleksi di BNB Chain, data kartu tersimpan on-chain. Bukan Agent ID resmi Binance.";
+  return "I designed an Agent ID card " + state.name + " (" + personaConfig[state.persona].title + ") at Agent Card Studio — a collectible NFT mint on BNB Chain, with the card data stored on-chain. Not an official Binance Agent ID.";
 }
 
 async function shareCard() {
@@ -919,11 +919,11 @@ async function shareCard() {
   try {
     if (navigator.share) {
       await navigator.share(payload);
-      $("#shareFeedback").textContent = "Menu berbagi dibuka.";
+      $("#shareFeedback").textContent = "Share menu opened.";
       return;
     }
     await navigator.clipboard.writeText(payload.text);
-    $("#shareFeedback").textContent = "Teks dibagikan disalin.";
+    $("#shareFeedback").textContent = "Share text copied.";
   } catch (error) {
     if (error && error.name === "AbortError") return;
     try {
@@ -933,9 +933,9 @@ async function shareCard() {
       textArea.select();
       document.execCommand("copy");
       textArea.remove();
-      $("#shareFeedback").textContent = "Teks dibagikan disalin.";
+      $("#shareFeedback").textContent = "Share text copied.";
     } catch (copyError) {
-      $("#shareFeedback").textContent = "Bagikan tidak tersedia di perangkat ini.";
+      $("#shareFeedback").textContent = "Sharing is not available on this device.";
     }
   }
 }
@@ -959,32 +959,32 @@ async function loadMyCards() {
     try { state.freeUsed = Boolean(await readContract.freeMintUsed(state.address)); refreshMintUI(); } catch (e) { /* abaikan */ }
   }
   if (!hasContract()) {
-    status.textContent = "Kontrak belum diterbitkan — belum ada kartu yang bisa ditampilkan. Pemilik akan menerbitkannya dari wallet-nya.";
+    status.textContent = "The contract is not deployed yet — there are no cards to show. The owner will deploy it from their wallet.";
     grid.replaceChildren();
     return;
   }
   if (!state.connected || !state.address) {
-    status.textContent = "Hubungkan wallet untuk melihat kartu NFT milikmu.";
+    status.textContent = "Connect your wallet to see your NFT cards.";
     grid.replaceChildren();
     return;
   }
   if (!chainState.loaded) {
-    status.textContent = "Memuat data kontrak…";
+    status.textContent = "Loading contract data…";
     await loadChainState();
     if (scanId !== myCardsScanId) return;
   }
   if (!readContract) {
-    status.textContent = "Data kontrak tidak terbaca saat ini. Coba muat ulang.";
+    status.textContent = "Contract data is unavailable right now. Try reloading.";
     grid.replaceChildren();
     return;
   }
   const total = chainState.totalMinted || 0;
   if (total === 0) {
-    status.textContent = "Belum ada kartu yang terbit. Jadilah yang pertama mint dari studio di atas.";
+    status.textContent = "No cards have been minted yet. Be the first to mint from the studio above.";
     grid.replaceChildren();
     return;
   }
-  status.textContent = "Memindai pool nomor #1–" + (chainState.maxSupply || 10000).toLocaleString("id-ID") + " di BNB Chain untuk wallet " + shortAddr(state.address) + "…";
+  status.textContent = "Scanning the number pool #1–" + (chainState.maxSupply || 10000).toLocaleString("en-US") + " on BNB Chain for wallet " + shortAddr(state.address) + "…";
   grid.replaceChildren();
   const owned = [];
   const scanMax = chainState.maxSupply || 10000;
@@ -1001,15 +1001,15 @@ async function loadMyCards() {
       } catch (e) { return { exists: false, id: null }; }
     }));
     results.forEach((r) => { if (r && r.exists) seenMinted++; if (r && r.id != null) owned.push(r.id); });
-    status.textContent = "Memindai nomor " + Math.min(start + CHUNK - 1, scanMax).toLocaleString("id-ID") + "/" + scanMax.toLocaleString("id-ID") + "… " + owned.length + " milikmu ditemukan.";
+    status.textContent = "Scanning numbers " + Math.min(start + CHUNK - 1, scanMax).toLocaleString("en-US") + "/" + scanMax.toLocaleString("en-US") + "… " + owned.length + " of yours found.";
     if (seenMinted >= total) break;
   }
   if (scanId !== myCardsScanId) return;
   if (owned.length === 0) {
-    status.textContent = "Wallet " + shortAddr(state.address) + " belum memiliki kartu Agent Card. Mint kartu pertamamu dari studio di atas.";
+    status.textContent = "Wallet " + shortAddr(state.address) + " does not own an Agent Card yet. Mint your first card from the studio above.";
     return;
   }
-  status.textContent = owned.length + " kartu milik " + shortAddr(state.address) + " — gambar dirender dari metadata on-chain.";
+  status.textContent = owned.length + " cards owned by " + shortAddr(state.address) + " — images rendered from on-chain metadata.";
   for (const id of owned) {
     if (scanId !== myCardsScanId) return;
     try {
@@ -1027,16 +1027,16 @@ async function loadMyCards() {
       const title = document.createElement("h3");
       title.textContent = cardData[0];
       const metaLine = document.createElement("p");
-      metaLine.textContent = "No. " + pad4(id) + " · " + personaConfig[personaKey].title.toUpperCase() + " · " + cardData[2] + " · " + (Number(cardData[3]) === 1 ? "PAID EDITION ★" : "FREE EDITION") + (cardData[4] ? " · Tanda tangan: " + cardData[4] : "") + (String(cardData[0]).endsWith(".ai") ? " · AGENT ID .AI" : "");
+      metaLine.textContent = "No. " + pad4(id) + " · " + personaConfig[personaKey].title.toUpperCase() + " · " + cardData[2] + " · " + (Number(cardData[3]) === 1 ? "PAID EDITION ★" : "FREE EDITION") + (cardData[4] ? " · Signature: " + cardData[4] : "") + (String(cardData[0]).endsWith(".ai") ? " · AGENT ID .AI" : "");
       const link = document.createElement("a");
       link.href = explorerToken(id);
       link.target = "_blank";
       link.rel = "noopener noreferrer";
-      link.textContent = "Lihat di BscScan ↗";
+      link.textContent = "View on BscScan ↗";
       const certBtn = document.createElement("button");
       certBtn.type = "button";
       certBtn.className = "outline-button my-card-cert";
-      certBtn.textContent = "Unduh Sertifikat";
+      certBtn.textContent = "Download Certificate";
       certBtn.addEventListener("click", () => downloadCertificate(id, cardData, meta));
       article.append(img, title, metaLine, link, certBtn);
       grid.append(article);
@@ -1046,14 +1046,14 @@ async function loadMyCards() {
       const title = document.createElement("h3");
       title.textContent = "Agent Card No. " + pad4(id);
       const metaLine = document.createElement("p");
-      metaLine.textContent = "Metadata kartu ini tidak bisa dibaca saat ini.";
+      metaLine.textContent = "This card's metadata cannot be read right now.";
       article.append(title, metaLine);
       grid.append(article);
     }
   }
 }
 
-/* ---------- Panel pemilik ---------- */
+/* ---------- Owner panel ---------- */
 
 function openOwnerPanel() {
   const panel = $("#pemilik");
@@ -1070,24 +1070,24 @@ async function updateOwnerPanel() {
   const nonOwnerNote = $("#ownerNonOwnerNote");
   if (!statusEl) return;
   if (!hasContract()) {
-    statusEl.textContent = "Kontrak belum diterbitkan. Alamat kontrak di halaman ini masih kosong — pemilik menerbitkannya dari wallet-nya dengan tombol di bawah.";
+    statusEl.textContent = "The contract is not deployed yet. The contract address on this page is still empty — the owner deploys it from their wallet with the button below.";
     if (deployBlock) deployBlock.hidden = false;
     if (controls) controls.hidden = true;
     if (nonOwnerNote) nonOwnerNote.hidden = true;
     return;
   }
   const ownerAddr = chainState.owner;
-  statusEl.innerHTML = "Kontrak terbit di <a href=\"" + explorerAddress(contractAddress()) + "\" target=\"_blank\" rel=\"noopener noreferrer\">" + escapeXml(contractAddress()) + "</a>"
+  statusEl.innerHTML = "Contract deployed at <a href=\"" + explorerAddress(contractAddress()) + "\" target=\"_blank\" rel=\"noopener noreferrer\">" + escapeXml(contractAddress()) + "</a>"
     + (ownerAddr ? " · Owner: " + escapeXml(shortAddr(ownerAddr)) : "")
     + (chainState.paidPrice != null ? " · Free: " + escapeXml(formatBNB(chainState.freePrice)) + " BNB · Paid: " + escapeXml(formatBNB(chainState.paidPrice)) + " BNB" : "")
-    + (chainState.mintOpen != null ? " · Mint: " + (chainState.mintOpen ? "terbuka" : "ditutup") : "");
+    + (chainState.mintOpen != null ? " · Mint: " + (chainState.mintOpen ? "open" : "closed") : "");
   if (deployBlock) deployBlock.hidden = true;
   const isOwner = state.connected && state.address && ownerAddr && state.address.toLowerCase() === ownerAddr.toLowerCase();
   if (controls) controls.hidden = !isOwner;
   if (nonOwnerNote) nonOwnerNote.hidden = Boolean(isOwner);
   if (isOwner) {
     const mintState = $("#ownerMintStateText");
-    if (mintState) mintState.textContent = "Mint: " + (chainState.mintOpen ? "terbuka" : "ditutup");
+    if (mintState) mintState.textContent = "Mint: " + (chainState.mintOpen ? "open" : "closed");
     const toggleBtn = $("#toggleMintButton");
     if (toggleBtn) toggleBtn.textContent = chainState.mintOpen ? "Tutup mint" : "Buka mint";
     const freeText = $("#ownerCurrentFreeText");
@@ -1108,7 +1108,7 @@ async function refreshOwnerBalance() {
         const bal = await withTimeout(provider.getBalance(contractAddress()), 8000);
         el.textContent = formatBNB(bal) + " BNB";
         return;
-      } catch (e) { /* coba RPC berikutnya */ }
+      } catch (e) { /* try the next RPC */ }
     }
   } catch (e) { el.textContent = "— BNB"; }
 }
@@ -1117,7 +1117,7 @@ async function deployContract() {
   const statusEl = $("#deployStatus");
   const button = $("#deployButton");
   if (!window.ethers || !window.ethereum) {
-    if (statusEl) statusEl.textContent = "Wallet tidak terdeteksi. Buka halaman ini di browser dalam aplikasi wallet.";
+    if (statusEl) statusEl.textContent = "No wallet detected. Open this page in a wallet app's browser.";
     return;
   }
   if (!state.connected) {
@@ -1126,25 +1126,25 @@ async function deployContract() {
   }
   await ensureChain();
   if (state.chainId !== AGENT_CARD_CONFIG.chainId) {
-    if (statusEl) statusEl.textContent = "Ganti jaringan wallet ke BNB Smart Chain (56) untuk menerbitkan kontrak.";
+    if (statusEl) statusEl.textContent = "Switch your wallet network to BNB Smart Chain (56) to deploy the contract.";
     return;
   }
   if (!signer) await setupSigner();
   if (!signer) {
-    if (statusEl) statusEl.textContent = "Wallet belum siap. Hubungkan ulang lalu coba lagi.";
+    if (statusEl) statusEl.textContent = "Wallet not ready. Reconnect and try again.";
     return;
   }
   if (typeof AGENT_CARD_BYTECODE !== "string" || !AGENT_CARD_BYTECODE.startsWith("0x") || AGENT_CARD_BYTECODE.length < 100) {
-    if (statusEl) statusEl.textContent = "Bytecode kontrak tidak tersedia di halaman ini.";
+    if (statusEl) statusEl.textContent = "The contract bytecode is not available on this page.";
     return;
   }
   if (button) button.disabled = true;
   try {
-    if (statusEl) statusEl.textContent = "Menunggu tanda tangan deploy di wallet-mu…";
+    if (statusEl) statusEl.textContent = "Waiting for the deploy signature in your wallet…";
     const factory = new window.ethers.ContractFactory(AGENT_CARD_ABI, AGENT_CARD_BYTECODE, signer);
     const contract = await factory.deploy();
     const deployTx = contract.deploymentTransaction ? contract.deploymentTransaction() : null;
-    if (statusEl) statusEl.textContent = "Kontrak terkirim" + (deployTx && deployTx.hash ? " (" + deployTx.hash + ")" : "") + ". Menunggu konfirmasi jaringan…";
+    if (statusEl) statusEl.textContent = "Contract sent" + (deployTx && deployTx.hash ? " (" + deployTx.hash + ")" : "") + ". Waiting for network confirmation…";
     await contract.waitForDeployment();
     const addr = await contract.getAddress();
     AGENT_CARD_CONFIG.contractAddress = addr;
@@ -1154,13 +1154,13 @@ async function deployContract() {
     if (result) result.hidden = false;
     if (addrText) addrText.textContent = addr;
     if (scanLink) scanLink.href = explorerAddress(addr);
-    if (statusEl) statusEl.textContent = "Kontrak berhasil diterbitkan. Alamatnya sudah aktif di sesi browser ini.";
-    showToast("Kontrak terbit: " + shortAddr(addr));
+    if (statusEl) statusEl.textContent = "Contract deployed successfully. Its address is now active in this browser session.";
+    showToast("Contract deployed: " + shortAddr(addr));
     await loadChainState();
     loadMyCards();
   } catch (e) {
     const friendly = friendlyMintError(e);
-    if (statusEl) statusEl.textContent = "Deploy gagal: " + friendly.message;
+    if (statusEl) statusEl.textContent = "Deploy failed: " + friendly.message;
   } finally {
     if (button) button.disabled = false;
   }
@@ -1169,16 +1169,16 @@ async function deployContract() {
 async function ownerToggleMint() {
   const feedback = $("#ownerFeedback");
   if (!walletContract) await setupSigner();
-  if (!walletContract) { if (feedback) feedback.textContent = "Wallet belum siap."; return; }
+  if (!walletContract) { if (feedback) feedback.textContent = "Wallet not ready."; return; }
   try {
-    if (feedback) feedback.textContent = "Mengirim transaksi ubah status mint… setujui di wallet.";
+    if (feedback) feedback.textContent = "Sending the mint-status transaction… approve it in your wallet.";
     const tx = await walletContract.setMintOpen(!chainState.mintOpen);
     await tx.wait();
-    if (feedback) feedback.textContent = "Status mint diperbarui. Hash: " + tx.hash;
+    if (feedback) feedback.textContent = "Mint status updated. Hash: " + tx.hash;
     await loadChainState();
   } catch (e) {
     const friendly = friendlyMintError(e);
-    if (feedback) feedback.textContent = "Gagal mengubah status mint: " + friendly.message;
+    if (feedback) feedback.textContent = "Failed to change the mint status: " + friendly.message;
   }
 }
 
@@ -1188,38 +1188,38 @@ async function ownerSetPrice(tier) {
   const raw = input ? input.value.trim() : "";
   const value = Number(raw);
   if (!raw || !(value >= 0) || !isFinite(value)) {
-    if (feedback) feedback.textContent = "Masukkan harga baru dalam BNB (0 atau lebih).";
+    if (feedback) feedback.textContent = "Enter a new price in BNB (0 or more).";
     return;
   }
   if (!walletContract) await setupSigner();
-  if (!walletContract) { if (feedback) feedback.textContent = "Wallet belum siap."; return; }
+  if (!walletContract) { if (feedback) feedback.textContent = "Wallet not ready."; return; }
   try {
-    if (feedback) feedback.textContent = "Mengirim transaksi ubah harga… setujui di wallet.";
+    if (feedback) feedback.textContent = "Sending the price-change transaction… approve it in your wallet.";
     const tx = tier === 1
       ? await walletContract.setPaidMintPrice(window.ethers.parseEther(raw))
       : await walletContract.setFreeMintPrice(window.ethers.parseEther(raw));
     await tx.wait();
-    if (feedback) feedback.textContent = "Harga " + (tier === 1 ? "paid" : "free") + " mint diubah menjadi " + raw + " BNB. Hash: " + tx.hash;
+    if (feedback) feedback.textContent = "The " + (tier === 1 ? "paid" : "free") + " mint price was changed to " + raw + " BNB. Hash: " + tx.hash;
     await loadChainState();
   } catch (e) {
     const friendly = friendlyMintError(e);
-    if (feedback) feedback.textContent = "Gagal mengubah harga: " + friendly.message;
+    if (feedback) feedback.textContent = "Failed to change the price: " + friendly.message;
   }
 }
 
 async function ownerWithdraw() {
   const feedback = $("#ownerFeedback");
   if (!walletContract) await setupSigner();
-  if (!walletContract) { if (feedback) feedback.textContent = "Wallet belum siap."; return; }
+  if (!walletContract) { if (feedback) feedback.textContent = "Wallet not ready."; return; }
   try {
-    if (feedback) feedback.textContent = "Mengirim transaksi penarikan… setujui di wallet.";
+    if (feedback) feedback.textContent = "Sending the withdrawal transaction… approve it in your wallet.";
     const tx = await walletContract.withdraw();
     await tx.wait();
-    if (feedback) feedback.textContent = "BNB kontrak ditarik ke wallet owner. Hash: " + tx.hash;
+    if (feedback) feedback.textContent = "Contract BNB withdrawn to the owner wallet. Hash: " + tx.hash;
     refreshOwnerBalance();
   } catch (e) {
     const friendly = friendlyMintError(e);
-    if (feedback) feedback.textContent = "Gagal menarik BNB: " + friendly.message;
+    if (feedback) feedback.textContent = "Failed to withdraw BNB: " + friendly.message;
   }
 }
 
@@ -1250,17 +1250,17 @@ function renderMintFeed() {
   if (!track) return;
   const items = mintFeedIds.map((id) => mintFeedCache.get(id)).filter(Boolean);
   if (count && hasContract() && chainState.totalMinted != null) {
-    count.innerHTML = chainState.totalMinted.toLocaleString("id-ID") + " dari " + (chainState.maxSupply || 10000).toLocaleString("id-ID") + " kartu sudah termint.<br />Diperbarui otomatis.";
+    count.innerHTML = chainState.totalMinted.toLocaleString("en-US") + " of " + (chainState.maxSupply || 10000).toLocaleString("en-US") + " cards minted so far.<br />Updates automatically.";
   }
   if (!items.length) {
     track.replaceChildren();
     track.classList.remove("is-scrolling");
     if (status) status.textContent = hasContract()
-      ? "Belum ada kartu yang termint. Jadilah yang pertama mint dari studio di atas."
-      : "Feed mint live tampil di sini setelah kontrak diterbitkan.";
+      ? "No cards have been minted yet. Be the first to mint from the studio above."
+      : "The live mint feed will appear here once the contract is deployed.";
     return;
   }
-  if (status) status.textContent = "Live dari kontrak · setiap kartu dirender dari data on-chain-nya · arahkan kursor untuk menjeda.";
+  if (status) status.textContent = "Live from the contract · every card is rendered from its on-chain data · hover to pause.";
   const make = (item) => {
     const fig = document.createElement("figure");
     fig.className = "mint-feed-item";
@@ -1308,7 +1308,7 @@ async function loadMintFeed(announce) {
       const top = mintFeedCache.get(ids[0]);
       if (top) showToast("Baru saja termint: " + top.name + " · No. " + pad4(ids[0]));
     }
-  } catch (e) { /* RPC sibuk — coba lagi pada siklus berikut */ }
+  } catch (e) { /* RPC busy — retry on the next cycle */ }
 }
 
 function startMintFeed() {
@@ -1318,7 +1318,7 @@ function startMintFeed() {
 }
 
 
-/* ---------- Perayaan mint + sertifikat ---------- */
+/* ---------- Mint celebration + certificate ---------- */
 function celebrateMint() {
   const view = $("#successView");
   if (!view) return;
@@ -1381,7 +1381,7 @@ async function downloadCertificate(id, cardData, meta) {
     ctx.textAlign = "center";
     ctx.fillStyle = "#f3d27a";
     ctx.font = "700 43px Georgia, serif";
-    ctx.fillText("SERTIFIKAT KEPEMILIKAN", 620, 118);
+    ctx.fillText("CERTIFICATE OF OWNERSHIP", 620, 118);
     ctx.fillStyle = "#9aa3b2";
     ctx.font = "600 19px Arial, sans-serif";
     ctx.fillText("A G E N T   C A R D   \u00B7   B N B   C H A I N", 620, 152);
@@ -1399,44 +1399,44 @@ async function downloadCertificate(id, cardData, meta) {
     ctx.fillStyle = "#c9ccd4";
     ctx.font = "20px Arial, sans-serif";
     ctx.fillText("Persona: " + personaConfig[personaKey].title, 440, y); y += 32;
-    ctx.fillText("Edisi: " + (Number(cardData[3]) === 1 ? "Paid" : "Free"), 440, y); y += 32;
+    ctx.fillText("Edition: " + (Number(cardData[3]) === 1 ? "Paid" : "Free"), 440, y); y += 32;
     const clsLabel = serialClassLabel(id);
-    if (clsLabel) { ctx.fillText("Kelas Seri: " + clsLabel, 440, y); y += 32; }
-    if (cardData[4]) { ctx.fillText("Tanda tangan: " + cardData[4], 440, y); y += 32; }
+    if (clsLabel) { ctx.fillText("Serial Class: " + clsLabel, 440, y); y += 32; }
+    if (cardData[4]) { ctx.fillText("Signature: " + cardData[4], 440, y); y += 32; }
     y += 14;
     ctx.fillStyle = "#9aa3b2";
     ctx.font = "600 15px Arial, sans-serif";
-    ctx.fillText("PEMILIK", 440, y); y += 24;
+    ctx.fillText("OWNER", 440, y); y += 24;
     ctx.fillStyle = "#e8eaf0";
     ctx.font = "16px ui-monospace, monospace";
     ctx.fillText(state.address || "", 440, y); y += 44;
     ctx.fillStyle = "#9aa3b2";
     ctx.font = "600 15px Arial, sans-serif";
-    ctx.fillText("KONTRAK", 440, y); y += 24;
+    ctx.fillText("CONTRACT", 440, y); y += 24;
     ctx.fillStyle = "#e8eaf0";
     ctx.font = "16px ui-monospace, monospace";
     ctx.fillText(contractAddress(), 440, y); y += 44;
     ctx.fillStyle = "#9aa3b2";
     ctx.font = "15px Arial, sans-serif";
-    ctx.fillText("Dicetak " + new Date().toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" }), 440, y);
+    ctx.fillText("Printed " + new Date().toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" }), 440, y);
     ctx.textAlign = "center";
     ctx.fillStyle = "#77808f";
     ctx.font = "14px Arial, sans-serif";
-    ctx.fillText("Sertifikat ini dibuat dari data on-chain. Agent Card adalah kartu koleksi, bukan Agent ID resmi Binance.", 620, 800);
+    ctx.fillText("This certificate is generated from on-chain data. Agent Card is a collectible card, not an official Binance Agent ID.", 620, 800);
     canvas.toBlob((png) => {
-      if (!png) { showToast("Gagal membuat sertifikat. Coba lagi."); return; }
+      if (!png) { showToast("Failed to create the certificate. Try again."); return; }
       const url = URL.createObjectURL(png);
       const link = document.createElement("a");
       link.href = url;
-      link.download = "sertifikat-" + String(cardData[0]).replace(/[^a-z0-9]+/gi, "-").toLowerCase() + "-" + pad4(id) + ".png";
+      link.download = "certificate-" + String(cardData[0]).replace(/[^a-z0-9]+/gi, "-").toLowerCase() + "-" + pad4(id) + ".png";
       document.body.append(link);
       link.click();
       link.remove();
       URL.revokeObjectURL(url);
-      showToast("Sertifikat tersimpan.");
+      showToast("Certificate saved.");
     }, "image/png");
   } catch (e) {
-    showToast("Gagal membuat sertifikat. Coba lagi.");
+    showToast("Failed to create the certificate. Try again.");
   }
 }
 
@@ -1465,8 +1465,8 @@ $$(".name-mode").forEach((btn) => btn.addEventListener("click", () => {
   }
   const help = $("#nameHelp");
   if (help) help.textContent = ai
-    ? "Khusus pemegang Agent ID Binance: tulis nama agent-mu tanpa .ai \u2014 nama kartu on-chain akan persis seperti Agent ID-mu dan tercatat sebagai trait Agent ID di metadata."
-    : "1\u201332 karakter. Hanya huruf, angka, spasi, titik, garis bawah, dan strip. Nama tersimpan persis seperti yang kamu tulis.";
+    ? "For Binance Agent ID holders: type your agent name without .ai \u2014 your on-chain card name will match your Agent ID exactly and will be recorded as an Agent ID trait in the metadata."
+    : "1\u201332 characters. Letters, numbers, spaces, dots, underscores, and dashes only. The name is stored exactly as you type it.";
   updateCard();
   validInput();
   refreshMintUI();
@@ -1523,7 +1523,7 @@ $("#heroUseButton").addEventListener("click", () => {
   if (colorButton) colorButton.click();
   showView("editorView", 1);
   document.getElementById("studio").scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth" });
-  showToast("Desain " + personaConfig[heroState.persona].title + " · " + colorConfig[heroState.color].label + " diterapkan di studio.");
+  showToast("Design " + personaConfig[heroState.persona].title + " · " + colorConfig[heroState.color].label + " applied in the studio.");
 });
 
 $("#walletButton").addEventListener("click", () => {
@@ -1553,8 +1553,8 @@ const copyBtn = $("#copyDeployAddressButton");
 if (copyBtn) copyBtn.addEventListener("click", async () => {
   try {
     await navigator.clipboard.writeText(contractAddress());
-    showToast("Alamat kontrak disalin.");
-  } catch (e) { showToast("Salin manual alamat di atas."); }
+    showToast("Contract address copied.");
+  } catch (e) { showToast("Copy the address above manually."); }
 });
 const toggleBtn = $("#toggleMintButton");
 if (toggleBtn) toggleBtn.addEventListener("click", ownerToggleMint);
@@ -1609,7 +1609,7 @@ $$(".gallery-card").forEach((card) => card.addEventListener("click", () => {
   heroState.color = card.dataset.color;
   syncHeroCard();
   showView("editorView", 1);
-  showToast("Gaya " + card.dataset.label + " diterapkan di studio.");
+  showToast("Style " + card.dataset.label + " applied in the studio.");
 }));
 
 const inviteButton = document.getElementById("inviteMakeButton");
