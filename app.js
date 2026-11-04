@@ -376,7 +376,7 @@ function setChainStatus(mode) {
     pill = "BNB CHAIN · WALLET LIBRARY FAILED TO LOAD";
     badgeText = "BNB CHAIN · WALLET LIBRARY FAILED TO LOAD";
     note = "The wallet library failed to load.<br />Check your connection and reload.";
-    contractLabel = "PUSTAKA GAGAL DIMUAT";
+    contractLabel = "LIBRARY FAILED TO LOAD";
     price = "The wallet library failed to load — check your connection and reload the page.";
   }
   if (pillText) pillText.textContent = pill;
@@ -494,12 +494,12 @@ function updateConfirmReceipt() {
       link.href = "https://agentcard.cloud/deploy.html";
     }
   }
+  const shownPrice = activePrice() != null ? activePrice()
+    : parseFloat(state.tier === 1 ? AGENT_CARD_CONFIG.paidMintPrice : AGENT_CARD_CONFIG.freeMintPrice);
   if (priceEl) {
-    priceEl.innerHTML = activePrice() != null
-      ? escapeXml(editionName()) + " · " + escapeXml(formatBNB(activePrice())) + " BNB <em>LIVE DARI KONTRAK</em>"
-      : "— BNB <em>LIVE DARI KONTRAK</em>";
+    priceEl.innerHTML = escapeXml(editionName()) + " · " + escapeXml(formatBNB(shownPrice)) + " BNB <em>LIVE FROM CONTRACT</em>";
   }
-  if (totalEl) totalEl.textContent = activePrice() != null ? formatBNB(activePrice()) + " BNB" : "— BNB";
+  if (totalEl) totalEl.textContent = formatBNB(shownPrice) + " BNB";
 }
 
 function updateWalletUI() {
@@ -2031,6 +2031,7 @@ window.addEventListener("pageshow", syncButtonStates);
 /* Keep retrying the public contract read until it lands - a single failed
    attempt on a slow connection must not leave the stats blank forever. */
 setInterval(function () { if (hasContract() && !chainState.loaded && !chainLoading) loadChainState(); }, 12000);
+setInterval(function () { if (hasContract() && chainState.loaded && !chainLoading) loadChainState(); }, 45000);
 
 
 /* Diagnostics: if anything failed while this page loaded, say so on screen
