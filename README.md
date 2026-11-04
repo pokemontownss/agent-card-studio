@@ -1,22 +1,50 @@
 # Agent Card Studio
 
-Mint your own Agent Card as a real NFT on BNB Chain.
+**Free mint is LIVE.** 4,444 Agent ID cards on BNB Chain — every card's artwork is
+rendered 100% on-chain as SVG by the contract itself (no IPFS, no external image server).
+Each mint draws a random serial from the shared pool #1–#4444.
 
-- **Network:** BNB Smart Chain (mainnet, chainId 56)
-- **Contract:** `AgentCard` (ERC-721, symbol ACARD) — address appears here once deployed
-- **Card data:** agent name, persona (Whale / Shark / Sniper) and color are stored on-chain; the card image is an SVG rendered by the contract itself (tokenURI is fully on-chain, no external image server)
-- **Two mint editions:** Free Mint (anti-sybil fee, default 0.0002 BNB, max 1 free mint per wallet, standard design) and Paid Mint (default 0.002 BNB, premium gold holographic trading-card design, Power +30). Every wallet can mint at most 2 cards in total across both editions, and all mint payments accumulate in the contract for the owner to withdraw — plus network gas, paid from your own wallet
-- **Card art:** premium MINIMAL metal card (Binance Agent ID card style) — brushed-metal finish in the minter's chosen color (10 colors), engraved concentric circles, a randomly drawn serial number (#1-#4444 shared pool, drawn by the contract at mint), the agent name as the hero in the center, persona in small caps, edition + rarity (Common for Free, Rare Holo for Paid). The card SVG is rendered fully on-chain by the contract (tokenURI image is a data URI); the site preview and PNG download mirror the same design. The persona illustrations in `assets/` remain available as promo art
-- **Supply:** max 4,444
+- **Site:** https://agentcard.cloud
+- **X:** [@AgentCard_Bnb](https://x.com/AgentCard_Bnb)
+- **For AI agents:** machine-readable mint instructions at https://agentcard.cloud/llms.txt
 
-Agent Card is a collectible digital card. It is **not** an official Binance Agent ID credential and is not affiliated with Binance.
+## Mint with an AI agent (copy-paste)
+
+> Mint 1 Agent Card NFT on BSC. CA: 0x0716bD547494e7B8E45C15266F03a43915982C6e. Check mintOpen=true, freeMintUsed=false, mintCount<2 for my wallet - else stop and tell me. Call freeMint(my Agent ID + ".ai", 0, "#7C4DFF", "") with exactly 0.0002 BNB (anti-sybil fee). Reply tx link.
+
+Direct wallet mint is also available on the site under "Advanced" on the confirmation screen.
+
+## Contracts (BNB Smart Chain, chainId 56)
+
+| Contract | Address |
+|---|---|
+| AgentCard (ERC-721) | `0x0716bD547494e7B8E45C15266F03a43915982C6e` |
+| $ACARD (ERC-20) | `0x3A56270f7A8c78E9cC4A8A9f18e375cd184F1133` |
+| CardBurn | `0x83EE9bB4c76019fAf5dd1451CB8f41bC78d68323` |
+| CardStake | `0xFB9139F2c6996141dAc67fF98C965A4BEF43a250` |
+
+## The collection
+
+- **Personas (style):** 0 = Whale (Power 120), 1 = Shark (110), 2 = Sniper (100). Paid Edition adds +30 Power and a gold name.
+- **Free Mint:** 0.0002 BNB anti-sybil fee, max 1 free mint per wallet.
+- **Paid Mint:** 0.002 BNB.
+- **Limit:** max 2 cards per wallet across both editions.
+- **Names:** 1–32 chars; names ending in `.ai` automatically receive an "Agent ID" trait. Optional signature text (max 24 chars) is engraved on the card.
+- **Colors:** 18 card colors.
+
+## $ACARD
+
+Fixed supply 1,000,000,000. Burn pool 222,200,000 / stake pool 200,000,000 / project reserve 577,800,000.
+
+- **Burn** a card forever (sent to the dead address): **50,000 $ACARD** (0.0001 BNB action fee).
+- **Stake** a card: **500 $ACARD/day** (0.0001 BNB action fee; claim and unstake are free, unstake always returns the card).
 
 ## Files
-- `index.html`, `styles.css`, `app.js` — the static site (GitHub Pages)
-- `contracts/AgentCard.sol` — the ERC-721 contract source (solc 0.8.26, optimizer 200, viaIR)
-- `contracts/ACARD.sol` — the $ACARD reward token (ERC-20, fixed supply 1,000,000,000)
-- `contracts/CardBurn.sol` — burn an Agent Card (sent to the dead address forever) for 50,000 $ACARD, paid from a funded pool of 222,200,000 $ACARD
-- `contracts/CardStake.sol` — stake an Agent Card to earn 500 $ACARD per day from a funded pool of 200,000,000 $ACARD; unstake anytime to get the card back
 
-## Minting via AI agent
-The Mint section also offers copy-ready agent prompts (free / paid, quantity 1–2) plus read-only "Check your mints" by wallet address — no wallet connection needed for those. The studio's direct wallet mint remains available.
+- `index.html`, `styles.css`, `app.js` — the static site (GitHub Pages)
+- `llms.txt` — machine-readable instructions for AI agents
+- `deploy.html` — owner deployment tool (direct URL only)
+- `contracts/` — Solidity sources (solc 0.8.26, viaIR, optimizer 200)
+
+Agent Card Studio is an unofficial collectible project. It is **not** an official Binance
+Agent ID credential and is not affiliated with Binance.
