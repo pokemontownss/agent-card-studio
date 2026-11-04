@@ -514,3 +514,12 @@ h2 { font-size: 30px; line-height: 1.1; letter-spacing: -.055em; margin: 0; font
 .collectible-card.card-paid .card-chip { background: linear-gradient(120deg, #f9e08a, #caa12f); color: #3d2c02; border-color: rgba(124, 90, 8, .5); }
 .collectible-card .card-bottomline strong { text-shadow: 0 1px 0 rgba(255,255,255,.45); }
 .my-card img { background: #0B0916; }
+
+/* === Minimal metal face (v6) === */
+.collectible-card .card-chip, .collectible-card .card-label, .collectible-card .card-watermark, .collectible-card .card-artwork { display: none; }
+.collectible-card::after { width: 250px; height: 250px; left: 50%; right: auto; top: 47%; transform: translate(-50%, -50%); border: 1px solid rgba(23,19,14,.13); border-radius: 50%; box-shadow: 0 0 0 32px rgba(255,255,255,.05), 0 0 0 33px rgba(23,19,14,.09), 0 0 0 65px rgba(255,255,255,.04), 0 0 0 66px rgba(23,19,14,.07); }
+.collectible-card .card-bottomline { position: static; margin-top: auto; margin-bottom: auto; flex-direction: column; align-items: center; justify-content: center; gap: 7px; text-align: center; }
+.collectible-card .card-bottomline strong { font-size: 32px; letter-spacing: .5px; }
+.collectible-card .card-role { letter-spacing: 4px; font-size: 11px; }
+.collectible-card .card-serial { position: absolute; left: 19px; bottom: 14px; }
+.collectible-card .card-edition { letter-spacing: 2px; }

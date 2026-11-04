@@ -190,11 +190,11 @@ contract AgentCard {
     function tokenURI(uint256 tokenId) external view returns (string memory) {
         require(_owners[tokenId] != address(0), "Nonexistent token");
         Card memory c = cards[tokenId];
-        string memory art = c.style == 0 ? "art-guardian.webp" : (c.style == 1 ? "art-builder.webp" : "art-explorer.webp");
+        string memory svg = _buildSvg(tokenId, c);
         string memory json = string(abi.encodePacked(
             '{"name":"', c.agentName, ' - Agent Card #', _toString(tokenId), '",',
-            '"description":"A premium metal Agent Card on BNB Chain. The metal card face (finish in the color stored on-chain, embossed agent name, persona artwork) is rendered by the official Agent Card Studio site from this on-chain data. A collectible card, not an official Binance Agent ID.",',
-            '"image":"https://agentcard.cloud/assets/', art, '",',
+            '"description":"A premium minimal metal Agent Card on BNB Chain: brushed-metal finish in the color chosen at mint, embossed agent name, rendered fully on-chain as SVG. A collectible card, not an official Binance Agent ID.",',
+            '"image":"data:image/svg+xml;base64,', _base64(bytes(svg)), '",',
             '"attributes":[',
             '{"trait_type":"Persona","value":"', _persona(c.style), '"},',
             '{"trait_type":"Agent Name","value":"', c.agentName, '"},',
@@ -216,6 +216,99 @@ contract AgentCard {
     function _power(uint8 style, uint8 tier) internal pure returns (uint256) {
         uint256 p = style == 0 ? 120 : (style == 1 ? 110 : 100);
         return tier == 1 ? p + 30 : p;
+    }
+
+    function _buildSvg(uint256 tokenId, Card memory c) internal pure returns (string memory) {
+        string memory L1 = _mixStr(c.colorHex, true, 55);
+        string memory L2 = _mixStr(c.colorHex, true, 22);
+        string memory D1 = _mixStr(c.colorHex, false, 38);
+        string memory D2 = _mixStr(c.colorHex, false, 55);
+        bool paid = c.tier == 1;
+        string memory overlay = paid
+            ? '<rect x="6" y="6" width="408" height="582" rx="26" fill="url(#holo)" opacity="0.16"/><rect x="6" y="6" width="408" height="582" rx="26" fill="url(#sheen)" opacity="0.5"/>'
+            : '<rect x="6" y="6" width="408" height="582" rx="26" fill="url(#sheen)" opacity="0.28"/>';
+        return string(abi.encodePacked(
+            '<svg xmlns="http://www.w3.org/2000/svg" width="420" height="594" viewBox="0 0 420 594"><defs>',
+            '<linearGradient id="metal" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="', L1, '"/><stop offset="0.2" stop-color="', c.colorHex, '"/><stop offset="0.42" stop-color="', D1, '"/><stop offset="0.62" stop-color="', L2, '"/><stop offset="0.82" stop-color="', D2, '"/><stop offset="1" stop-color="', L1, '"/></linearGradient>',
+            '<linearGradient id="sheen" x1="0" y1="0" x2="0.7" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0.55"/><stop offset="0.45" stop-color="#ffffff" stop-opacity="0.05"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>',
+            '<linearGradient id="holo" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff5f6d"/><stop offset="0.25" stop-color="#ffc371"/><stop offset="0.5" stop-color="#8aff80"/><stop offset="0.75" stop-color="#4dc9ff"/><stop offset="1" stop-color="#b18cff"/></linearGradient>',
+            '<pattern id="brush" width="3" height="3" patternUnits="userSpaceOnUse"><line x1="0" y1="0.5" x2="3" y2="0.5" stroke="#ffffff" stroke-opacity="0.05"/><line x1="0" y1="2" x2="3" y2="2" stroke="#000000" stroke-opacity="0.05"/></pattern></defs>',
+            '<rect x="6" y="6" width="408" height="582" rx="26" fill="url(#metal)"/><rect x="6" y="6" width="408" height="582" rx="26" fill="url(#brush)"/>', overlay,
+            '<g fill="none" stroke="#17130E" stroke-opacity="0.10"><circle cx="210" cy="272" r="66"/><circle cx="210" cy="272" r="100"/><circle cx="210" cy="272" r="134"/></g>',
+            '<g fill="none" stroke="#ffffff" stroke-opacity="0.13"><circle cx="210" cy="273.5" r="66"/><circle cx="210" cy="273.5" r="100"/><circle cx="210" cy="273.5" r="134"/></g>',
+            '<rect x="14" y="14" width="392" height="566" rx="20" fill="none" stroke="#ffffff" stroke-opacity="0.38" stroke-width="1.5"/>',
+            '<rect x="6" y="6" width="408" height="582" rx="26" fill="none" stroke="#000000" stroke-opacity="0.45" stroke-width="2"/>',
+            '<text x="30" y="54" font-family="Arial, sans-serif" font-size="12.5" font-weight="700" letter-spacing="3.5" fill="#17130E" fill-opacity="0.88">AGENT CARD</text>',
+            '<text x="390" y="54" text-anchor="end" font-family="Arial, sans-serif" font-size="11.5" font-weight="700" letter-spacing="2" fill="#17130E" fill-opacity="0.88">', 'ONE AND ONLY', '</text>',
+            '<rect x="30" y="66" width="360" height="1.4" fill="#000000" fill-opacity="0.28"/><rect x="30" y="67.6" width="360" height="1" fill="#ffffff" fill-opacity="0.35"/>',
+            '<text x="211.5" y="291" text-anchor="middle" font-family="Arial, sans-serif" font-size="', _nameSize(bytes(c.agentName).length), '" font-weight="800" letter-spacing="0.5" fill="#ffffff" fill-opacity="0.35">', _esc(c.agentName), '</text>',
+            '<text x="210" y="289.5" text-anchor="middle" font-family="Arial, sans-serif" font-size="', _nameSize(bytes(c.agentName).length), '" font-weight="800" letter-spacing="0.5" fill="#17130E">', _esc(c.agentName), '</text>',
+            '<text x="210" y="330" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="700" letter-spacing="4.5" fill="#17130E" fill-opacity="0.72">', c.style == 0 ? 'GUARDIAN' : (c.style == 1 ? 'BUILDER' : 'EXPLORER'), '</text>',
+            '<rect x="30" y="502" width="360" height="1.2" fill="#000000" fill-opacity="0.22"/><rect x="30" y="503.4" width="360" height="1" fill="#ffffff" fill-opacity="0.3"/>',
+            '<text x="30" y="540" font-family="Arial, sans-serif" font-size="13.5" font-weight="700" letter-spacing="1.6" fill="#17130E" fill-opacity="0.88">No. ', _pad4(tokenId), ' / 10000</text>',
+            '<text x="390" y="540" text-anchor="end" font-family="Arial, sans-serif" font-size="12" font-weight="700" letter-spacing="2.2" fill="#17130E" fill-opacity="0.8">BNB CHAIN</text>',
+            '<text x="210" y="570" text-anchor="middle" font-family="Arial, sans-serif" font-size="7.5" letter-spacing="1.4" fill="#17130E" fill-opacity="0.55">COLLECTIBLE CARD &#183; NOT AN OFFICIAL BINANCE AGENT ID</text>',
+            '</svg>'
+        ));
+    }
+
+    function _nameSize(uint256 len) internal pure returns (string memory) {
+        if (len <= 10) return "44";
+        if (len <= 14) return "37";
+        if (len <= 20) return "30";
+        if (len <= 26) return "25";
+        return "21";
+    }
+
+    function _hexVal(bytes1 ch) internal pure returns (uint256) {
+        if (ch >= "0" && ch <= "9") return uint8(ch) - 48;
+        if (ch >= "a" && ch <= "f") return uint8(ch) - 87;
+        if (ch >= "A" && ch <= "F") return uint8(ch) - 55;
+        return 0;
+    }
+
+    function _byteHex(uint256 v) internal pure returns (string memory) {
+        bytes memory digits = "0123456789abcdef";
+        bytes memory out = new bytes(2);
+        out[0] = digits[v >> 4];
+        out[1] = digits[v & 15];
+        return string(out);
+    }
+
+    function _mixStr(string memory h, bool toWhite, uint256 pct) internal pure returns (string memory) {
+        bytes memory b = bytes(h);
+        if (b.length != 7) return h;
+        string memory out = "#";
+        for (uint256 i = 0; i < 3; i++) {
+            uint256 v = _hexVal(b[1 + i * 2]) * 16 + _hexVal(b[2 + i * 2]);
+            v = toWhite ? v + (255 - v) * pct / 100 : v - v * pct / 100;
+            out = string(abi.encodePacked(out, _byteHex(v)));
+        }
+        return out;
+    }
+
+    function _esc(string memory s) internal pure returns (string memory) {
+        bytes memory b = bytes(s);
+        uint256 extra = 0;
+        for (uint256 i = 0; i < b.length; i++) {
+            if (b[i] == "&") extra += 4;
+            else if (b[i] == "<" || b[i] == ">") extra += 3;
+            else if (b[i] == '"') extra += 5;
+            else if (b[i] == "'") extra += 4;
+        }
+        if (extra == 0) return s;
+        bytes memory out = new bytes(b.length + extra);
+        uint256 j = 0;
+        for (uint256 i = 0; i < b.length; i++) {
+            bytes1 ch = b[i];
+            if (ch == "&") { out[j++] = "&"; out[j++] = "a"; out[j++] = "m"; out[j++] = "p"; out[j++] = ";"; }
+            else if (ch == "<") { out[j++] = "&"; out[j++] = "l"; out[j++] = "t"; out[j++] = ";"; }
+            else if (ch == ">") { out[j++] = "&"; out[j++] = "g"; out[j++] = "t"; out[j++] = ";"; }
+            else if (ch == '"') { out[j++] = "&"; out[j++] = "q"; out[j++] = "u"; out[j++] = "o"; out[j++] = "t"; out[j++] = ";"; }
+            else if (ch == "'") { out[j++] = "&"; out[j++] = "a"; out[j++] = "p"; out[j++] = "o"; out[j++] = "s"; out[j++] = ";"; }
+            else { out[j++] = ch; }
+        }
+        return string(out);
     }
 
     function _toString(uint256 value) internal pure returns (string memory) {
