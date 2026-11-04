@@ -613,3 +613,11 @@ h2 { font-size: 30px; line-height: 1.1; letter-spacing: -.055em; margin: 0; font
 .check-result { font-size: 13px; font-weight: 600; min-height: 20px; }
 .status-pill { align-self: center; border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; font-size: 11px; font-weight: 800; letter-spacing: 1.4px; white-space: nowrap; }
 .owner-token-block { margin-top: 18px; border-top: 1px solid var(--line); padding-top: 16px; }
+
+/* === Agent-first mint flow === */
+.agent-checkout { margin-top: 14px; }
+.agent-steps { margin: 12px 0 4px; padding-left: 20px; font-size: 13.5px; line-height: 1.6; }
+.direct-mint { margin-top: 16px; border-top: 1px dashed var(--line); padding-top: 12px; }
+.direct-mint summary { cursor: pointer; font-size: 13px; font-weight: 700; }
+.my-cards-lookup { display: flex; gap: 10px; flex-wrap: wrap; margin: 10px 0 4px; }
+.my-cards-lookup .owner-input { flex: 1 1 260px; }

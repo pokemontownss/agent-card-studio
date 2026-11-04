@@ -23,7 +23,7 @@
   <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDk2IDk2Ij4KICA8cmVjdCB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHJ4PSIyNCIgZmlsbD0iI2Y1ZjRlZiIvPgogIDxnIGZpbGw9IiMyMDIzMWYiIHRyYW5zZm9ybT0icm90YXRlKC0xMCA0OCA0OCkiPgogICAgPHJlY3QgeD0iMjQiIHk9IjQ0IiB3aWR0aD0iMTIiIGhlaWdodD0iMjgiIHJ4PSI2Ii8+CiAgICA8cmVjdCB4PSI0MiIgeT0iMjYiIHdpZHRoPSIxMiIgaGVpZ2h0PSI0NiIgcng9IjYiLz4KICAgIDxyZWN0IHg9IjYwIiB5PSIzNiIgd2lkdGg9IjEyIiBoZWlnaHQ9IjM2IiByeD0iNiIvPgogIDwvZz4KICA8Y2lyY2xlIGN4PSI3NCIgY3k9IjI0IiByPSI3IiBmaWxsPSIjZDVmYTYxIi8+Cjwvc3ZnPgo=" />
   <script>window.__loadEthersFallback=function(){var s=document.createElement('script');s.src='https://unpkg.com/ethers@6.13.4/dist/ethers.umd.min.js';document.head.appendChild(s);};</script>
   <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js" onerror="window.__loadEthersFallback()"></script>
-  <link rel="stylesheet" href="styles.css?v=15">
+  <link rel="stylesheet" href="styles.css?v=16">
 </head>
 <body>
   <div class="page-shell">
@@ -138,23 +138,23 @@
             <p class="eyebrow"><span class="eyebrow-line"></span> HOW IT WORKS</p>
             <h2 id="how-title">Three steps to an on-chain card</h2>
           </div>
-          <p class="section-note">Designing runs in your browser;<br />minting goes through your wallet.</p>
+          <p class="section-note">Designing runs in your browser;<br />your AI agent mints from your wallet.</p>
         </div>
         <div class="how-grid">
           <article class="how-card reveal">
             <div class="how-top"><span class="how-number">STEP 01</span><span class="how-glyph" aria-hidden="true">◈</span></div>
-            <h3>Connect your wallet</h3>
-            <p>Tap the Connect Wallet button above and approve in your wallet. Make sure your network is BNB Smart Chain (56). This page never asks for a private key or seed phrase.</p>
+            <h3>Design your card</h3>
+            <p>Write your Agent ID name, pick a Guardian, Builder, or Explorer persona, then set the color and your signature. The preview updates instantly — no wallet connection needed.</p>
           </article>
           <article class="how-card reveal">
             <div class="how-top"><span class="how-number">STEP 02</span><span class="how-glyph" aria-hidden="true">✳</span></div>
-            <h3>Personalize your card</h3>
-            <p>Write your Agent ID name, pick a Guardian, Builder, or Explorer persona, then set the color. The preview updates instantly.</p>
+            <h3>Copy the mint prompt</h3>
+            <p>At the mint step you get a ready-to-paste prompt carrying your design, the contract address, and the exact price — free or paid edition, 1 or 2 cards.</p>
           </article>
           <article class="how-card reveal">
             <div class="how-top"><span class="how-number">STEP 03</span><span class="how-glyph" aria-hidden="true">↓</span></div>
-            <h3>Real mint, card lands in your wallet</h3>
-            <p>Check the live mint price from the contract, approve the transaction in your wallet, and your card is issued as an NFT on BNB Chain — straight into your wallet.</p>
+            <h3>Your agent mints it</h3>
+            <p>Paste the prompt to your AI agent. It mints the card from your wallet on BNB Chain and replies with the transaction link — the NFT lands straight in your wallet.</p>
           </article>
         </div>
       </section>
@@ -170,7 +170,7 @@
         <div class="reasons-grid">
           <article class="reason-card reveal">
             <span class="reason-icon" aria-hidden="true">◈</span>
-            <div><h3>Your wallet, your card</h3><p>Connect a real BNB Chain wallet and mint from your own address. The issued card belongs to that wallet as an NFT.</p></div>
+            <div><h3>Your wallet, your card</h3><p>Your AI agent mints from your own wallet address, and the issued card belongs to that wallet as an NFT. This site never connects your wallet.</p></div>
           </article>
           <article class="reason-card reveal">
             <span class="reason-icon" aria-hidden="true">✦</span>
@@ -209,19 +209,9 @@
             <p class="check-result" id="checkResult" aria-live="polite"></p>
           </div>
           <div class="tool-card">
-            <h3>Mint via AI agent</h3>
-            <p>No wallet connection needed here: design your card in the studio below, copy a prompt, and give it to your AI agent — it mints from your wallet and replies with the transaction link.</p>
-            <label class="field-label" for="agentQty">QUANTITY</label>
-            <select class="owner-input" id="agentQty">
-              <option value="1" selected>1 card</option>
-              <option value="2">2 cards</option>
-            </select>
-            <label class="field-label" for="agentPromptFree">FREE MINT PROMPT</label>
-            <textarea class="prompt-box" id="agentPromptFree" rows="5" readonly></textarea>
-            <button class="outline-button copy-btn" type="button" data-copy-target="agentPromptFree">Copy free prompt</button>
-            <label class="field-label" for="agentPromptPaid">PAID MINT PROMPT</label>
-            <textarea class="prompt-box" id="agentPromptPaid" rows="5" readonly></textarea>
-            <button class="outline-button copy-btn" type="button" data-copy-target="agentPromptPaid">Copy paid prompt</button>
+            <h3>Mint via AI agent — no wallet connection</h3>
+            <p>This site never asks you to connect a wallet. Design your card in the studio below, continue to the mint step, copy the prompt, and give it to your AI agent — the agent mints from your wallet and replies with the transaction link.</p>
+            <a class="outline-button copy-btn" href="#studio">Design your card →</a>
           </div>
         </div>
       </section>
@@ -323,7 +313,7 @@
 
             <div class="wallet-notice" id="walletNotice">
               <span class="notice-icon" aria-hidden="true">◈</span>
-              <span id="walletNoticeText"><strong>Wallet not connected.</strong><br />Connect a BNB Chain wallet to mint this card as an NFT.</span>
+              <span id="walletNoticeText"><strong>No wallet connection needed.</strong><br />You mint through your AI agent at the next step. This site never asks for a seed phrase or private key.</span>
               <button class="notice-connect" id="noticeConnect" type="button">Connect</button>
             </div>
             <div class="wallet-connected" id="walletConnected" hidden>
@@ -333,9 +323,9 @@
             </div>
 
             <button class="primary-button continue-button" id="continueButton" type="button" disabled>
-              Continue to confirmation <span aria-hidden="true">→</span>
+              Continue to mint <span aria-hidden="true">→</span>
             </button>
-            <p class="under-button-note" id="continueHint">Connect your wallet to continue.</p>
+            <p class="under-button-note" id="continueHint">No wallet needed — the next step gives you a prompt for your AI agent.</p>
           </div>
 
           <aside class="preview-panel" aria-label="Agent ID card preview">
@@ -368,7 +358,7 @@
         </div>
 
         <section class="state-view confirm-view" id="confirmView" hidden aria-labelledby="confirmTitle">
-          <div class="state-heading"><span class="state-backmark">02</span><div><p class="eyebrow"><span class="eyebrow-line"></span> STEP TWO</p><h2 id="confirmTitle">Review before you mint</h2><p>Check the card summary and the live price from the contract.</p></div></div>
+          <div class="state-heading"><span class="state-backmark">02</span><div><p class="eyebrow"><span class="eyebrow-line"></span> STEP TWO</p><h2 id="confirmTitle">Mint with your AI agent</h2><p>No wallet connection on this site. Copy the prompt, give it to your AI agent, and it mints this card from your wallet.</p></div></div>
           <div class="confirm-layout">
             <div class="confirm-card-slot" id="confirmCardSlot"></div>
             <div class="confirm-details">
@@ -380,7 +370,27 @@
               <div class="receipt-row"><span>Gas</span><strong>Set by the network <em>SHOWN IN WALLET</em></strong></div>
               <div class="receipt-total"><span>Total mint price</span><strong id="confirmTotal">— BNB</strong></div>
               <div class="simulation-callout"><span aria-hidden="true">ⓘ</span><p>This is a <strong>real transaction on BNB Chain</strong> and BNB payments are <strong>final</strong>. Gas is set by the network and shown in your wallet before you approve — check the details in your wallet.</p></div>
-              <button class="primary-button mint-button" id="mintButton" type="button" disabled>Mint NFT <span aria-hidden="true">→</span></button>
+              <div class="agent-checkout">
+                <label class="field-label" for="agentQty">QUANTITY</label>
+                <select class="owner-input" id="agentQty">
+                  <option value="1" selected>1 card</option>
+                  <option value="2">2 cards</option>
+                </select>
+                <label class="field-label" for="agentPromptConfirm">YOUR MINT PROMPT — <span id="agentPromptTierLabel">FREE EDITION</span></label>
+                <textarea class="prompt-box" id="agentPromptConfirm" rows="6" readonly></textarea>
+                <button class="primary-button mint-button" type="button" data-copy-target="agentPromptConfirm">Copy mint prompt <span aria-hidden="true">→</span></button>
+                <ol class="agent-steps">
+                  <li>Copy the prompt above.</li>
+                  <li>Paste it to your AI agent (for example your Binance AI agent).</li>
+                  <li>The agent mints the card from your wallet and replies with the transaction link.</li>
+                </ol>
+                <p class="field-hint">This site never connects a wallet and never asks for a seed phrase or private key. The mint happens in your agent's wallet, where you stay in control.</p>
+              </div>
+              <details class="direct-mint">
+                <summary>Advanced — mint directly with a connected wallet</summary>
+                <p class="field-hint">The direct route: connect a BNB Chain wallet and sign the mint transaction yourself.</p>
+                <button class="primary-button mint-button" id="mintButton" type="button" disabled>Mint NFT <span aria-hidden="true">→</span></button>
+              </details>
             </div>
           </div>
           <button class="back-button" id="backToEditor" type="button">← Back to design</button>
@@ -435,9 +445,13 @@
           </div>
           <p class="section-note">Read directly from the contract<br />on BNB Chain.</p>
         </div>
-        <p class="my-cards-status" id="myCardsStatus">Connect your wallet to see your NFT cards.</p>
+        <p class="my-cards-status" id="myCardsStatus">Connect your wallet — or paste an address below — to see the NFT cards.</p>
         <div class="my-cards-actions">
           <button class="outline-button my-cards-refresh" id="refreshMyCardsButton" type="button">Reload my cards <span aria-hidden="true">↻</span></button>
+        </div>
+        <div class="my-cards-lookup">
+          <input class="owner-input" id="myCardsAddress" type="text" placeholder="…or paste a wallet address — no connection needed" autocomplete="off" spellcheck="false" />
+          <button class="outline-button" id="myCardsLookupButton" type="button">View cards</button>
         </div>
         <div class="my-cards-grid" id="myCardsGrid"></div>
       </section>
@@ -661,7 +675,7 @@
             </details>
             <details class="faq-item reveal">
               <summary>Can I mint through an AI agent instead of connecting a wallet?</summary>
-              <p>Yes. Design your card, then use the Mint via AI agent prompts in the Mint section: copy the free or paid prompt and give it to your agent — it mints from your wallet and replies with the transaction link. The studio's direct wallet mint keeps working too.</p>
+              <p>Yes. Design your card in the studio, continue to the mint step, and copy the prompt for the free or paid edition. Give it to your agent — it mints from your wallet and replies with the transaction link. A direct wallet mint remains available under Advanced at the same step.</p>
             </details>
           </div>
         </div>
@@ -709,6 +723,6 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <a class="floating-cta" id="floatingCta" href="#studio">Create a Card on BNB Chain <span aria-hidden="true">→</span></a>
-  <script src="app.js?v=15"></script>
+  <script src="app.js?v=16"></script>
 </body>
 </html>

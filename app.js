@@ -61,6 +61,7 @@ let signer = null;
 let walletContract = null;
 let mintedResult = null;
 let myCardsScanId = 0;
+let myCardsLookup = "";
 
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
@@ -462,8 +463,10 @@ function refreshMintUI() {
   const continueButton = $("#continueButton");
   const hint = $("#continueHint");
   const mintButton = $("#mintButton");
-  if (continueButton) continueButton.disabled = Boolean(blocked) || !validInputSilent();
-  if (hint) hint.textContent = blocked || "The mint price is read live from the contract; gas is shown in your wallet before you approve.";
+  if (continueButton) continueButton.disabled = !validInputSilent();
+  if (hint) hint.textContent = !hasContract()
+    ? "The contract is not deployed yet — the owner deploys it from their wallet, and minting opens right after."
+    : "No wallet connection needed — the next step gives you a ready-to-paste prompt for your AI agent.";
   if (mintButton) {
     mintButton.disabled = Boolean(blocked) || !validInputSilent();
     const price = activePrice() != null ? formatBNB(activePrice()) : null;
@@ -542,10 +545,10 @@ function agentPromptText(tier, qty) {
 function renderAgentPrompts() {
   const qtyEl = $("#agentQty");
   const qty = qtyEl ? Number(qtyEl.value || 1) : 1;
-  const f = $("#agentPromptFree");
-  if (f) f.value = agentPromptText(0, qty);
-  const pd = $("#agentPromptPaid");
-  if (pd) pd.value = agentPromptText(1, qty);
+  const c = $("#agentPromptConfirm");
+  if (c) c.value = agentPromptText(state.tier, qty);
+  const tierLabel = $("#agentPromptTierLabel");
+  if (tierLabel) tierLabel.textContent = state.tier === 1 ? "PAID EDITION" : "FREE EDITION";
   renderRewardPrompts();
 }
 
@@ -725,12 +728,6 @@ function continueToConfirmation() {
   if (!validInput()) {
     $("#agentName").focus();
     showToast("Check the Agent ID name format.");
-    return;
-  }
-  const blocked = mintBlockedReason();
-  if (blocked) {
-    showToast(blocked);
-    if (!state.connected) connectWallet();
     return;
   }
   updateCard();
@@ -1122,8 +1119,8 @@ async function loadMyCards() {
     grid.replaceChildren();
     return;
   }
-  if (!state.connected || !state.address) {
-    status.textContent = "Connect your wallet to see your NFT cards.";
+  if (!state.address && !myCardsLookup) {
+    status.textContent = "Connect your wallet — or paste an address above — to see the NFT cards.";
     grid.replaceChildren();
     return;
   }
@@ -1156,7 +1153,7 @@ async function loadMyCards() {
     const results = await Promise.all(ids.map(async (id) => {
       try {
         const ownerAddr = await withTimeout(readContract.ownerOf(id), 8000);
-        return { exists: true, id: ownerAddr.toLowerCase() === state.address.toLowerCase() ? id : null };
+        return { exists: true, id: ownerAddr.toLowerCase() === (state.address || myCardsLookup).toLowerCase() ? id : null };
       } catch (e) { return { exists: false, id: null }; }
     }));
     results.forEach((r) => { if (r && r.exists) seenMinted++; if (r && r.id != null) owned.push(r.id); });
@@ -1165,10 +1162,10 @@ async function loadMyCards() {
   }
   if (scanId !== myCardsScanId) return;
   if (owned.length === 0) {
-    status.textContent = "Wallet " + shortAddr(state.address) + " does not own an Agent Card yet. Mint your first card from the studio above.";
+    status.textContent = "Wallet " + shortAddr(state.address || myCardsLookup) + " does not own an Agent Card yet. Mint your first card from the studio above.";
     return;
   }
-  status.textContent = owned.length + " cards owned by " + shortAddr(state.address) + " — images rendered from on-chain metadata.";
+  status.textContent = owned.length + " cards owned by " + shortAddr(state.address || myCardsLookup) + " — images rendered from on-chain metadata.";
   for (const id of owned) {
     if (scanId !== myCardsScanId) return;
     try {
@@ -1769,6 +1766,16 @@ $("#errorBackButton").addEventListener("click", () => showView("editorView", 1))
 $("#downloadButton").addEventListener("click", downloadCard);
 $("#shareButton").addEventListener("click", shareCard);
 $("#makeAnotherButton").addEventListener("click", () => showView("editorView", 1));
+const lookupBtn = $("#myCardsLookupButton");
+if (lookupBtn) lookupBtn.addEventListener("click", () => {
+  const value = ($("#myCardsAddress").value || "").trim();
+  if (!window.ethers || !window.ethers.isAddress(value)) { showToast("Enter a valid 0x wallet address."); return; }
+  myCardsLookup = value;
+  loadMyCards();
+});
+const lookupInput = $("#myCardsAddress");
+if (lookupInput) lookupInput.addEventListener("keydown", (ev) => { if (ev.key === "Enter") { ev.preventDefault(); if (lookupBtn) lookupBtn.click(); } });
+
 const refreshBtn = $("#refreshMyCardsButton");
 if (refreshBtn) refreshBtn.addEventListener("click", loadMyCards);
 const ownerLink = $("#ownerFooterLink");
