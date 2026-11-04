@@ -19,7 +19,7 @@ const CARD_STAKE_BYTECODE = "608034609557601f610d5c38819003918201601f19168301916
 const TOKEN_ABI = ["function transfer(address to, uint256 amount) returns (bool)", "function balanceOf(address account) view returns (uint256)"];
 const REWARD_ABI = [{"inputs":[{"name":"token_","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"inputs":[{"name":"nft_","type":"address"}],"name":"setNft","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"totalBurned","outputs":[{"name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"poolBalance","outputs":[{"name":"","type":"uint256"}],"stateMutability":"view","type":"function"}];
 
-const READ_RPCS = ["https://bsc-dataseed.binance.org", "https://bsc.publicnode.com"];
+const READ_RPCS = ["https://bsc-dataseed.binance.org", "https://bsc-dataseed1.binance.org", "https://bsc-dataseed2.binance.org", "https://bsc.publicnode.com", "https://bsc-dataseed1.defibit.io", "https://bsc-dataseed1.ninicoin.io"];
 
 const personaConfig = {
   guardian: { title: "Whale", cardTitle: "THE WHALE", tagline: "Calm & market-moving", styleIndex: 0 },
@@ -1421,9 +1421,11 @@ function renderMintFeed() {
     track.classList.remove("is-scrolling");
     if (status) status.textContent = !hasContract()
       ? "The live mint feed will appear here once the contract is deployed."
-      : (chainState.totalMinted != null && chainState.totalMinted > 0)
-        ? "Loading the latest mints from the contract…"
-        : "No cards have been minted yet. Be the first to mint from the studio above.";
+      : chainState.totalMinted == null
+        ? "Loading the live mint feed from the contract…"
+        : chainState.totalMinted > 0
+          ? "Loading the latest mints from the contract…"
+          : "No cards have been minted yet. Be the first to mint from the studio above.";
     return;
   }
   if (status) status.textContent = "Live from the contract · every card is rendered from its on-chain data · hover to pause.";
@@ -1477,11 +1479,54 @@ async function loadMintFeed(announce) {
   } catch (e) { /* RPC busy — retry on the next cycle */ }
 }
 
+/* ---------- Road to 100 + Top minters board ---------- */
+let boardLoading = false;
+async function loadBoard() {
+  const fill = $("#roadFill");
+  if (fill && chainState.totalMinted != null) {
+    const totalNow = chainState.totalMinted;
+    fill.style.width = Math.min(100, totalNow) + "%";
+    const rc = $("#roadCount"); if (rc) rc.textContent = totalNow.toLocaleString("en-US");
+    const rl = $("#roadLeft"); if (rl) rl.textContent = Math.max(0, 100 - totalNow).toLocaleString("en-US");
+  }
+  const list = $("#boardList");
+  if (!list || !readContract || boardLoading) return;
+  if (chainState.totalMinted == null || chainState.totalMinted === 0) return;
+  boardLoading = true;
+  try {
+    const ids = (await withTimeout(readContract.recentMintIds(chainState.totalMinted), 12000)).map(Number);
+    const tally = new Map();
+    for (let i = 0; i < ids.length; i += 10) {
+      const owners = await Promise.all(ids.slice(i, i + 10).map((id) => readContract.ownerOf(id).catch(() => null)));
+      owners.forEach((o) => { if (o) { const k = o.toLowerCase(); tally.set(k, (tally.get(k) || 0) + 1); } });
+    }
+    const rows = [...tally.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10);
+    list.replaceChildren();
+    rows.forEach(([addr, n], idx) => {
+      const li = document.createElement("li");
+      li.className = "board-row" + (idx === 0 ? " board-top" : "");
+      const rank = document.createElement("span"); rank.className = "board-rank"; rank.textContent = (idx === 0 ? "\u{1F451} " : "") + "#" + (idx + 1);
+      const who = document.createElement("span"); who.className = "board-addr"; who.textContent = shortAddr(addr);
+      const cnt = document.createElement("strong"); cnt.className = "board-count"; cnt.textContent = n + (n === 1 ? " card" : " cards");
+      li.append(rank, who, cnt);
+      list.append(li);
+    });
+    if (!rows.length) {
+      const li = document.createElement("li");
+      li.className = "board-empty";
+      li.textContent = "No mints yet — the board is waiting for its first name.";
+      list.append(li);
+    }
+  } catch (e) { /* board retries on the next cycle */ }
+  boardLoading = false;
+}
+
 function startMintFeed() {
   if (mintFeedTimer) return;
   loadMintFeed(false);
   updateBurnedCount();
-  mintFeedTimer = setInterval(() => { loadMintFeed(true); updateBurnedCount(); }, 30000);
+  loadBoard();
+  mintFeedTimer = setInterval(() => { loadMintFeed(true); updateBurnedCount(); loadBoard(); }, 30000);
 }
 
 

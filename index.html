@@ -32,7 +32,7 @@
   window.__acsErrs = [];
   window.addEventListener("error", function (e) { try { window.__acsErrs.push(String(e.message || e.type)); } catch (x) {} });
   </script>
-  <link rel="stylesheet" href="styles.css?v=31">
+  <link rel="stylesheet" href="styles.css?v=32">
 </head>
 <body>
   <div id="debugBar" hidden style="position:fixed;top:0;left:0;right:0;z-index:9999;background:#b00020;color:#fff;font:12px/1.5 monospace;padding:6px 10px;white-space:pre-wrap;"></div>
@@ -76,7 +76,7 @@
             <a class="hero-cta" href="#studio" id="heroMainCta">Create Your Card on BNB Chain <span aria-hidden="true">→</span></a>
             <a class="hero-cta-secondary" href="#galeri">View Gallery <span aria-hidden="true">↓</span></a>
           </div>
-          <p class="hero-hint" id="heroPriceNote">The contract is not deployed yet — you can still try the design; minting opens once the owner deploys the contract.</p>
+          <p class="hero-hint" id="heroPriceNote">Live on BNB Chain — free mint 0.0002 BNB · paid mint 0.002 BNB · max 2 cards per wallet. Reading live contract data…</p>
           <ul class="hero-trust" aria-label="On-chain guarantees">
             <li><span aria-hidden="true">✓</span> Card data on-chain</li>
             <li><span aria-hidden="true">✓</span> No image server</li>
@@ -226,13 +226,29 @@
         </div>
       </section>
 
+      <section class="road" id="road" aria-labelledby="road-title">
+        <div class="road-head">
+          <p class="eyebrow"><span class="eyebrow-line"></span> COMMUNITY GOAL</p>
+          <h2 id="road-title">Road to 100 mints.</h2>
+          <p class="section-note">The first community milestone is 100 cards minted. Every wallet can hold 2 cards &mdash; minted one already? Your second slot is still open.</p>
+        </div>
+        <div class="road-progress">
+          <div class="road-bar"><div class="road-fill" id="roadFill"></div></div>
+          <p class="road-count"><strong id="roadCount">&mdash;</strong> / 100 minted &middot; <span id="roadLeft">&mdash;</span> to go</p>
+        </div>
+        <div class="board">
+          <h3 class="board-title">Top minters</h3>
+          <ol class="board-list" id="boardList"><li class="board-empty">Loading the board from the contract&hellip;</li></ol>
+          <p class="board-note">Live from the contract &middot; updates automatically &middot; the crown changes hands at the top.</p>
+        </div>
+      </section>
       <section class="studio" id="studio" aria-labelledby="studio-title">
         <div class="section-heading">
           <div>
             <p class="eyebrow"><span class="eyebrow-line"></span> STUDIO</p>
             <h2 id="studio-title">Design your version</h2>
           </div>
-          <p class="section-note" id="studioNote">The contract is not deployed yet.<br />Minting opens once the owner deploys it.</p>
+          <p class="section-note" id="studioNote">Live on BNB Chain — minting is open.<br />Design your card below.</p>
         </div>
 
         <div class="step-track" aria-label="Card creation steps">
@@ -369,7 +385,7 @@
           <div class="confirm-layout">
             <div class="confirm-card-slot" id="confirmCardSlot"></div>
             <div class="confirm-details">
-              <div class="confirm-receipt-title"><span>MINT SUMMARY</span><span class="chain-pill small" id="contractStatusPill"><span class="status-dot"></span> <span id="contractStatusText">CONTRACT NOT DEPLOYED</span></span></div>
+              <div class="confirm-receipt-title"><span>MINT SUMMARY</span><span class="chain-pill small" id="contractStatusPill"><span class="status-dot"></span> <span id="contractStatusText">CHECKING CONTRACT…</span></span></div>
               <div class="receipt-row"><span>Card</span><strong id="confirmName">nara.ai · Whale</strong></div>
               <div class="receipt-row"><span>Network</span><strong>BNB Smart Chain <em>CHAIN 56</em></strong></div>
               <div class="receipt-row"><span>Contract</span><strong><a id="confirmContractLink" href="#" target="_blank" rel="noopener noreferrer">Not deployed yet</a></strong></div>
@@ -471,7 +487,7 @@
           </div>
           <span class="status-pill" id="tokenStatus">COMING SOON</span>
         </div>
-        <p>$ACARD is the reward token of Agent Card Studio: a fixed supply of <strong>1,000,000,000 $ACARD</strong> on BNB Chain. Burn a card to receive tokens at once, or stake a card and earn every day. Contracts: <span id="tokenAddressLine">not deployed yet</span></p>
+        <p>$ACARD is the reward token of Agent Card Studio: a fixed supply of <strong>1,000,000,000 $ACARD</strong> on BNB Chain. Burn a card to receive tokens at once, or stake a card and earn every day. Contracts: <span id="tokenAddressLine">0x3A56270f7A8c78E9cC4A8A9f18e375cd184F1133</span></p>
         <div class="stat-grid">
           <div class="stat-card"><span class="stat-label">Total supply</span><strong class="stat-value">1,000,000,000</strong></div>
           <div class="stat-card"><span class="stat-label">Burn rate</span><strong class="stat-value">50,000 / card</strong></div>
@@ -657,6 +673,6 @@
     }).catch(function () {});
   } catch (e) {} })();
   </script>
-  <script src="app.js?v=31"></script>
+  <script src="app.js?v=32"></script>
 </body>
 </html>
