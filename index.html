@@ -33,7 +33,7 @@
   window.__acsErrs = [];
   window.addEventListener("error", function (e) { try { window.__acsErrs.push(String(e.message || e.type)); } catch (x) {} });
   </script>
-  <link rel="stylesheet" href="site-v34.css">
+  <link rel="stylesheet" href="site-v35.css">
 </head>
 <body>
   <div id="debugBar" hidden style="position:fixed;top:0;left:0;right:0;z-index:9999;background:#b00020;color:#fff;font:12px/1.5 monospace;padding:6px 10px;white-space:pre-wrap;"></div>
@@ -69,7 +69,7 @@
     <main id="top">
       <section class="hero" aria-labelledby="hero-title">
         <div class="hero-copy">
-          <p class="hero-badge" id="heroBadge"><i aria-hidden="true"></i> BNB CHAIN · CONTRACT NOT DEPLOYED YET</p>
+          <p class="hero-badge" id="heroBadge"><i aria-hidden="true"></i> LIVE ON BNB CHAIN · MINT OPEN</p>
           <p class="eyebrow"><span class="eyebrow-line"></span> YOUR AGENT IDENTITY, AS A CARD</p>
           <h1 id="hero-title">Your Agent ID deserves its own card.</h1>
           <p class="hero-description">Design a collectible card from your Agent ID name — pick a persona, set the color, then mint it as an NFT on BNB Chain. Your card's name, persona, color, and edition are stored on-chain and delivered straight to your wallet.</p>
@@ -389,7 +389,7 @@
               <div class="confirm-receipt-title"><span>MINT SUMMARY</span><span class="chain-pill small" id="contractStatusPill"><span class="status-dot"></span> <span id="contractStatusText">CHECKING CONTRACT…</span></span></div>
               <div class="receipt-row"><span>Card</span><strong id="confirmName">nara.ai · Whale</strong></div>
               <div class="receipt-row"><span>Network</span><strong>BNB Smart Chain <em>CHAIN 56</em></strong></div>
-              <div class="receipt-row"><span>Contract</span><strong><a id="confirmContractLink" href="#" target="_blank" rel="noopener noreferrer">Not deployed yet</a></strong></div>
+              <div class="receipt-row"><span>Contract</span><strong><a id="confirmContractLink" href="https://bscscan.com/address/0x0716bD547494e7B8E45C15266F03a43915982C6e" target="_blank" rel="noopener noreferrer">0x0716…82C6e</a></strong></div>
               <div class="receipt-row"><span>Mint price</span><strong id="confirmPrice">— BNB <em>LIVE FROM CONTRACT</em></strong></div>
               <div class="receipt-row"><span>Gas</span><strong>Set by the network <em>SHOWN IN WALLET</em></strong></div>
               <div class="receipt-total"><span>Total mint price</span><strong id="confirmTotal">— BNB</strong></div>
@@ -486,7 +486,7 @@
             <p class="eyebrow"><span class="eyebrow-line"></span> $ACARD TOKEN</p>
             <h2 id="token-title">Hold the card. Earn the token.</h2>
           </div>
-          <span class="status-pill" id="tokenStatus">COMING SOON</span>
+          <span class="status-pill" id="tokenStatus">LIVE</span>
         </div>
         <p>$ACARD is the reward token of Agent Card Studio: a fixed supply of <strong>1,000,000,000 $ACARD</strong> on BNB Chain. Burn a card to receive tokens at once, or stake a card and earn every day. Contracts: <span id="tokenAddressLine">0x3A56270f7A8c78E9cC4A8A9f18e375cd184F1133</span></p>
         <div class="stat-grid">
@@ -676,6 +676,6 @@
   </script>
   <script>window.__loadEthersFallback=function(){var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js';document.head.appendChild(s);};</script>
   <script src="assets/ethers.umd.min.js" onerror="window.__loadEthersFallback()"></script>
-  <script src="app-v34.js"></script>
+  <script src="app-v35.js"></script>
 </body>
 </html>
