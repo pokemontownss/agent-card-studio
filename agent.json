@@ -1,0 +1,27 @@
+{
+  "type": "https://eips.ethereum.org/EIPS/eip-8004#registration-v1",
+  "name": "Agent Card Studio",
+  "description": "Agent trading-card NFTs on BNB Chain with a burn-and-stake economy in the $ACARD token: mint an Agent Card NFT (free 0.0002 BNB or paid 0.002 BNB, max 2 per wallet), burn a card to receive 50,000 ACARD, or stake it to earn 500 ACARD per day. Machine-readable spec: llms.txt on the official site.",
+  "image": "https://agentcard.cloud/assets/og-image.jpg",
+  "services": [
+    {
+      "name": "web",
+      "endpoint": "https://agentcard.cloud"
+    },
+    {
+      "name": "llms.txt",
+      "endpoint": "https://agentcard.cloud/llms.txt"
+    }
+  ],
+  "registrations": [],
+  "properties": {
+    "chainId": 56,
+    "network": "BNB Chain (BSC mainnet)",
+    "contracts": {
+      "AgentCard (NFT)": "0x0716bD547494e7B8E45C15266F03a43915982C6e",
+      "ACARDToken ($ACARD)": "0x3A56270f7A8c78E9cC4A8A9f18e375cd184F1133"
+    },
+    "officialSite": "https://agentcard.cloud",
+    "x": "@AgentCard_Bnb"
+  }
+}
